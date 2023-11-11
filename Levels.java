@@ -18,15 +18,35 @@ public class Levels {
         case 3:
             map = getThirdLevel();
             break;
-
+        case 4:
+            map = getFourthLevel();
+            break;
+        case 5:
+            map = getFifthLevel();
+            break;
+        case 6:
+            map = getSixthLevel();
+            break;
+        case 7:
+            map = getSeventhLevel();
+            break;
+        case 8:
+            map = getEighthLevel();
+            break;
+        case 9:
+            map = getNinthLevel();
+            break;
         default:
             map = getFirstLevel();
             currentLevel = 1;
       }
 
       currentLevel++;
-
       return map;
+  }
+
+  public void setCurrentLevel(int level) {
+      currentLevel = level;
   }
 
   private int[][] getFirstLevel() {
@@ -75,6 +95,30 @@ public class Levels {
               {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
               {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
+  }
+
+  private int[][] getFourthLevel() {
+      return null;
+  }
+
+  private int[][] getFifthLevel() {
+      return null;
+  }
+
+  private int[][] getSixthLevel() {
+      return null;
+  }
+
+  private int[][] getSeventhLevel() {
+      return null;
+  }
+
+  private int[][] getEighthLevel() {
+      return null;
+  }
+
+  private int[][] getNinthLevel() {
+      return null;
   }
 
   //
