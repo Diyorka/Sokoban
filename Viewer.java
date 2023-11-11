@@ -45,4 +45,14 @@ public class Viewer {
         }
         return image;
     }
+
+    private Image getImage(File file) {
+        Image image = null;
+        try {
+            image = ImageIO.read(file);
+        } catch (IOException e) {
+          System.out.println("Error: " + e);
+        }
+        return image;
+    }
 }
