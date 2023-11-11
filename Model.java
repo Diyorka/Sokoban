@@ -48,6 +48,10 @@ public class Model {
             scanMap();
         }
 
+        if (map == null) {
+            return;
+        }
+
         if (message == LEFT) {
             moveLeft();
             totalMoves++;
@@ -62,8 +66,6 @@ public class Model {
             totalMoves++;
         } else if(message == EXIT) {
             System.exit(0);
-        } else {
-            return;
         }
 
         returnCheck();
@@ -134,6 +136,7 @@ public class Model {
     }
 
     private void returnCheck() {
+
        for (int i = 0; i < checksPos.length; i++) {
            int checkPosY = checksPos[0][i];
            int checkPosX = checksPos[1][i];
