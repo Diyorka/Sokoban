@@ -28,10 +28,15 @@ public class Model {
 
     private int[][] checksPos;
 
-    Model(Viewer viewer) {
+    public Model(Viewer viewer) {
         this.viewer = viewer;
         playerPosX = -1;
         playerPosY = -1;
+    }
+
+    public int[][] getDesktop(){
+      loadMap();
+      return map;
     }
 
     public void doAction(char message) {
@@ -72,11 +77,11 @@ public class Model {
         map = new int[][]
                 {
                         {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                        {2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
-                        {2, 0, 2, 0, 0, 0, 3, 4, 0, 2},
-                        {2, 0, 2, 0, 0, 0, 0, 0, 0, 2},
                         {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 2, 0, 0, 0, 0, 3, 4, 0, 2},
+                        {0, 2, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {0, 2, 0, 0, 1, 0, 0, 0, 0, 2},
+                        {2, 2, 0, 0, 0, 0, 0, 0, 0, 2},
                         {2, 0, 0, 0, 0, 0, 3, 0, 0, 2},
                         {2, 0, 4, 0, 0, 0, 0, 0, 0, 2},
                         {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
@@ -157,6 +162,7 @@ public class Model {
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
     }
+
     private void moveRight() {
         if ((map[playerPosY][playerPosX + 1] == WALL)) {
             System.out.println("Impossible move to the right"); //debug
