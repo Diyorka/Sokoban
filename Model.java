@@ -19,6 +19,7 @@ public class Model {
     private Viewer viewer;
 
     private int[][] map;
+    private Levels levelList;
 
     private int totalMoves = 0; //debug
 
@@ -28,17 +29,22 @@ public class Model {
 
     private int[][] checksPos;
 
-    Model(Viewer viewer) {
+    public Model(Viewer viewer) {
         this.viewer = viewer;
+        levelList = new Levels();
         playerPosX = -1;
         playerPosY = -1;
+    }
+
+    public int[][] getDesktop(){
+        return map;
     }
 
     public void doAction(char message) {
         System.out.println("got -- " + message); //debug
         if(message == LOAD) {
             System.out.println("------------ Map loaded ------------\n\n"); //debug
-            loadMap();
+            map = levelList.getNextLevel();
             scanMap();
         }
 
@@ -61,27 +67,15 @@ public class Model {
         returnCheck();
         viewer.update();
 
-        if (isWon()) {
-            System.out.println("You win!");
-            System.exit(0);
-        }
         System.out.println("Moves: " + totalMoves); //debug
-    }
 
-    private void loadMap() {
-        map = new int[][]
-                {
-                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                        {2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
-                        {2, 0, 2, 0, 0, 0, 3, 4, 0, 2},
-                        {2, 0, 2, 0, 0, 0, 0, 0, 0, 2},
-                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                        {2, 0, 0, 0, 0, 0, 3, 0, 0, 2},
-                        {2, 0, 4, 0, 0, 0, 0, 0, 0, 2},
-                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-                };
+        if (isWon()) {
+            javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You win!");
+            map = levelList.getNextLevel();
+            scanMap();
+            viewer.update();
+            totalMoves = 0;
+        }
     }
 
     private void scanMap() {
@@ -157,6 +151,7 @@ public class Model {
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
     }
+
     private void moveRight() {
         if ((map[playerPosY][playerPosX + 1] == WALL)) {
             System.out.println("Impossible move to the right"); //debug

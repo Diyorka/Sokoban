@@ -14,16 +14,14 @@ public class Controller implements KeyListener {
     }
 
     public void keyPressed(KeyEvent event) {
-        char key = e.getKeyChar();
+        char key = event.getKeyChar();
         key = Character.toLowerCase(key);
         model.doAction(key);
     }
 
     public void keyTyped(KeyEvent event) {
-
     }
 
     public void keyReleased(KeyEvent event) {
-
     }
 }
