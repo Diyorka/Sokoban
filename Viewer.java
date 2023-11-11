@@ -11,6 +11,8 @@ public class Viewer {
         Model model = controller.getModel();
         canvas = new Canvas(model);
 
+        levelChooser = new LevelChooser();
+
         JFrame frame = new JFrame("Sokoban MVC");
         frame.setSize(1200, 800);
         frame.setResizable(false);
@@ -22,6 +24,6 @@ public class Viewer {
     }
 
     public void update() {
-
+        canvas.repaint();
     }
 }
