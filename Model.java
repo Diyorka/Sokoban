@@ -78,6 +78,15 @@ public class Model {
         }
     }
 
+    public void changeLevel(String command) {
+        String stringLevelNumber = command.substring(command.length() - 1, command.length());
+        int levelNumber = Integer.parseInt(stringLevelNumber);
+        map = levelList.setCurrentLevel(level);
+        scanMap();
+        viewer.update();
+        totalMoves = 0;
+    }
+
     private void scanMap() {
         for(int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
@@ -93,7 +102,7 @@ public class Model {
             }
         }
 
-        if (boxesCount != checksCount || playerCount == 0 || playerCount > 1) {
+        if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && boxesCount == 0) {
             System.out.println("Map have invalid game parameters");
         }
 

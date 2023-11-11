@@ -19,9 +19,6 @@ public class Viewer {
         levelChooser = new LevelChooser();
         File backgroundFile = new File("images/background.jpg");
         backgroundImage = getImage(backgroundFile);
-    }
-
-    public void runApplication() {
         MenuPanel menu = new MenuPanel(backgroundImage);
         frame = new JFrame("Sokoban");
         frame.setSize(1000, 700);
