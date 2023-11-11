@@ -81,6 +81,7 @@ public class Canvas extends JPanel {
       x = start;
       y = y + height + offset;
     }
+
   }
 
   private void drawErrorMessage(Graphics g) {

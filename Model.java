@@ -62,6 +62,8 @@ public class Model {
             totalMoves++;
         } else if(message == EXIT) {
             System.exit(0);
+        } else {
+            return;
         }
 
         returnCheck();
@@ -81,7 +83,8 @@ public class Model {
     public void changeLevel(String command) {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
-        map = levelList.setCurrentLevel(level);
+        levelList.setCurrentLevel(levelNumber);
+        map = levelList.getNextLevel();
         scanMap();
         viewer.update();
         totalMoves = 0;
