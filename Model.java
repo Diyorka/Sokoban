@@ -13,6 +13,7 @@ public class Model {
     private final int RESTART = 82; //'r' button keycode
     private final int EXIT = 27; //'esc' button keycode
 
+    private String move;
     private int playerPosX;
     private int playerPosY;
 
@@ -34,6 +35,7 @@ public class Model {
         levelList = new Levels();
         playerPosX = -1;
         playerPosY = -1;
+        move = "Down";
     }
 
     public int[][] getDesktop(){
@@ -50,16 +52,21 @@ public class Model {
         }
 
         if (map == null) {
+            System.out.println("NO MAP FOUND\n\n");
             return;
         }
 
         if (keyMessage == LEFT) {
+            move = "Left";
             moveLeft();
         } else if(keyMessage == RIGHT) {
+            move = "Right";
             moveRight();
         } else if(keyMessage == UP) {
+            move = "Up";
             moveTop();
         } else if(keyMessage == DOWN) {
+            move = "Down";
             moveBot();
         }
 
@@ -69,11 +76,7 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
-            javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You win!");
-            map = levelList.getNextLevel();
-            scanMap();
-            viewer.update();
-            totalMoves = 0;
+            showEndLevelDialog();
         }
     }
 
@@ -81,19 +84,47 @@ public class Model {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levelList.setCurrentLevel(levelNumber);
-        map = levelList.getNextLevel();
+        map = levelList.getCurrentMap();
         scanMap();
         viewer.showCanvas();
         totalMoves = 0;
+    }
+
+    public String getMove() {
+        return move;
+    }
+
+    private void showEndLevelDialog() {
+        Object[] options = {"Go to levels", "Next level"};
+        int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
+                                                                  "!\n                        Total moves: " + totalMoves, "Congratulations!",
+                                                                  javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.PLAIN_MESSAGE,
+                                                                  null, options, options[1]);
+        if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
+            map = levelList.getNextMap();
+            scanMap();
+            viewer.update();
+        } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
+            //back to levels list
+            map = null;
+            System.out.println("Choose back to lvl list");
+            System.exit(0);
+        } else {
+            //back to menu
+            map = null;
+            System.out.println("Choose back to menu");
+            System.exit(0);
+        }
+        //javax.swing.JOptionPane.showOptionDialog(new javax.swing.JFrame(), "You win!");
     }
 
     private void scanMap() {
         playerCount = 0;
         boxesCount = 0;
         checksCount = 0;
+        totalMoves = 0;
         for(int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-                System.out.print(map[i][j] + " ");
                 if (map[i][j] == PLAYER) {
                     playerPosX = j;
                     playerPosY = i;
@@ -104,14 +135,13 @@ public class Model {
                     checksCount++;
                 }
             }
-            System.out.println();
         }
 
         if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && checksCount == 0) {
             System.out.println("Map have invalid game parameters");
-            System.out.println(playerCount);
-            System.out.println(boxesCount);
-            System.out.println(checksCount);
+            System.out.println("players: " + playerCount);
+            System.out.println("boxes: " + boxesCount);
+            System.out.println("checks: " + checksCount);
             map = null;
             return;
         }

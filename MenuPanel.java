@@ -16,9 +16,9 @@ public class MenuPanel extends JPanel {
     private MenuController menuController;
     private File fontFile;
 
-    public MenuPanel(Image backgroundImage) {
-        this.backgroundImage = backgroundImage;
-        menuController = new MenuController();
+    public MenuPanel(Viewer viewer, Model model) {
+        backgroundImage = viewer.getBackgroundImage();
+        menuController = new MenuController(viewer, model);
         fontFile = new File("fonts/PixelFont.otf");
         init();
     }

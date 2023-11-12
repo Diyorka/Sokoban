@@ -5,7 +5,16 @@ public class Levels {
       currentLevel = 1;
   }
 
-  public int[][] getNextLevel() {
+  public int getCurrentLevel() {
+      return currentLevel;
+  }
+
+  public int[][] getNextMap() {
+      currentLevel++;
+      return getCurrentMap();
+  }
+
+  public int[][] getCurrentMap() {
       int[][] map = null;
 
       switch (currentLevel) {
@@ -41,15 +50,6 @@ public class Levels {
             currentLevel = 1;
       }
 
-      System.out.println("set = " + currentLevel + " level");
-
-      currentLevel++;
-      return map;
-  }
-
-  public int[][] getCurrentMap() {
-      currentLevel--;
-      int[][] map = getNextLevel();
       return map;
   }
 
