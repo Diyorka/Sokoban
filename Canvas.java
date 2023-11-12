@@ -13,6 +13,7 @@ public class Canvas extends JPanel {
   private Image imageWall;
   private Image imageBox;
   private Image imageGoal;
+  private Image imageGround;
   private Image imageError;
 
   public Canvas(Model model) {
@@ -20,10 +21,11 @@ public class Canvas extends JPanel {
     setBackground(Color.BLACK);
     setOpaque(true);
 
-    File fileGamer = new File("images/player.png");
+    File fileGamer = new File("images/front-player.png");
     File fileWall = new File("images/wall.png");
     File fileBox = new File("images/box.png");
-    File fileGoal = new File("images/goal.png");
+    File fileGoal = new File("images/target1.png");
+    File fileGround = new File("images/ground1.png");
     File fileError = new File("images/error.png");
 
     try {
@@ -31,6 +33,7 @@ public class Canvas extends JPanel {
       imageWall = ImageIO.read(fileWall);
       imageBox = ImageIO.read(fileBox);
       imageGoal = ImageIO.read(fileGoal);
+      imageGround = ImageIO.read(fileGround);
       imageError = ImageIO.read(fileError);
     } catch (IOException e) {
       System.out.println("Error: " + e);
@@ -39,16 +42,16 @@ public class Canvas extends JPanel {
 
   public void paint(Graphics g) {
     super.paint(g);
-    // boolean state = model.getState();
-    // if(state) {
-    drawDesktop(g);
-    // } else {
-    // drawErrorMessage(g);
-    // }
+
+    int[][] desktop = model.getDesktop();
+    if(desktop != null) {
+        drawDesktop(g, desktop);
+    } else {
+        drawErrorMessage(g);
+    }
   }
 
-  private void drawDesktop(Graphics g) {
-    int[][] desktop = model.getDesktop();
+  private void drawDesktop(Graphics g, int[][] desktop) {
     int start = 100;
     int x = start;
     int y = start;
@@ -65,7 +68,9 @@ public class Canvas extends JPanel {
         }
 
         if(isFirstWallFound) {
-          if(desktop[i][j] == 1) {
+          if(desktop[i][j] == 0) {
+            g.drawImage(imageGround, x, y, null);
+          }else if(desktop[i][j] == 1) {
             g.drawImage(imageGamer, x, y, null);
           } else if(desktop[i][j] == 2) {
             g.drawImage(imageWall, x, y, null);
