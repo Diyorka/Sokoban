@@ -6,12 +6,12 @@ public class Model {
     private final int BOX = 3;
     private final int CHECK = 4;
 
-    private final char LEFT = 'a';
+    private final char LEFT =  'a';
     private final char RIGHT = 'd';
     private final char UP = 'w';
-    private final char DOWN = 's';
-    private final char LOAD = 'r';
-    private final char EXIT = 'q';
+    private final char DOWN =  's';
+    private final char RESTART = 'r';
+    private final char EXIT = '\u001B'; //escape
 
     private int playerPosX;
     private int playerPosY;
@@ -21,7 +21,7 @@ public class Model {
     private int[][] map;
     private Levels levelList;
 
-    private int totalMoves = 0; //debug
+    private int totalMoves = 0;
 
     private int playerCount;
     private int boxesCount;
@@ -42,10 +42,12 @@ public class Model {
 
     public void doAction(char message) {
         System.out.println("got -- " + message); //debug
-        if(message == LOAD) {
-            System.out.println("------------ Map loaded ------------\n\n"); //debug
-            map = levelList.getNextLevel();
+        if (message == RESTART) {
+            System.out.println("------------ Map restarted ------------\n\n");
+            map = levelList.getCurrentMap();
             scanMap();
+        } else if (message == EXIT) {
+            System.exit(0);
         }
 
         if (map == null) {
@@ -54,18 +56,12 @@ public class Model {
 
         if (message == LEFT) {
             moveLeft();
-            totalMoves++;
         } else if(message == RIGHT) {
             moveRight();
-            totalMoves++;
         } else if(message == UP) {
             moveTop();
-            totalMoves++;
         } else if(message == DOWN) {
             moveBot();
-            totalMoves++;
-        } else if(message == EXIT) {
-            System.exit(0);
         }
 
         returnCheck();
@@ -93,8 +89,12 @@ public class Model {
     }
 
     private void scanMap() {
+        playerCount = 0;
+        boxesCount = 0;
+        checksCount = 0;
         for(int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
+                System.out.print(map[i][j] + " ");
                 if (map[i][j] == PLAYER) {
                     playerPosX = j;
                     playerPosY = i;
@@ -105,19 +105,25 @@ public class Model {
                     checksCount++;
                 }
             }
+            System.out.println();
         }
 
-        if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && boxesCount == 0) {
+        if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && checksCount == 0) {
             System.out.println("Map have invalid game parameters");
+            System.out.println(playerCount);
+            System.out.println(boxesCount);
+            System.out.println(checksCount);
+            map = null;
+            return;
         }
 
-        checksPos = new int[2][checksCount];
+        checksPos = new int[checksCount][2];
         int checksQueue = 0;
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == CHECK) {
-                    checksPos[0][checksQueue] = i;
-                    checksPos[1][checksQueue] = j;
+                    checksPos[checksQueue][0] = i;
+                    checksPos[checksQueue][1] = j;
                     checksQueue++;
                 }
             }
@@ -125,9 +131,9 @@ public class Model {
     }
 
     private boolean isWon() {
-        for (int i = 0; i < checksPos[0].length; i++) {
-            int checkPosY = checksPos[0][i];
-            int checkPosX = checksPos[1][i];
+        for (int i = 0; i < checksPos.length; i++) {
+            int checkPosY = checksPos[i][0];
+            int checkPosX = checksPos[i][1];
             if (map[checkPosY][checkPosX] != BOX) {
                 return false;
             }
@@ -136,10 +142,9 @@ public class Model {
     }
 
     private void returnCheck() {
-
        for (int i = 0; i < checksPos.length; i++) {
-           int checkPosY = checksPos[0][i];
-           int checkPosX = checksPos[1][i];
+           int checkPosY = checksPos[i][0];
+           int checkPosX = checksPos[i][1];
            if (map[checkPosY][checkPosX] == SPACE) {
                map[checkPosY][checkPosX] = CHECK;
                break;
@@ -165,6 +170,7 @@ public class Model {
         map[playerPosY][playerPosX - 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
+        totalMoves++;
     }
 
     private void moveRight() {
@@ -185,6 +191,7 @@ public class Model {
         map[playerPosY][playerPosX + 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX += 1;
+        totalMoves++;
     }
 
     private void moveTop() {
@@ -205,6 +212,7 @@ public class Model {
         map[playerPosY - 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY -= 1;
+        totalMoves++;
     }
 
     private void moveBot() {
@@ -225,6 +233,7 @@ public class Model {
         map[playerPosY + 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY += 1;
+        totalMoves++;
     }
 
     private boolean canMoveBoxToLeft() {
