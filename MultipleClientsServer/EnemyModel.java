@@ -1,28 +1,20 @@
- import java.util.Arrays;
-
-public class Model implements SokobanModel {
+public class EnemyModel implements SokobanModel {
   private Viewer viewer;
   private int[][] desktop;
   private int indexX;
   private int indexY;
   private int[][] arrayOfBoxes;
-  private Levels repository;
   private boolean stateGame;
-  ////
-  private Client client;
 
-
-  public Model(Viewer viewer, Client client) {
+  public EnemyModel(Viewer viewer, int[][] initialField) {
+    System.out.println("creating enemy model");
     this.viewer = viewer;
-    this.client = client;
-    repository = new Levels(client);
-
+    this.desktop = initialField;
     initialization();
   }
 
   private void initialization() {
     stateGame = true;
-    desktop = repository.nextLevel();
     int counterOne = 0;
     int counterThree = 0;
     int counterFour = 0;
@@ -77,7 +69,7 @@ public class Model implements SokobanModel {
       return;
     }
     check();
-    viewer.update();
+    viewer.updateEnemyField();
     won();
   }
 
@@ -92,7 +84,7 @@ public class Model implements SokobanModel {
 
     javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You are won!!!");
     initialization();
-    viewer.update();
+    viewer.updateEnemyField();
   }
 
   private void check() {
@@ -119,8 +111,6 @@ public class Model implements SokobanModel {
       indexY = indexY - 1;
       desktop[indexX][indexY] = 1;
     }
-    /// send data about our movement on server
-    client.sendDataToServer("Left");
   }
 
   private void moveUp() {
@@ -136,7 +126,7 @@ public class Model implements SokobanModel {
       indexX = indexX - 1;
       desktop[indexX][indexY] = 1;
     }
-    client.sendDataToServer("Up");
+
   }
 
   private void moveRight() {
@@ -153,7 +143,6 @@ public class Model implements SokobanModel {
       indexY = indexY + 1;
       desktop[indexX][indexY] = 1;
     }
-    client.sendDataToServer("Right");
   }
 
   private void moveDown() {
@@ -169,16 +158,12 @@ public class Model implements SokobanModel {
       indexX = indexX + 1;
       desktop[indexX][indexY] = 1;
     }
-    client.sendDataToServer("Down");
   }
 
   public int[][] getDesktop() {
     return desktop;
   }
 
-  public int[][] copyDesktop() {
-      return Arrays.copyOf(desktop, desktop.length);
-  }
   public boolean getState() {
     return stateGame;
   }

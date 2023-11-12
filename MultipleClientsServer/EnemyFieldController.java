@@ -4,18 +4,24 @@ public class EnemyFieldController implements Runnable {
     private Thread thread;
     private Viewer viewer;
     private Canvas canvas;
+    private SokobanModel enemyModel;
 
     public EnemyFieldController(Client client, Viewer viewer) {
         this.thread = new Thread(this);
         this.client = client;
         this.viewer = viewer;
         canvas = viewer.getEnemyCanvas();
+        enemyModel = canvas.getModel();
     }
     @Override
     public void run() {
         System.out.println("in EnemyFieldController thread");
         while(true) {
-             System.out.println(client.getDataFromServer());
+            // getting information about enemies actions
+            String enemyAction = client.getDataFromServer();
+            System.out.println(enemyAction);
+            // send data about action to enemyModel
+            enemyModel.move(enemyAction);
 
 
 

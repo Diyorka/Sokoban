@@ -10,8 +10,9 @@ public class Viewer {
   public Viewer( Client client) {
     controller = new Controller(this, client);
     Model model = controller.getModel();
+    EnemyModel enemyModel = new EnemyModel(this, model.copyDesktop());
     myCanvas = new Canvas(model);
-    enemyCanvas = new Canvas(model);
+    enemyCanvas = new Canvas(enemyModel);
 
     JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, myCanvas, enemyCanvas);
     splitPane.setDividerLocation(720);
@@ -40,6 +41,7 @@ public class Viewer {
   }
   public void updateEnemyField() {
     enemyCanvas.repaint();
+    
   }
 
 

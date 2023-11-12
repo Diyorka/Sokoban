@@ -25,7 +25,7 @@ public class Controller implements KeyListener {
       case 38:
         direction = "Up";
         break;
-      case 39:
+      case 39: 
         direction = "Right";
         break;
       case 40:

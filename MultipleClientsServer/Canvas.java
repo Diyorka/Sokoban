@@ -7,15 +7,15 @@ import java.awt.Image;
 import javax.imageio.ImageIO;
 import java.awt.Font;
 
-public class Canvas extends JPanel { 
-  private Model model;
+public class Canvas extends JPanel {
+  private SokobanModel model;
   private Image imageGamer;
   private Image imageWall;
   private Image imageBox;
   private Image imageGoal;
   private Image imageError;
 
-  public Canvas(Model model) {
+  public Canvas(SokobanModel model) {
     this.model = model;
     setBackground(Color.BLACK);
     setOpaque(true);
@@ -46,7 +46,9 @@ public class Canvas extends JPanel {
       drawErrorMessage(g);
     }
   }
-
+  public SokobanModel getModel() {
+      return model;
+  }
   private void drawDesktop(Graphics g) {
     int[][] desktop = model.getDesktop();
     int start = 100;
