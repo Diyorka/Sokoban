@@ -54,16 +54,12 @@ public class Model {
 
         if (message == LEFT) {
             moveLeft();
-            totalMoves++;
         } else if(message == RIGHT) {
             moveRight();
-            totalMoves++;
         } else if(message == UP) {
             moveTop();
-            totalMoves++;
         } else if(message == DOWN) {
             moveBot();
-            totalMoves++;
         } else if(message == EXIT) {
             System.exit(0);
         }
@@ -109,6 +105,8 @@ public class Model {
 
         if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && boxesCount == 0) {
             System.out.println("Map have invalid game parameters");
+            map = null;
+            return;
         }
 
         checksPos = new int[2][checksCount];
@@ -165,6 +163,7 @@ public class Model {
         map[playerPosY][playerPosX - 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
+        totalMoves++;
     }
 
     private void moveRight() {
@@ -185,6 +184,7 @@ public class Model {
         map[playerPosY][playerPosX + 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX += 1;
+        totalMoves++;
     }
 
     private void moveTop() {
@@ -205,6 +205,7 @@ public class Model {
         map[playerPosY - 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY -= 1;
+        totalMoves++;
     }
 
     private void moveBot() {
@@ -225,6 +226,7 @@ public class Model {
         map[playerPosY + 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY += 1;
+        totalMoves++;
     }
 
     private boolean canMoveBoxToLeft() {
