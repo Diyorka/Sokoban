@@ -6,12 +6,12 @@ public class Model {
     private final int BOX = 3;
     private final int CHECK = 4;
 
-    private final char LEFT =  'a';
-    private final char RIGHT = 'd';
-    private final char UP = 'w';
-    private final char DOWN =  's';
-    private final char RESTART = 'r';
-    private final char EXIT = '\u001B'; //escape
+    private final int LEFT =  37; //arrow left keycode
+    private final int RIGHT = 39; //arrow right keycode
+    private final int UP = 38; //arrow up keycode
+    private final int DOWN =  40; //arrow down keycode
+    private final int RESTART = 82; //'r' button keycode
+    private final int EXIT = 27; //'esc' button keycode
 
     private int playerPosX;
     private int playerPosY;
@@ -40,13 +40,12 @@ public class Model {
         return map;
     }
 
-    public void doAction(char message) {
-        System.out.println("got -- " + message); //debug
-        if (message == RESTART) {
+    public void doAction(int keyMessage) {
+        if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
             map = levelList.getCurrentMap();
             scanMap();
-        } else if (message == EXIT) {
+        } else if (keyMessage == EXIT) {
             System.exit(0);
         }
 
@@ -54,13 +53,13 @@ public class Model {
             return;
         }
 
-        if (message == LEFT) {
+        if (keyMessage == LEFT) {
             moveLeft();
-        } else if(message == RIGHT) {
+        } else if(keyMessage == RIGHT) {
             moveRight();
-        } else if(message == UP) {
+        } else if(keyMessage == UP) {
             moveTop();
-        } else if(message == DOWN) {
+        } else if(keyMessage == DOWN) {
             moveBot();
         }
 
