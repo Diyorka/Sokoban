@@ -14,10 +14,12 @@ public class MenuPanel extends JPanel {
 
     private Image backgroundImage;
     private MenuController menuController;
+    private File fontFile;
 
     public MenuPanel(Image backgroundImage) {
         this.backgroundImage = backgroundImage;
         menuController = new MenuController();
+        fontFile = new File("fonts/PixelFont.otf");
         init();
     }
 
@@ -29,11 +31,10 @@ public class MenuPanel extends JPanel {
     private void init() {
         setLayout(null);
         JLabel label = new JLabel("Sokoban");
-        label.setBounds(410, 180, 400, 100);
+        label.setBounds(420, 160, 500, 100);
         label.setForeground(Color.WHITE);
 
-        // Font labelFont = new Font("Showcard Gothic", Font.PLAIN, 72);
-        Font labelFont = getCustomFont(Font.ITALIC, 100f);
+        Font labelFont = getCustomFont(fontFile, Font.PLAIN, 120f);
         label.setFont(labelFont);
 
         JButton playButton = createButton("Play", "Play", 500, 315);
@@ -55,10 +56,10 @@ public class MenuPanel extends JPanel {
         add(exitButton);
     }
 
-    private Font getCustomFont(int style, float size) {
+    private Font getCustomFont(File file, int style, float size) {
         Font customFont = null;
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/PixelFont.ttf")).deriveFont(style, size);
+            customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
         } catch (IOException | FontFormatException e) {
@@ -69,7 +70,7 @@ public class MenuPanel extends JPanel {
 
     private JButton createButton(String name, String command, int x, int y) {
         JButton button = new JButton(name);
-        Font font = getCustomFont(Font.PLAIN, 20f);
+        Font font = getCustomFont(fontFile, Font.PLAIN, 24f);
         button.setBounds(x, y, 200, 40);
         button.setFocusable(false);
         button.setFont(font);
