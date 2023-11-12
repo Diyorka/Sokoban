@@ -16,7 +16,7 @@ public class Viewer {
         Model model = controller.getModel();
         canvas = new Canvas(model);
         backgroundImage = new ImageIcon("images/background.jpg").getImage();
-        levelChooser = new LevelChooser();
+        levelChooser = new LevelChooser(model);
         menu = new MenuPanel(backgroundImage);
         frame = new JFrame("Sokoban");
         frame.setSize(1200, 800);

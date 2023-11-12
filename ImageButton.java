@@ -8,6 +8,10 @@ import java.awt.Font;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.io.File;
 
 public class ImageButton extends JButton {
 
@@ -37,7 +41,7 @@ public class ImageButton extends JButton {
         g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
-        Font newFont = new Font("Tahoma", Font.BOLD, fontSize);
+        Font newFont = getCustomFont(Font.PLAIN, fontSize);
         g2d.setFont(newFont);
 
         FontMetrics metrics = g2d.getFontMetrics(newFont);
@@ -48,6 +52,20 @@ public class ImageButton extends JButton {
         g2d.drawString(buttonText, x, y);
 
         g2d.dispose();
+    }
+
+    private Font getCustomFont(int style, float size) {
+        Font customFont = null;
+        File fontFile = new File("fonts/PixelFont.otf");
+
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(style, size);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.out.println(e);
+        }
+        return customFont;
     }
 
 }
