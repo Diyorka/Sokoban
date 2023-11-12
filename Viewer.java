@@ -1,14 +1,13 @@
 import javax.swing.JFrame;
 import java.awt.Image;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
+import javax.swing.ImageIcon;
 
 public class Viewer {
 
     private Controller controller;
     private Canvas canvas;
     private LevelChooser levelChooser;
+    private MenuPanel menu;
     private JFrame frame;
     private Image backgroundImage;
 
@@ -16,13 +15,12 @@ public class Viewer {
         controller = new Controller(this);
         Model model = controller.getModel();
         canvas = new Canvas(model);
+        backgroundImage = new ImageIcon("images/background.jpg").getImage();
         levelChooser = new LevelChooser();
-        File backgroundFile = new File("images/background.jpg");
-        backgroundImage = getImage(backgroundFile);
-        MenuPanel menu = new MenuPanel(backgroundImage);
+        menu = new MenuPanel(backgroundImage);
         frame = new JFrame("Sokoban");
-        frame.setSize(1000, 700);
-        frame.setLocation(270, 70);
+        frame.setSize(1200, 800);
+        frame.setLocation(200, 15);
         frame.add("Center", menu);
         frame.setVisible(true);
         frame.addKeyListener(controller);
@@ -31,15 +29,5 @@ public class Viewer {
 
     public void update() {
         canvas.repaint();
-    }
-
-    private Image getImage(File file) {
-        Image image = null;
-        try {
-            image = ImageIO.read(file);
-        } catch (IOException e) {
-          System.out.println("Error: " + e);
-        }
-        return image;
     }
 }
