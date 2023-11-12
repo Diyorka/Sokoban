@@ -125,7 +125,7 @@ public class Model {
     }
 
     private boolean isWon() {
-        for (int i = 0; i < checksPos.length; i++) {
+        for (int i = 0; i < checksPos[0].length; i++) {
             int checkPosY = checksPos[0][i];
             int checkPosX = checksPos[1][i];
             if (map[checkPosY][checkPosX] != BOX) {
