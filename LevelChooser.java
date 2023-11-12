@@ -10,18 +10,22 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.io.File;
 
 public class LevelChooser extends JPanel {
     private LevelChooserController levelChooserController;
 
-    public LevelChooser() {
-        levelChooserController = new LevelChooserController();
+    public LevelChooser(Model model) {
+        levelChooserController = new LevelChooserController(model);
         setLayout(null);
 
         JLabel title = new JLabel("Level Selection");
-        Font font = new Font("Tahoma", Font.BOLD, 48);
+        Font font = getCustomFont(Font.PLAIN, 80);
         title.setFont(font);
-        title.setBounds(370, 50, 450, 55);
+        title.setBounds(370, 50, 470, 60);
         title.setForeground(Color.WHITE);
 
         add(title);
@@ -46,7 +50,7 @@ public class LevelChooser extends JPanel {
 
     private JButton createImageButton(String levelName, String command, String imagePath,
                                       int x, int y, int w, int h, boolean borderFlag) {
-        JButton button = new ImageButton(levelName, imagePath, 36, borderFlag);
+        JButton button = new ImageButton(levelName, imagePath, 48, borderFlag);
         button.setBounds(x, y, w, h);
         button.setActionCommand(command);
         button.addActionListener(levelChooserController);
@@ -54,5 +58,18 @@ public class LevelChooser extends JPanel {
         return button;
     }
 
+    private Font getCustomFont(int style, float size) {
+        Font customFont = null;
+        File fontFile = new File("fonts/PixelFont.otf");
+
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(style, size);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.out.println(e);
+        }
+        return customFont;
+    }
 
 }

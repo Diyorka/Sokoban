@@ -88,7 +88,7 @@ public class Model {
         levelList.setCurrentLevel(levelNumber);
         map = levelList.getNextLevel();
         scanMap();
-        viewer.update();
+        viewer.showCanvas();
         totalMoves = 0;
     }
 

@@ -2,9 +2,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class LevelChooserController implements ActionListener {
+    private Model model;
 
-    public LevelChooserController() {
-
+    public LevelChooserController(Model model) {
+        this.model = model;
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -20,6 +21,7 @@ public class LevelChooserController implements ActionListener {
             case "Level 7":
             case "Level 8":
             case "Level 9":
+                model.changeLevel(command);
             case "Back":
                 System.out.println(command);
                 break;
