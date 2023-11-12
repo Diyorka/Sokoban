@@ -10,6 +10,10 @@ import java.awt.Font;
 public class Canvas extends JPanel {
   private Model model;
   private Image imageGamer;
+  private Image imageFrontGamer;
+  private Image imageBackGamer;
+  private Image imageLeftGamer;
+  private Image imageRightGamer;
   private Image imageWall;
   private Image imageBox;
   private Image imageGoal;
@@ -21,7 +25,10 @@ public class Canvas extends JPanel {
     setBackground(Color.BLACK);
     setOpaque(true);
 
-    File fileGamer = new File("images/front-player.png");
+    File filefrontGamer = new File("images/front-player.png");
+    File fileBackGamer = new File("images/back-player.png");
+    File fileLeftGamer = new File("images/left-side-player.png");
+    File fileRightGamer = new File("images/right-side-player.png");
     File fileWall = new File("images/wall.png");
     File fileBox = new File("images/box.png");
     File fileGoal = new File("images/target1.png");
@@ -29,7 +36,10 @@ public class Canvas extends JPanel {
     File fileError = new File("images/error.png");
 
     try {
-      imageGamer = ImageIO.read(fileGamer);
+      imageFrontGamer = ImageIO.read(filefrontGamer);
+      imageBackGamer = ImageIO.read(fileBackGamer);
+      imageLeftGamer = ImageIO.read(fileLeftGamer);
+      imageRightGamer = ImageIO.read(fileRightGamer);
       imageWall = ImageIO.read(fileWall);
       imageBox = ImageIO.read(fileBox);
       imageGoal = ImageIO.read(fileGoal);
@@ -45,10 +55,29 @@ public class Canvas extends JPanel {
 
     int[][] desktop = model.getDesktop();
     if(desktop != null) {
+        rotateGamer();
         drawDesktop(g, desktop);
     } else {
         drawErrorMessage(g);
     }
+  }
+
+  private void rotateGamer() {
+      String move = model.getMove();
+      switch (move) {
+          case "Left":
+              imageGamer = imageLeftGamer;
+              break;
+          case "Right":
+              imageGamer = imageRightGamer;
+              break;
+          case "Up":
+              imageGamer = imageBackGamer;
+              break;
+          case "Down":
+              imageGamer = imageFrontGamer;
+              break;
+      }
   }
 
   private void drawDesktop(Graphics g, int[][] desktop) {

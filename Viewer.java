@@ -21,7 +21,7 @@ public class Viewer {
         levelChooser = new LevelChooser(model);
 
         backgroundImage = new ImageIcon("images/background.jpg").getImage();
-        menu = new MenuPanel(backgroundImage);
+        menu = new MenuPanel(this, model);
 
         cardLayout = new CardLayout();
 
@@ -46,5 +46,13 @@ public class Viewer {
         update();
         cardLayout.show(frame.getContentPane(), "canvas");
         canvas.requestFocusInWindow();
+    }
+
+    public void showLevelChooser() {
+        cardLayout.show(frame.getContentPane(), "levelChooser");
+    }
+
+    public Image getBackgroundImage() {
+        return backgroundImage;
     }
 }

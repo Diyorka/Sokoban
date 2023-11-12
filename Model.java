@@ -13,6 +13,7 @@ public class Model {
     private final char LOAD = 'r';
     private final char EXIT = 'q';
 
+    private String move;
     private int playerPosX;
     private int playerPosY;
 
@@ -34,6 +35,7 @@ public class Model {
         levelList = new Levels();
         playerPosX = -1;
         playerPosY = -1;
+        move = "Down";
     }
 
     public int[][] getDesktop(){
@@ -53,15 +55,19 @@ public class Model {
         }
 
         if (message == LEFT) {
+            move = "Left";
             moveLeft();
             totalMoves++;
         } else if(message == RIGHT) {
+            move = "Right";
             moveRight();
             totalMoves++;
         } else if(message == UP) {
+            move = "Up";
             moveTop();
             totalMoves++;
         } else if(message == DOWN) {
+            move = "Down";
             moveBot();
             totalMoves++;
         } else if(message == EXIT) {
@@ -90,6 +96,10 @@ public class Model {
         scanMap();
         viewer.showCanvas();
         totalMoves = 0;
+    }
+
+    public String getMove() {
+        return move;
     }
 
     private void scanMap() {
