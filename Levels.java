@@ -41,7 +41,15 @@ public class Levels {
             currentLevel = 1;
       }
 
+      System.out.println("set = " + currentLevel + " level");
+
       currentLevel++;
+      return map;
+  }
+
+  public int[][] getCurrentMap() {
+      currentLevel--;
+      int[][] map = getNextLevel();
       return map;
   }
 
@@ -75,7 +83,7 @@ public class Levels {
               {2, 0, 0, 0, 2, 0, 0, 0, 0, 2},
               {2, 0, 0, 4, 2, 0, 0, 0, 0, 2},
               {2, 0, 0, 0, 2, 0, 1, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+              {2, 0, 0, 0, 0, 0, 0, 3, 0, 2},
               {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
               {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
