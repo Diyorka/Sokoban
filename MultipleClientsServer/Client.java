@@ -53,7 +53,15 @@ public class Client {
         return levelContent;
     }
 
-    public void sendDataToServer(String data) {
+    public  String loadEnemyLevelFromServer() {
+        String levelContent = null;
+        if(SOCKET_CHANNEL != null) {
+            levelContent = getDataFromServer();
+        }
+        return levelContent;
+    }
+
+    public  void sendDataToServer(String data) {
         while(true) {
             try {
                 buffer.clear();
@@ -80,7 +88,7 @@ public class Client {
         }
     }
 
-    public String getDataFromServer() {
+    public  String getDataFromServer() {
         String data = null;
         while(true) {
             try {
@@ -126,24 +134,6 @@ public class Client {
         }
     }
 
-    // public static void main(String[] args) {
-    //     Client client = new Client();
-    //
-    //     System.out.println(client.loadLevelFromServer("7"));
-    //
-    //     Scanner console = new Scanner(System.in);
-    //     String myData = console.nextLine();
-    //
-    //     EnemyFieldController enemyField = new EnemyFieldController(client);
-    //     enemyField.go();
-    //
-    //     while(!myData.equals("game over")) {
-    //         // send data to server
-    //         client.sendDataToServer(myData);
-    //         myData = console.nextLine();
-    //     }
-    //     client.sendDataToServer(myData);
-    //     client.closeClient();
-    // }
+
 
 }

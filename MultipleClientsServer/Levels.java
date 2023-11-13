@@ -133,7 +133,7 @@ public class Levels {
     return desktop;
   }
 
-  private int[][] parseData(String data) {
+  private  int[][] parseData(String data) {
 
     int[][] array = null;
 
@@ -228,28 +228,7 @@ public class Levels {
   }
 
 
-  private String loadLevelFromServer(char l) {
-    try {
-      Socket socket = new Socket("localhost", 4444);
-      byte post = (byte)l;
-      OutputStream out = socket.getOutputStream();
-      out.write(post);
-      out.flush();
-      InputStream in = socket.getInputStream();
-      InputStreamReader inputStreamReader = new InputStreamReader(in);
-      BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-      String answer = bufferedReader.readLine();
-      return answer;
-    } catch (UnknownHostException uhe) {
-      System.out.println("Error " + uhe);
-    } catch (IOException ioe) {
-      System.out.println("Error " + ioe);
-    }
-
-    return null;
-  }
-
-  private int[][] parseData(String data, char newLineSymbol) {
+  public static int[][] parseData(String data, char newLineSymbol) {
 
     int[][] array = null;
 

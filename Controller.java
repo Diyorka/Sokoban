@@ -14,9 +14,7 @@ public class Controller implements KeyListener {
     }
 
     public void keyPressed(KeyEvent event) {
-        char key = event.getKeyChar();
-        System.out.println(key);
-        key = Character.toLowerCase(key);
+        int key = event.getKeyCode();
         model.doAction(key);
     }
 

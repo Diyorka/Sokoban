@@ -61,22 +61,4 @@ public class Viewer {
     public Image getBackgroundImage() {
         return backgroundImage;
     }
-
-    public void showLevelCompletionDialog() {
-        Object[] options = {"Next Level", "Back to menu"};
-        int choice = JOptionPane.showOptionDialog(frame,
-                "Congratulations! Level passed!",
-                "Level completed",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]);
-
-        if (choice == JOptionPane.YES_OPTION) {
-            controller.getModel().changeLevel("Next");
-        } else {
-            showMenu();
-        }
-    }
 }
