@@ -119,6 +119,23 @@ public class Model {
     }
 
     private void scanMap() {
+        if (map == null) {
+            return;
+        }
+
+        for (int i = 0; i < map.length - 1; i++) {
+            int currentMapLineLength = map[i].length;
+            int nextMapLineLastElementOfCurrentLine = map[i + 1][map[i].length];
+            int nextMapLineLength = map[i + 1].length;
+            int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
+
+            if (nextMapLineLength > currentMapLineLength && (nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
+                System.out.println("Map have invalid structure\n" + "Problem in mapline " + (i + 1));
+                map = null;
+                return;
+            }
+        }
+
         playerCount = 0;
         boxesCount = 0;
         checksCount = 0;
