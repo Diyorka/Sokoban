@@ -78,7 +78,11 @@ public class Model {
         if (isWon()) {
             javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You win!");
             map = levelList.getNextLevel();
-            scanMap();
+            
+            if(map != null) {
+                scanMap();
+            }
+
             viewer.update();
             totalMoves = 0;
         }
@@ -89,7 +93,11 @@ public class Model {
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levelList.setCurrentLevel(levelNumber);
         map = levelList.getNextLevel();
-        scanMap();
+
+        if(map != null) {
+            scanMap();
+        }
+
         viewer.showCanvas();
         totalMoves = 0;
     }

@@ -81,9 +81,9 @@ public class Canvas extends JPanel {
   }
 
   private void drawDesktop(Graphics g, int[][] desktop) {
-    int start = 100;
+    int start = 350;
     int x = start;
-    int y = start;
+    int y = 150;
     int width = 50;
     int height = 50;
     int offset = 0;
