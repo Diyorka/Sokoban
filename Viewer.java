@@ -26,8 +26,8 @@ public class Viewer {
         cardLayout = new CardLayout();
 
         frame = new JFrame("Sokoban");
-        frame.setSize(1200, 800);
-        frame.setLocation(200, 15);
+        frame.setSize(1200, 700);
+        frame.setLocation(100, 15);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 
