@@ -111,6 +111,7 @@ public class Model {
         System.out.println(player.getNickname());
         System.out.println(player.getAvailableSkins());
         System.out.println(player.getTotalCoins());
+    }
 
     private void showEndLevelDialog() {
         Object[] options = {"Go to levels", "Next level"};
