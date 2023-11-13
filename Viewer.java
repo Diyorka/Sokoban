@@ -2,7 +2,6 @@ import javax.swing.JFrame;
 import java.awt.Image;
 import java.awt.CardLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 public class Viewer {
 
@@ -13,13 +12,14 @@ public class Viewer {
     private JFrame frame;
     private Image backgroundImage;
     private CardLayout cardLayout;
+    private Model model;
 
     public Viewer() {
-        controller = new Controller(this);
+        controller = new Controller(this, model);
         Model model = controller.getModel();
-        canvas = new Canvas(model);
+        canvas = new Canvas(this, model);
         canvas.addKeyListener(controller);
-        levelChooser = new LevelChooser(this, model);
+        LevelChooser levelChooser = new LevelChooser(this, model);
 
         backgroundImage = new ImageIcon("images/background.jpg").getImage();
         menu = new MenuPanel(this, model);
@@ -38,6 +38,10 @@ public class Viewer {
 
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    public Viewer getViewer() {
+        return this;
     }
 
     public void update() {

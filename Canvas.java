@@ -4,6 +4,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Font;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Canvas extends JPanel {
   private Model model;
@@ -18,9 +21,12 @@ public class Canvas extends JPanel {
   private Image groundImage;
   private Image coinImage;
   private Image errorImage;
+  private Controller controller;
+  private Viewer viewer;
 
-  public Canvas(Model model) {
+  public Canvas(Viewer viewer, Model model) {
     this.model = model;
+    controller = new Controller(viewer, model);
     setBackground(Color.BLACK);
     setOpaque(true);
 
@@ -34,6 +40,11 @@ public class Canvas extends JPanel {
     groundImage = new ImageIcon("images/ground1.png").getImage();
     coinImage = new ImageIcon("images/coin.png").getImage();
     errorImage = new ImageIcon("images/error.png").getImage();
+
+    JButton exitGameButton = new JButton("Exit to menu");
+    exitGameButton.setBounds(10, 10, 100, 30);
+    exitGameButton.addActionListener(controller);
+    add(exitGameButton);
   }
 
   public void paint(Graphics g) {
