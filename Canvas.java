@@ -1,53 +1,39 @@
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.File;
-import java.io.IOException;
 import java.awt.Image;
-import javax.imageio.ImageIO;
 import java.awt.Font;
+import javax.swing.ImageIcon;
 
 public class Canvas extends JPanel {
   private Model model;
-  private Image imageGamer;
-  private Image imageFrontGamer;
-  private Image imageBackGamer;
-  private Image imageLeftGamer;
-  private Image imageRightGamer;
-  private Image imageWall;
-  private Image imageBox;
-  private Image imageGoal;
-  private Image imageGround;
-  private Image imageError;
+  private Image gamerImage;
+  private Image frontGamerImage;
+  private Image backGamerImage;
+  private Image leftGamerImage;
+  private Image rightGamerImage;
+  private Image wallImage;
+  private Image boxImage;
+  private Image goalImage;
+  private Image groundImage;
+  private Image coinImage;
+  private Image errorImage;
 
   public Canvas(Model model) {
     this.model = model;
     setBackground(Color.BLACK);
     setOpaque(true);
 
-    File filefrontGamer = new File("images/front-player.png");
-    File fileBackGamer = new File("images/back-player.png");
-    File fileLeftGamer = new File("images/left-side-player.png");
-    File fileRightGamer = new File("images/right-side-player.png");
-    File fileWall = new File("images/wall.png");
-    File fileBox = new File("images/box.png");
-    File fileGoal = new File("images/target1.png");
-    File fileGround = new File("images/ground1.png");
-    File fileError = new File("images/error.png");
-
-    try {
-      imageFrontGamer = ImageIO.read(filefrontGamer);
-      imageBackGamer = ImageIO.read(fileBackGamer);
-      imageLeftGamer = ImageIO.read(fileLeftGamer);
-      imageRightGamer = ImageIO.read(fileRightGamer);
-      imageWall = ImageIO.read(fileWall);
-      imageBox = ImageIO.read(fileBox);
-      imageGoal = ImageIO.read(fileGoal);
-      imageGround = ImageIO.read(fileGround);
-      imageError = ImageIO.read(fileError);
-    } catch (IOException e) {
-      System.out.println("Error: " + e);
-    }
+    frontGamerImage = new ImageIcon("images/front-player.png").getImage();
+    backGamerImage = new ImageIcon("images/back-player.png").getImage();
+    leftGamerImage = new ImageIcon("images/left-side-player.png").getImage();
+    rightGamerImage = new ImageIcon("images/right-side-player.png").getImage();
+    wallImage = new ImageIcon("images/wall.png").getImage();
+    boxImage = new ImageIcon("images/box.png").getImage();
+    goalImage = new ImageIcon("images/target1.png").getImage();
+    groundImage = new ImageIcon("images/ground1.png").getImage();
+    coinImage = new ImageIcon("images/coin.png").getImage();
+    errorImage = new ImageIcon("images/error.png").getImage();
   }
 
   public void paint(Graphics g) {
@@ -66,16 +52,16 @@ public class Canvas extends JPanel {
       String move = model.getMove();
       switch (move) {
           case "Left":
-              imageGamer = imageLeftGamer;
+              gamerImage = leftGamerImage;
               break;
           case "Right":
-              imageGamer = imageRightGamer;
+              gamerImage = rightGamerImage;
               break;
           case "Up":
-              imageGamer = imageBackGamer;
+              gamerImage = backGamerImage;
               break;
           case "Down":
-              imageGamer = imageFrontGamer;
+              gamerImage = frontGamerImage;
               break;
       }
   }
@@ -88,25 +74,27 @@ public class Canvas extends JPanel {
     int height = 50;
     int offset = 0;
 
-    for(int i = 0; i < desktop.length; i++) {
+    for (int i = 0; i < desktop.length; i++) {
       boolean isFirstWallFound = false;
 
-      for(int j = 0; j < desktop[i].length; j++) {
-        if(!isFirstWallFound && desktop[i][j] == 2) {
+      for (int j = 0; j < desktop[i].length; j++) {
+        if (!isFirstWallFound && desktop[i][j] == 2) {
           isFirstWallFound = true;
         }
 
-        if(isFirstWallFound) {
-          if(desktop[i][j] == 0) {
-            g.drawImage(imageGround, x, y, null);
-          }else if(desktop[i][j] == 1) {
-            g.drawImage(imageGamer, x, y, null);
-          } else if(desktop[i][j] == 2) {
-            g.drawImage(imageWall, x, y, null);
-          } else if(desktop[i][j] == 3) {
-            g.drawImage(imageBox, x, y, null);
-          } else if(desktop[i][j] == 4) {
-            g.drawImage(imageGoal, x, y, null);
+        if (isFirstWallFound) {
+          if (desktop[i][j] == 0) {
+            g.drawImage(groundImage, x, y, null);
+          } else if (desktop[i][j] == 1) {
+            g.drawImage(gamerImage, x, y, null);
+          } else if (desktop[i][j] == 2) {
+            g.drawImage(wallImage, x, y, null);
+          } else if (desktop[i][j] == 3) {
+            g.drawImage(boxImage, x, y, null);
+          } else if (desktop[i][j] == 4) {
+            g.drawImage(goalImage, x, y, null);
+          } else if (desktop[i][j] == 5) {
+            g.drawImage(coinImage, x, y, null);
           }
         }
         x = x + width + offset;
@@ -120,7 +108,7 @@ public class Canvas extends JPanel {
 
   private void drawErrorMessage(Graphics g) {
     Font font = new Font("Impact", Font.BOLD, 50);
-    g.drawImage(imageError, 200, 200, null);
+    g.drawImage(errorImage, 200, 200, null);
     g.setFont(font);
     g.setColor(Color.RED);
     g.drawString("Initialization Error!", 250, 100);
