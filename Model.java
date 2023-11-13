@@ -7,12 +7,12 @@ public class Model {
     private final int CHECK = 4;
     private final int COIN = 5;
 
-    private final char LEFT =  'a';
-    private final char RIGHT = 'd';
-    private final char UP = 'w';
-    private final char DOWN =  's';
-    private final char RESTART = 'r';
-    private final char EXIT = '\u001B'; //escape
+    private final int LEFT =  37; //arrow left keycode
+    private final int RIGHT = 39; //arrow right keycode
+    private final int UP = 38; //arrow up keycode
+    private final int DOWN =  40; //arrow down keycode
+    private final int RESTART = 82; //'r' button keycode
+    private final int EXIT = 27; //'esc' button keycode
 
     private String move;
     private int playerPosX;
@@ -45,30 +45,32 @@ public class Model {
         return map;
     }
 
-    public void doAction(char message) {
-        System.out.println("got -- " + message); //debug
-        if (message == RESTART) {
+    public void doAction(int keyMessage) {
+        if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
             map = levelList.getCurrentMap();
-            scanMap();
-        } else if (message == EXIT) {
-            System.exit(0);
+            if (map != null) {
+                scanMap();
+            }
+        } else if (keyMessage == EXIT) {
+            viewer.showMenu();
         }
 
         if (map == null) {
+            System.out.println("NO MAP FOUND\n\n");
             return;
         }
 
-        if (message == LEFT) {
+        if (keyMessage == LEFT) {
             move = "Left";
             moveLeft();
-        } else if(message == RIGHT) {
+        } else if(keyMessage == RIGHT) {
             move = "Right";
             moveRight();
-        } else if(message == UP) {
+        } else if(keyMessage == UP) {
             move = "Up";
             moveTop();
-        } else if(message == DOWN) {
+        } else if(keyMessage == DOWN) {
             move = "Down";
             moveBot();
         }
@@ -79,15 +81,7 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
-            javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You win!");
-            map = levelList.getNextLevel();
-
-            if(map != null) {
-                scanMap();
-            }
-
-            viewer.update();
-            totalMoves = 0;
+            showEndLevelDialog();
         }
     }
 
@@ -95,9 +89,9 @@ public class Model {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levelList.setCurrentLevel(levelNumber);
-        map = levelList.getNextLevel();
+        map = levelList.getCurrentMap();
 
-        if(map != null) {
+        if (map != null) {
             scanMap();
         }
 
@@ -109,13 +103,50 @@ public class Model {
         return move;
     }
 
+    private void showEndLevelDialog() {
+        Object[] options = {"Go to levels", "Next level"};
+        int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
+                                                                  "!\n                        Total moves: " + totalMoves, "Congratulations!",
+                                                                  javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.PLAIN_MESSAGE,
+                                                                  null, options, options[1]);
+        if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
+            map = levelList.getNextMap();
+            if (map != null) {
+                scanMap();
+            }
+            viewer.update();
+        } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
+            viewer.showLevelChooser();
+            map = null;
+        } else {
+            viewer.showMenu();
+            map = null;
+        }
+    }
+
     private void scanMap() {
+        for (int i = 0; i < map.length - 1; i++) {
+            int currentMapLineLength = map[i].length;
+            int nextMapLineLength = map[i + 1].length;
+            if (nextMapLineLength <= currentMapLineLength) {
+                continue;
+            }
+
+            int nextMapLineLastElementOfCurrentLine = map[i + 1][map[i].length];
+            int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
+            if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
+                System.out.println("Map have invalid structure\n" + "Problem in mapline " + (i + 1));
+                map = null;
+                return;
+            }
+        }
+
         playerCount = 0;
         boxesCount = 0;
         checksCount = 0;
-        for(int i = 0; i < map.length; i++) {
+        totalMoves = 0;
+        for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-                System.out.print(map[i][j] + " ");
                 if (map[i][j] == PLAYER) {
                     playerPosX = j;
                     playerPosY = i;
@@ -128,14 +159,13 @@ public class Model {
                     coinsCount++;
                 }
             }
-            System.out.println();
         }
 
         if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && checksCount == 0) {
             System.out.println("Map have invalid game parameters");
-            System.out.println(playerCount);
-            System.out.println(boxesCount);
-            System.out.println(checksCount);
+            System.out.println("players: " + playerCount);
+            System.out.println("boxes: " + boxesCount);
+            System.out.println("checks: " + checksCount);
             map = null;
             return;
         }

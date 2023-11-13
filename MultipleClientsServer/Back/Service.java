@@ -49,13 +49,29 @@ public class Service implements Runnable{
 
        try {
           //getting level from clients
-           String currentLevel = readData(player1Channel);
-           System.out.println("received level number from client 1 >>> " + currentLevel);
-           currentLevel = readData(player2Channel);
-           System.out.println("received level number from client 2 >>> " + currentLevel);
+           // String currentLevel = readData(player1Channel);
+           // System.out.println("received level number from client 1 >>> " + currentLevel);
+           // currentLevel = readData(player2Channel);
+           // System.out.println("received level number from client 2 >>> " + currentLevel);
+           //
+           // System.out.println("received level number from clients >>> " + currentLevel);
+           // sendLevelToClients(Integer.parseInt(currentLevel));
 
-           System.out.println("received level number from clients >>> " + currentLevel);
-           sendLevelToClients(Integer.parseInt(currentLevel));
+           String player1Level = readData(player1Channel);
+           System.out.println("received level number from client 1 >>> " + player1Level);
+           String player1LevelContent = loadLevel(Integer.parseInt(player1Level));
+           sendData(player1Channel, player1LevelContent);
+
+           String player2Level = readData(player2Channel);
+           System.out.println("received level number from client 2 >>> " + player2Level);
+           String player2LevelContent = loadLevel(Integer.parseInt(player2Level));
+           sendData(player2Channel, player2LevelContent);
+
+           /// send levels of enemies
+            sendData(player1Channel, player2LevelContent);
+             System.out.println("send level of enemy  ");
+            sendData(player2Channel, player1LevelContent);
+             System.out.println("send level of enemy " );
 
           // change data
            while (player1Channel.isOpen() && player2Channel.isOpen()) {
@@ -82,6 +98,7 @@ public class Service implements Runnable{
        sendData(player1Channel, levelContent);
        sendData(player2Channel, levelContent);
    }
+
 
    private String readData(SocketChannel channel) throws IOException {
        ByteBuffer buffer = ByteBuffer.allocate(1024);
