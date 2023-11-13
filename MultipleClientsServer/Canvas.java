@@ -7,6 +7,9 @@ import java.awt.Image;
 import javax.imageio.ImageIO;
 import java.awt.Font;
 
+
+import java.util.Arrays;
+
 public class Canvas extends JPanel {
   private SokobanModel model;
   private Image imageGamer;
@@ -51,6 +54,14 @@ public class Canvas extends JPanel {
   }
   private void drawDesktop(Graphics g) {
     int[][] desktop = model.getDesktop();
+    for(int i = 0; i < desktop.length; i++) {
+        for(int j = 0; j < desktop[i].length; j++) {
+            System.out.print(desktop[i][j] + " ");
+        }
+        System.out.println();
+    }
+    System.out.println();
+    System.out.println();
     int start = 100;
     int x = start;
     int y = start;

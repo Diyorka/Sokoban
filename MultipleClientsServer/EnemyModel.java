@@ -5,16 +5,20 @@ public class EnemyModel implements SokobanModel {
   private int indexY;
   private int[][] arrayOfBoxes;
   private boolean stateGame;
+  private Client client;
 
-  public EnemyModel(Viewer viewer, int[][] initialField) {
+  public EnemyModel(Viewer viewer, Client client) {
     System.out.println("creating enemy model");
     this.viewer = viewer;
-    this.desktop = initialField;
+    this.client = client;
     initialization();
   }
 
   private void initialization() {
     stateGame = true;
+    String enemyLevel = client.loadEnemyLevelFromServer();
+    System.out.println(enemyLevel);
+    desktop = Levels.parseData(enemyLevel, 'A'); //// !!!!!!!!!!
     int counterOne = 0;
     int counterThree = 0;
     int counterFour = 0;
