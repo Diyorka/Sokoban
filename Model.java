@@ -80,11 +80,15 @@ public class Model {
 
         if (isWon()) {
             javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You win!");
+            viewer.showLevelCompletionDialog();
             map = levelList.getNextLevel();
 
             if(map != null) {
                 scanMap();
             }
+
+            viewer.showCanvas();
+            totalMoves = 0;
 
             viewer.update();
             totalMoves = 0;
