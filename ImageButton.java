@@ -34,12 +34,7 @@ public class ImageButton extends JButton {
 
         Graphics2D g2d = (Graphics2D) g.create();
 
-        if(!buttonText.equals("")) {
-          g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-        }
-
         g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 
         Font newFont = getCustomFont(Font.PLAIN, fontSize);
         g2d.setFont(newFont);

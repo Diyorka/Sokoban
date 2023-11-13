@@ -5,6 +5,7 @@ public class Model {
     private final int WALL = 2;
     private final int BOX = 3;
     private final int CHECK = 4;
+    private final int COIN = 5;
 
     private final int LEFT =  37; //arrow left keycode
     private final int RIGHT = 39; //arrow right keycode
@@ -22,11 +23,13 @@ public class Model {
     private int[][] map;
     private Levels levelList;
 
-    private int totalMoves = 0;
-
     private int playerCount;
     private int boxesCount;
     private int checksCount;
+    private int coinsCount;
+
+    private int totalMoves = 0;
+    private int collectedCoins;
 
     private int[][] checksPos;
 
@@ -84,8 +87,12 @@ public class Model {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levelList.setCurrentLevel(levelNumber);
-        map = levelList.getCurrentMap();
-        scanMap();
+        map = levelList.getNextLevel();
+
+        if(map != null) {
+            scanMap();
+        }
+
         viewer.showCanvas();
         totalMoves = 0;
     }
@@ -149,6 +156,8 @@ public class Model {
                     boxesCount++;
                 } else if (map[i][j] == CHECK) {
                     checksCount++;
+                } else if (map[i][j] == COIN) {
+                    coinsCount++;
                 }
             }
         }
@@ -212,6 +221,10 @@ public class Model {
             map[playerPosY][playerPosX - 2] = BOX;
         }
 
+        if (map[playerPosY][playerPosX - 1] == COIN) {
+            collectedCoins++;
+        }
+
         map[playerPosY][playerPosX - 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
@@ -224,13 +237,17 @@ public class Model {
             return;
         }
 
-        if(map[playerPosY][playerPosX + 1] == BOX && !canMoveBoxToRight()) {
+        if (map[playerPosY][playerPosX + 1] == BOX && !canMoveBoxToRight()) {
             return;
         }
 
-        if(map[playerPosY][playerPosX + 1] == BOX) {
+        if (map[playerPosY][playerPosX + 1] == BOX) {
             map[playerPosY][playerPosX + 1] = SPACE;
             map[playerPosY][playerPosX + 2] = BOX;
+        }
+
+        if (map[playerPosY][playerPosX + 1] == COIN) {
+            collectedCoins++;
         }
 
         map[playerPosY][playerPosX + 1] = PLAYER;
@@ -245,13 +262,17 @@ public class Model {
             return;
         }
 
-        if(map[playerPosY - 1][playerPosX] == BOX && !canMoveBoxToTop()) {
+        if (map[playerPosY - 1][playerPosX] == BOX && !canMoveBoxToTop()) {
             return;
         }
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
             map[playerPosY - 1][playerPosX] = SPACE;
             map[playerPosY - 2][playerPosX] = BOX;
+        }
+
+        if (map[playerPosY - 1][playerPosX] == COIN) {
+            collectedCoins++;
         }
 
         map[playerPosY - 1][playerPosX] = PLAYER;
@@ -266,13 +287,17 @@ public class Model {
             return;
         }
 
-        if(map[playerPosY + 1][playerPosX] == BOX && !canMoveBoxToBot()) {
+        if (map[playerPosY + 1][playerPosX] == BOX && !canMoveBoxToBot()) {
             return;
         }
 
-        if(map[playerPosY + 1][playerPosX] == BOX) {
+        if (map[playerPosY + 1][playerPosX] == BOX) {
             map[playerPosY + 1][playerPosX] = SPACE;
             map[playerPosY + 2][playerPosX] = BOX;
+        }
+
+        if (map[playerPosY + 1][playerPosX] == COIN) {
+            collectedCoins++;
         }
 
         map[playerPosY + 1][playerPosX] = PLAYER;
