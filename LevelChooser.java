@@ -18,8 +18,8 @@ import java.io.File;
 public class LevelChooser extends JPanel {
     private LevelChooserController levelChooserController;
 
-    public LevelChooser(Model model) {
-        levelChooserController = new LevelChooserController(model);
+    public LevelChooser(Viewer viewer, Model model) {
+        levelChooserController = new LevelChooserController(viewer, model);
         setLayout(null);
 
         JLabel title = new JLabel("Level Selection");
@@ -28,7 +28,11 @@ public class LevelChooser extends JPanel {
         title.setBounds(370, 50, 470, 60);
         title.setForeground(Color.WHITE);
 
+        JButton backButton = createButton("Menu", "Back", 100, 70);
+        backButton.addActionListener(levelChooserController);
+
         add(title);
+        add(backButton);
         add(createImageButton("Level 1", "Level 1", "images/level1.png", 170, 200, 200, 120, true));
         add(createImageButton("Level 2", "Level 2", "images/level1.png", 390, 200, 200, 120, true));
         add(createImageButton("Level 3", "Level 3", "images/level1.png", 610, 200, 200, 120, true));
@@ -38,7 +42,6 @@ public class LevelChooser extends JPanel {
         add(createImageButton("Level 7", "Level 7", "images/level1.png", 610, 340, 200, 120, true));
         add(createImageButton("Level 8", "Level 8", "images/level1.png", 830, 340, 200, 120, true));
         add(createImageButton("Level 9", "Level 9", "images/level1.png", 170, 480, 200, 120, true));
-        add(createImageButton("", "Back", "images/back.png", 100, 50, 70, 70, false));
     }
 
     public void paintComponent(Graphics g) {
@@ -55,6 +58,16 @@ public class LevelChooser extends JPanel {
         button.setActionCommand(command);
         button.addActionListener(levelChooserController);
 
+        return button;
+    }
+
+    private JButton createButton(String name, String command, int x, int y) {
+        JButton button = new JButton(name);
+        Font font = getCustomFont(Font.PLAIN, 24f);
+        button.setBounds(x, y, 200, 40);
+        button.setFocusable(false);
+        button.setFont(font);
+        button.setActionCommand(command);
         return button;
     }
 

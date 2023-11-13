@@ -18,7 +18,7 @@ public class Viewer {
         Model model = controller.getModel();
         canvas = new Canvas(model);
         canvas.addKeyListener(controller);
-        levelChooser = new LevelChooser(model);
+        levelChooser = new LevelChooser(this, model);
 
         backgroundImage = new ImageIcon("images/background.jpg").getImage();
         menu = new MenuPanel(this, model);
@@ -40,6 +40,10 @@ public class Viewer {
 
     public void update() {
         canvas.repaint();
+    }
+
+    public void showMenu() {
+      cardLayout.show(frame.getContentPane(), "menu");
     }
 
     public void showCanvas() {
