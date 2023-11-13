@@ -1,4 +1,7 @@
 public class Model {
+    private DBService dbService;
+    private Player player;
+    private Viewer viewer;
 
     private final int SPACE = 0;
     private final int PLAYER = 1;
@@ -17,8 +20,6 @@ public class Model {
     private int playerPosX;
     private int playerPosY;
 
-    private Viewer viewer;
-
     private int[][] map;
     private Levels levelList;
 
@@ -32,6 +33,8 @@ public class Model {
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
+        dbService = new DBService();
+        initPlayer("Stive");
         levelList = new Levels();
         playerPosX = -1;
         playerPosY = -1;
@@ -78,7 +81,7 @@ public class Model {
         if (isWon()) {
             javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), "You win!");
             map = levelList.getNextLevel();
-            
+
             if(map != null) {
                 scanMap();
             }
@@ -104,6 +107,13 @@ public class Model {
 
     public String getMove() {
         return move;
+    }
+
+    public void initPlayer(String nickname) {
+        player = dbService.getPlayerInfo(nickname);
+        System.out.println(player.getNickname());
+        System.out.println(player.getAvailableSkins());
+        System.out.println(player.getTotalCoins());
     }
 
     private void scanMap() {
