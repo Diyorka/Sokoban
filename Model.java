@@ -49,9 +49,11 @@ public class Model {
         if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
             map = levelList.getCurrentMap();
-            scanMap();
+            if (map != null) {
+                scanMap();
+            }
         } else if (keyMessage == EXIT) {
-            System.exit(0);
+            viewer.showMenu();
         }
 
         if (map == null) {
@@ -87,9 +89,9 @@ public class Model {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levelList.setCurrentLevel(levelNumber);
-        map = levelList.getNextLevel();
+        map = levelList.getCurrentMap();
 
-        if(map != null) {
+        if (map != null) {
             scanMap();
         }
 
@@ -109,20 +111,17 @@ public class Model {
                                                                   null, options, options[1]);
         if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
             map = levelList.getNextMap();
-            scanMap();
+            if (map != null) {
+                scanMap();
+            }
             viewer.update();
         } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
-            //back to levels list
+            viewer.showLevelChooser();
             map = null;
-            System.out.println("Choose back to lvl list");
-            System.exit(0);
         } else {
-            //back to menu
+            viewer.showMenu();
             map = null;
-            System.out.println("Choose back to menu");
-            System.exit(0);
         }
-        //javax.swing.JOptionPane.showOptionDialog(new javax.swing.JFrame(), "You win!");
     }
 
     private void scanMap() {
@@ -146,7 +145,7 @@ public class Model {
         boxesCount = 0;
         checksCount = 0;
         totalMoves = 0;
-        for(int i = 0; i < map.length; i++) {
+        for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
                     playerPosX = j;
