@@ -21,9 +21,11 @@ public class ImageButton extends JButton {
 
     public ImageButton(String buttonText, String imagePath, int fontSize, boolean borderFlag) {
         this.buttonText = buttonText;
-        this.backgroundImage = new ImageIcon(imagePath).getImage();
+        if(!"".equals(imagePath)) {
+            this.backgroundImage = new ImageIcon(imagePath).getImage();
+            setPreferredSize(new Dimension(backgroundImage.getWidth(null), backgroundImage.getHeight(null)));
+        }
         this.fontSize = fontSize;
-        setPreferredSize(new Dimension(backgroundImage.getWidth(null), backgroundImage.getHeight(null)));
         setBorderPainted(borderFlag);
         setContentAreaFilled(false);
     }
@@ -34,7 +36,12 @@ public class ImageButton extends JButton {
 
         Graphics2D g2d = (Graphics2D) g.create();
 
-        g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+        if(backgroundImage != null) {
+            g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+            g2d.setColor(Color.BLACK);
+        } else {
+            g2d.setColor(Color.WHITE);
+        }
 
         Font newFont = getCustomFont(Font.PLAIN, fontSize);
         g2d.setFont(newFont);
@@ -43,7 +50,6 @@ public class ImageButton extends JButton {
 
         int x = (getWidth() - metrics.stringWidth(buttonText)) / 2;
         int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
-        g2d.setColor(Color.BLACK);
         g2d.drawString(buttonText, x, y);
 
         g2d.dispose();
