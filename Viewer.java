@@ -35,6 +35,7 @@ public class Viewer {
         frame.add(levelChooser, "levelChooser");
         frame.add(canvas, "canvas");
 
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 
