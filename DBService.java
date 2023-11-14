@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.nio.file.StandardOpenOption;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class DBService {
     private final String coinsPath = "db/passed_levels.csv";
@@ -29,28 +31,36 @@ public class DBService {
     public void writeCoins(String nickname, int level, int coins) {
         try {
             boolean fileExists = Files.exists(Paths.get(coinsPath));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(coinsPath, true));
 
-            if (fileExists) {
-                String fileContent = new String(Files.readAllBytes(Paths.get(coinsPath)));
-
-                if (fileContent.contains(nickname + ";" + level)) {
-                    fileContent = fileContent.replaceAll(nickname + ";" + level + ";\\d+", nickname + ";" + level + ";" + coins);
-                    Files.write(Paths.get(coinsPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
-                    return;
-                }
-            }
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(coinsPath, true))) {
-                if (!fileExists) {
-                    writer.append("Nickname;Level;Coins");
-                    writer.newLine();
-                }
-
-                writer.append(nickname + ";" + level + ";" + coins);
+            if(!fileExists) {
+                writer.append("Nickname;Level;Coins");
                 writer.newLine();
             }
 
-        } catch (IOException e) {
+            String fileContent = new String(Files.readAllBytes(Paths.get(coinsPath)));
+
+            Pattern pattern = Pattern.compile(nickname + ";" + level + ";(\\d+)");
+            Matcher matcher = pattern.matcher(fileContent);
+
+            if (matcher.find()) {
+                int currentCoins = Integer.parseInt(matcher.group(1));
+
+                if (coins > currentCoins) {
+                    fileContent = fileContent.replaceAll(nickname + ";" + level + ";\\d+", nickname + ";" + level + ";" + coins);
+                    Files.write(Paths.get(coinsPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                    writeTotalCoins(nickname, coins - currentCoins);
+                }
+
+            } else {
+                writer.append(nickname + ";" + level + ";" + coins);
+                writer.newLine();
+                writer.close();
+
+                writeTotalCoins(nickname, coins);
+            }
+
+        } catch(IOException e) {
             System.out.println(e);
         }
     }
@@ -68,6 +78,36 @@ public class DBService {
             }
 
         } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
+    private void writeTotalCoins(String nickname, int value) {
+        try {
+            boolean fileExists = Files.exists(Paths.get(totalCoinsPath));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(totalCoinsPath, true));
+
+            if (!fileExists) {
+                writer.append("Nickname;Coins");
+                writer.newLine();
+            }
+
+            String fileContent = new String(Files.readAllBytes(Paths.get(totalCoinsPath)));
+
+            Pattern pattern = Pattern.compile(nickname +  ";(\\d+)");
+            Matcher matcher = pattern.matcher(fileContent);
+
+            if(matcher.find()) {
+                int currentCoins = Integer.parseInt(matcher.group(1));
+                fileContent = fileContent.replaceAll(nickname + ";\\d+", nickname + ";" + (value + currentCoins));
+                Files.write(Paths.get(totalCoinsPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            } else {
+                writer.append(nickname + ";" + value);
+                writer.newLine();
+                writer.close();
+            }
+
+        } catch(IOException e) {
             System.out.println(e);
         }
     }
