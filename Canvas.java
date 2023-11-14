@@ -7,6 +7,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
+import java.awt.FontFormatException;
+import java.io.IOException;
 
 public class Canvas extends JPanel {
   private Model model;
@@ -43,7 +47,8 @@ public class Canvas extends JPanel {
 
     JButton exitGameButton = new JButton("Exit to menu");
     exitGameButton.setBounds(10, 10, 150, 40);
-    exitGameButton.setFont(new Font("Arial", Font.BOLD, 14));
+    Font customFont = getCustomFont(new File("fonts/PixelFont.otf"), Font.PLAIN, 18);
+    exitGameButton.setFont(customFont);
     exitGameButton.setForeground(Color.BLACK);
     exitGameButton.setBackground(new Color(59, 89, 182));
     exitGameButton.setFocusPainted(false);
@@ -127,6 +132,18 @@ public class Canvas extends JPanel {
     g.setFont(font);
     g.setColor(Color.RED);
     g.drawString("Initialization Error!", 250, 100);
+  }
+
+  private Font getCustomFont(File file, int style, float size) {
+      Font customFont = null;
+      try {
+          customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
+          GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+          ge.registerFont(customFont);
+      } catch (IOException | FontFormatException e) {
+          System.out.println(e);
+      }
+      return customFont;
   }
 
 }
