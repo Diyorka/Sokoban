@@ -20,6 +20,7 @@ public class MenuController implements ActionListener {
             case "Set name":
                 String nickname = menuPanel.getNicknameText();
                 model.initPlayer(nickname);
+                viewer.updateSettings(model.getPlayer());
                 break;
             case "Play":
                 model.changeLevel("Level 1");
@@ -28,6 +29,7 @@ public class MenuController implements ActionListener {
                 viewer.showLevelChooser();
                 break;
             case "Settings":
+                viewer.showSettings();
                 break;
             case "Exit":
                 System.exit(0);

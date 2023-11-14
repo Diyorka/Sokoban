@@ -1,15 +1,17 @@
 import javax.swing.JFrame;
-import java.awt.Image;
 import java.awt.CardLayout;
-import javax.swing.ImageIcon;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.io.File;
 
 public class Viewer {
 
     private Controller controller;
     private Canvas canvas;
-    private MenuPanel menu;
+    private SettingsPanel settings;
     private JFrame frame;
-    private Image backgroundImage;
     private CardLayout cardLayout;
 
     public Viewer() {
@@ -18,14 +20,13 @@ public class Viewer {
         canvas = new Canvas(model);
         canvas.addKeyListener(controller);
         LevelChooser levelChooser = new LevelChooser(this, model);
-
-        backgroundImage = new ImageIcon("images/background.jpg").getImage();
-        menu = new MenuPanel(this, model);
+        settings = new SettingsPanel(this, model);
+        MenuPanel menu = new MenuPanel(this, model);
 
         cardLayout = new CardLayout();
 
         frame = new JFrame("Sokoban");
-        frame.setSize(1200, 700);
+        frame.setSize(1200, 800);
         frame.setLocation(100, 15);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
@@ -33,6 +34,7 @@ public class Viewer {
         frame.add(menu, "menu");
         frame.add(levelChooser, "levelChooser");
         frame.add(canvas, "canvas");
+        frame.add(settings, "settings");
 
         frame.setResizable(false);
         frame.setVisible(true);
@@ -40,6 +42,11 @@ public class Viewer {
 
     public void update() {
         canvas.repaint();
+    }
+
+    public void updateSettings(Player player) {
+        settings.setPlayer(player);
+        settings.repaint();
     }
 
     public void showMenu() {
@@ -56,7 +63,20 @@ public class Viewer {
         cardLayout.show(frame.getContentPane(), "levelChooser");
     }
 
-    public Image getBackgroundImage() {
-        return backgroundImage;
+    public void showSettings() {
+        cardLayout.show(frame.getContentPane(), "settings");
+    }
+
+    public Font getCustomFont(int style, float size) {
+        Font customFont = null;
+        File file = new File("fonts/PixelFont.otf");
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.out.println(e);
+        }
+        return customFont;
     }
 }
