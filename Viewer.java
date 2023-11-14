@@ -15,9 +15,9 @@ public class Viewer {
     private Model model;
 
     public Viewer() {
+        model = new Model(this);  // Инициализация Model
         controller = new Controller(this, model);
-        Model model = controller.getModel();
-        canvas = new Canvas(this, model);
+        canvas = new Canvas(this, model, controller);  // Передача Controller в Canvas
         canvas.addKeyListener(controller);
         LevelChooser levelChooser = new LevelChooser(this, model);
 

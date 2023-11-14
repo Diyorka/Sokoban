@@ -24,9 +24,9 @@ public class Canvas extends JPanel {
   private Controller controller;
   private Viewer viewer;
 
-  public Canvas(Viewer viewer, Model model) {
+  public Canvas(Viewer viewer, Model model, Controller controller) {
     this.model = model;
-    controller = new Controller(viewer, model);
+    this.controller = controller;
     setBackground(Color.BLACK);
     setOpaque(true);
 
