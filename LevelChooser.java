@@ -48,7 +48,7 @@ public class LevelChooser extends JPanel {
         super.paintComponent(g);
 
         Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
-        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        g.drawImage(backgroundImage, 0, 0, null);
     }
 
     private JButton createImageButton(String levelName, String command, String imagePath,

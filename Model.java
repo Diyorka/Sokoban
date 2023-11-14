@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class Model {
     private DBService dbService;
     private Player player;
@@ -17,6 +19,9 @@ public class Model {
     private final int RESTART = 82; //'r' button keycode
     private final int EXIT = 27; //'esc' button keycode
 
+    private final Music boxInTargetSound;
+    private final Music wonSound;
+
     private String move;
     private int playerPosX;
     private int playerPosY;
@@ -29,16 +34,19 @@ public class Model {
     private int checksCount;
     private int coinsCount;
 
-    private int totalMoves = 0;
+    private int totalMoves;
     private int collectedCoins;
 
     private int[][] checksPos;
+    private int[][] coinsPos;
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
         dbService = new DBService();
         initPlayer("Stive");
         levelList = new Levels();
+        wonSound = new Music(new File("music/won.wav"));
+        boxInTargetSound = new Music(new File("music/target.wav"));
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
@@ -51,11 +59,13 @@ public class Model {
     public void doAction(int keyMessage) {
         if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
+            collectedCoins = 0;
             map = levelList.getCurrentMap();
             if (map != null) {
                 scanMap();
             }
         } else if (keyMessage == EXIT) {
+            collectedCoins = 0;
             viewer.showMenu();
         }
 
@@ -84,7 +94,12 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
+            boxInTargetSound.stop();
+            wonSound.play();
+            int passedLevel = levelList.getCurrentLevel();
+            dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
             showEndLevelDialog();
+            collectedCoins = 0;
         }
     }
 
@@ -106,11 +121,20 @@ public class Model {
         return move;
     }
 
-    public void initPlayer(String nickname) {
+    public int getTotalMoves() {
+        return totalMoves;
+    }
+
+    public int getCollectedCoins() {
+        return collectedCoins;
+    }
+
+    public Player initPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
         System.out.println(player.getNickname());
         System.out.println(player.getAvailableSkins());
         System.out.println(player.getTotalCoins());
+        return player;
     }
 
     public Player getPlayer() {
@@ -159,6 +183,7 @@ public class Model {
         boxesCount = 0;
         checksCount = 0;
         totalMoves = 0;
+        coinsCount = 0;
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
@@ -195,6 +220,18 @@ public class Model {
                 }
             }
         }
+
+        coinsPos = new int[coinsCount][2];
+        int coinsQueue = 0;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == COIN) {
+                    coinsPos[coinsQueue][0] = i;
+                    coinsPos[coinsQueue][1] = j;
+                    coinsQueue++;
+                }
+            }
+        }
     }
 
     private boolean isWon() {
@@ -217,6 +254,20 @@ public class Model {
                break;
            }
        }
+
+       for (int i = 0; i < coinsPos.length; i++) {
+           int coinsPosY = coinsPos[i][0];
+           int coinsPosX = coinsPos[i][1];
+           boolean coinsValid = coinsPosY != -1 && coinsPosX != -1;
+
+           if (coinsValid && map[coinsPosY][coinsPosX] == SPACE) {
+               map[coinsPosY][coinsPosX] = COIN;
+               break;
+           } else if (coinsValid && map[coinsPosY][coinsPosX] == BOX) {
+              coinsPos[i][0] = -1;
+              coinsPos[i][1] = -1;
+           }
+       }
    }
 
     private void moveLeft() {
@@ -230,12 +281,15 @@ public class Model {
         }
 
         if (map[playerPosY][playerPosX - 1] == BOX) {
+            if(map[playerPosY][playerPosX - 2] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY][playerPosX - 1] = SPACE;
-            map[playerPosY][playerPosX - 2] = BOX;
-        }
 
-        if (map[playerPosY][playerPosX - 1] == COIN) {
-            collectedCoins++;
+            if (map[playerPosY][playerPosX - 2] == CHECK) {
+                boxInTargetSound.play();
+            }
+            map[playerPosY][playerPosX - 2] = BOX;
         }
 
         map[playerPosY][playerPosX - 1] = PLAYER;
@@ -255,12 +309,15 @@ public class Model {
         }
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
+            if(map[playerPosY][playerPosX + 2] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY][playerPosX + 1] = SPACE;
-            map[playerPosY][playerPosX + 2] = BOX;
-        }
 
-        if (map[playerPosY][playerPosX + 1] == COIN) {
-            collectedCoins++;
+            if (map[playerPosY][playerPosX + 2] == CHECK) {
+                boxInTargetSound.play();
+            }
+            map[playerPosY][playerPosX + 2] = BOX;
         }
 
         map[playerPosY][playerPosX + 1] = PLAYER;
@@ -280,12 +337,15 @@ public class Model {
         }
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
+            if(map[playerPosY - 2][playerPosX] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY - 1][playerPosX] = SPACE;
-            map[playerPosY - 2][playerPosX] = BOX;
-        }
 
-        if (map[playerPosY - 1][playerPosX] == COIN) {
-            collectedCoins++;
+            if (map[playerPosY - 2][playerPosX] == CHECK) {
+                boxInTargetSound.play();
+            }
+            map[playerPosY - 2][playerPosX] = BOX;
         }
 
         map[playerPosY - 1][playerPosX] = PLAYER;
@@ -305,12 +365,15 @@ public class Model {
         }
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
+            if(map[playerPosY + 2][playerPosX] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY + 1][playerPosX] = SPACE;
-            map[playerPosY + 2][playerPosX] = BOX;
-        }
 
-        if (map[playerPosY + 1][playerPosX] == COIN) {
-            collectedCoins++;
+            if (map[playerPosY + 2][playerPosX] == CHECK) {
+                boxInTargetSound.play();
+            }
+            map[playerPosY + 2][playerPosX] = BOX;
         }
 
         map[playerPosY + 1][playerPosX] = PLAYER;

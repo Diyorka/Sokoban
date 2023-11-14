@@ -13,11 +13,12 @@ public class Viewer {
     private SettingsPanel settings;
     private JFrame frame;
     private CardLayout cardLayout;
+    private Model model;
 
     public Viewer() {
-        controller = new Controller(this);
-        Model model = controller.getModel();
-        canvas = new Canvas(model);
+        model = new Model(this);
+        controller = new Controller(this, model);
+        canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
         LevelChooser levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
@@ -27,7 +28,7 @@ public class Viewer {
 
         frame = new JFrame("Sokoban");
         frame.setSize(1200, 800);
-        frame.setLocation(100, 15);
+        frame.setLocation(200, 15);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 
@@ -38,6 +39,10 @@ public class Viewer {
 
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    public Viewer getViewer() {
+        return this;
     }
 
     public void update() {
