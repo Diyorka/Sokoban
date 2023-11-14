@@ -137,6 +137,10 @@ public class Model {
         return player;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     private void showEndLevelDialog() {
         Object[] options = {"Go to levels", "Next level"};
         int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +

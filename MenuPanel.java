@@ -5,29 +5,25 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import javax.swing.ImageIcon;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
-import java.awt.FontFormatException;
-import java.io.IOException;
-import java.io.File;
 
 public class MenuPanel extends JPanel {
 
-    private Image backgroundImage;
+    private Viewer viewer;
     private MenuController menuController;
-    private File fontFile;
     private JTextField nickname;
 
     public MenuPanel(Viewer viewer, Model model) {
-        backgroundImage = viewer.getBackgroundImage();
+        this.viewer = viewer;
         menuController = new MenuController(this, viewer, model);
-        fontFile = new File("fonts/PixelFont.otf");
         init();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(backgroundImage, 0, 0, null);
+        Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 
     public String getNicknameText() {
@@ -40,18 +36,18 @@ public class MenuPanel extends JPanel {
         label.setBounds(420, 100, 500, 100);
         label.setForeground(Color.WHITE);
 
-        Font labelFont = getCustomFont(fontFile, Font.PLAIN, 120f);
+        Font labelFont = viewer.getCustomFont(Font.PLAIN, 120f);
         label.setFont(labelFont);
 
         nickname = new JTextField("Stive");
-        nickname.setFont(getCustomFont(fontFile, Font.PLAIN, 28f));
+        nickname.setFont(viewer.getCustomFont(Font.PLAIN, 28f));
         nickname.setBounds(500, 245, 150, 40);
         nickname.setForeground(Color.WHITE);
         nickname.setHorizontalAlignment(JTextField.CENTER);
         nickname.setOpaque(false);
 
         JButton setNameButton = createButton("Ok", "Set name", 720, 245);
-        setNameButton.setFont(getCustomFont(fontFile, Font.PLAIN, 18f));
+        setNameButton.setFont(viewer.getCustomFont(Font.PLAIN, 18f));
         setNameButton.setBounds(650, 245, 50, 40);
         setNameButton.addActionListener(menuController);
 
@@ -76,24 +72,11 @@ public class MenuPanel extends JPanel {
         add(exitButton);
     }
 
-    private Font getCustomFont(File file, int style, float size) {
-        Font customFont = null;
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-        } catch (IOException | FontFormatException e) {
-            System.out.println(e);
-        }
-        return customFont;
-    }
-
     private JButton createButton(String name, String command, int x, int y) {
         JButton button = new JButton(name);
-        Font font = getCustomFont(fontFile, Font.PLAIN, 24f);
         button.setBounds(x, y, 200, 40);
         button.setFocusable(false);
-        button.setFont(font);
+        button.setFont(viewer.getCustomFont(Font.PLAIN, 24f));
         button.setActionCommand(command);
         return button;
     }
