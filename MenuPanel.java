@@ -1,5 +1,6 @@
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,10 +16,11 @@ public class MenuPanel extends JPanel {
     private Image backgroundImage;
     private MenuController menuController;
     private File fontFile;
+    private JTextField nickname;
 
     public MenuPanel(Viewer viewer, Model model) {
         backgroundImage = viewer.getBackgroundImage();
-        menuController = new MenuController(viewer, model);
+        menuController = new MenuController(this, viewer, model);
         fontFile = new File("fonts/PixelFont.otf");
         init();
     }
@@ -28,14 +30,30 @@ public class MenuPanel extends JPanel {
         g.drawImage(backgroundImage, 0, 0, null);
     }
 
+    public String getNicknameText() {
+        return nickname.getText();
+    }
+
     private void init() {
         setLayout(null);
         JLabel label = new JLabel("Sokoban");
-        label.setBounds(420, 160, 500, 100);
+        label.setBounds(420, 100, 500, 100);
         label.setForeground(Color.WHITE);
 
         Font labelFont = getCustomFont(fontFile, Font.PLAIN, 120f);
         label.setFont(labelFont);
+
+        nickname = new JTextField("Stive");
+        nickname.setFont(getCustomFont(fontFile, Font.PLAIN, 28f));
+        nickname.setBounds(500, 245, 150, 40);
+        nickname.setForeground(Color.WHITE);
+        nickname.setHorizontalAlignment(JTextField.CENTER);
+        nickname.setOpaque(false);
+
+        JButton setNameButton = createButton("Ok", "Set name", 720, 245);
+        setNameButton.setFont(getCustomFont(fontFile, Font.PLAIN, 18f));
+        setNameButton.setBounds(650, 245, 50, 40);
+        setNameButton.addActionListener(menuController);
 
         JButton playButton = createButton("Play", "Play", 500, 315);
         playButton.addActionListener(menuController);
@@ -50,6 +68,8 @@ public class MenuPanel extends JPanel {
         exitButton.addActionListener(menuController);
 
         add(label);
+        add(nickname);
+        add(setNameButton);
         add(playButton);
         add(levelsButton);
         add(settingsButton);
