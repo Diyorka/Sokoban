@@ -106,11 +106,12 @@ public class Model {
         return move;
     }
 
-    public void initPlayer(String nickname) {
+    public Player initPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
         System.out.println(player.getNickname());
         System.out.println(player.getAvailableSkins());
         System.out.println(player.getTotalCoins());
+        return player;
     }
 
     private void showEndLevelDialog() {
