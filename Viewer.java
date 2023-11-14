@@ -11,11 +11,12 @@ public class Viewer {
     private JFrame frame;
     private Image backgroundImage;
     private CardLayout cardLayout;
+    private Model model;
 
     public Viewer() {
-        controller = new Controller(this);
-        Model model = controller.getModel();
-        canvas = new Canvas(model);
+        model = new Model(this);  // Инициализация Model
+        controller = new Controller(this, model);
+        canvas = new Canvas(this, model, controller);  // Передача Controller в Canvas
         canvas.addKeyListener(controller);
         LevelChooser levelChooser = new LevelChooser(this, model);
 
@@ -36,6 +37,10 @@ public class Viewer {
 
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    public Viewer getViewer() {
+        return this;
     }
 
     public void update() {
