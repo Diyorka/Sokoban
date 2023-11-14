@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class Model {
     private DBService dbService;
     private Player player;
@@ -16,6 +18,9 @@ public class Model {
     private final int DOWN =  40; //arrow down keycode
     private final int RESTART = 82; //'r' button keycode
     private final int EXIT = 27; //'esc' button keycode
+
+    private final Music boxInTargetSound;
+    private final Music wonSound;
 
     private String move;
     private int playerPosX;
@@ -40,6 +45,8 @@ public class Model {
         dbService = new DBService();
         initPlayer("Stive");
         levelList = new Levels();
+        wonSound = new Music(new File("music/won.wav"));
+        boxInTargetSound = new Music(new File("music/target.wav"));
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
@@ -87,6 +94,8 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
+            boxInTargetSound.stop();
+            wonSound.play();
             int passedLevel = levelList.getCurrentLevel();
             dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
             showEndLevelDialog();
@@ -272,6 +281,10 @@ public class Model {
                 collectedCoins++;
             }
             map[playerPosY][playerPosX - 1] = SPACE;
+
+            if (map[playerPosY][playerPosX - 2] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY][playerPosX - 2] = BOX;
         }
 
@@ -296,6 +309,10 @@ public class Model {
                 collectedCoins++;
             }
             map[playerPosY][playerPosX + 1] = SPACE;
+
+            if (map[playerPosY][playerPosX + 2] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY][playerPosX + 2] = BOX;
         }
 
@@ -320,6 +337,10 @@ public class Model {
                 collectedCoins++;
             }
             map[playerPosY - 1][playerPosX] = SPACE;
+
+            if (map[playerPosY - 2][playerPosX] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY - 2][playerPosX] = BOX;
         }
 
@@ -344,6 +365,10 @@ public class Model {
                 collectedCoins++;
             }
             map[playerPosY + 1][playerPosX] = SPACE;
+
+            if (map[playerPosY + 2][playerPosX] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY + 2][playerPosX] = BOX;
         }
 
