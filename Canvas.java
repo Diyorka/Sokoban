@@ -42,7 +42,11 @@ public class Canvas extends JPanel {
     errorImage = new ImageIcon("images/error.png").getImage();
 
     JButton exitGameButton = new JButton("Exit to menu");
-    exitGameButton.setBounds(10, 10, 100, 30);
+    exitGameButton.setBounds(10, 10, 150, 40);
+    exitGameButton.setFont(new Font("Arial", Font.BOLD, 14));
+    exitGameButton.setForeground(Color.BLACK);
+    exitGameButton.setBackground(new Color(59, 89, 182));
+    exitGameButton.setFocusPainted(false);
     exitGameButton.addActionListener(controller);
     add(exitGameButton);
   }
