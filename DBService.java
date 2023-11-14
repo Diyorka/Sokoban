@@ -65,6 +65,25 @@ public class DBService {
         }
     }
 
+    public void addSkin(String nickname, String skin) {
+        try {
+            boolean fileExists = Files.exists(Paths.get(skinsPath));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(skinsPath, true));
+
+            if(!fileExists) {
+                writer.append("Nickname;Skin");
+                writer.newLine();
+            }
+
+            writer.append(nickname + ";" + skin);
+            writer.newLine();
+            writer.close();
+
+        } catch(IOException e) {
+            System.out.println(e);
+        }
+    }
+
     public void readDataFromCSV() {
         try (BufferedReader reader = new BufferedReader(new FileReader("passed_levels.csv"))) {
             reader.readLine();
