@@ -51,11 +51,13 @@ public class Model {
     public void doAction(int keyMessage) {
         if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
+            collectedCoins = 0;
             map = levelList.getCurrentMap();
             if (map != null) {
                 scanMap();
             }
         } else if (keyMessage == EXIT) {
+            collectedCoins = 0;
             viewer.showMenu();
         }
 
@@ -84,7 +86,10 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
+            int passedLevel = levelList.getCurrentLevel();
+            dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
             showEndLevelDialog();
+            collectedCoins = 0;
         }
     }
 
