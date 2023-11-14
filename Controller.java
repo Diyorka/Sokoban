@@ -1,12 +1,16 @@
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Controller implements KeyListener {
+public class Controller implements KeyListener, ActionListener {
 
     private Model model;
+    private Viewer viewer;
 
-    public Controller(Viewer viewer) {
-        model = new Model(viewer);
+    public Controller(Viewer viewer, Model model) {
+    this.viewer = viewer;
+    this.model = model;
     }
 
     public Model getModel() {
@@ -23,4 +27,12 @@ public class Controller implements KeyListener {
 
     public void keyReleased(KeyEvent event) {
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      String command = e.getActionCommand();
+      if ("Exit to menu".equals(command)) {
+        viewer.showMenu();
+    }
+  }
 }

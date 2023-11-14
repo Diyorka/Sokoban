@@ -1,4 +1,7 @@
 public class Model {
+    private DBService dbService;
+    private Player player;
+    private Viewer viewer;
 
     private final int SPACE = 0;
     private final int PLAYER = 1;
@@ -18,8 +21,6 @@ public class Model {
     private int playerPosX;
     private int playerPosY;
 
-    private Viewer viewer;
-
     private int[][] map;
     private Levels levelList;
 
@@ -35,6 +36,8 @@ public class Model {
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
+        dbService = new DBService();
+        initPlayer("Stive");
         levelList = new Levels();
         playerPosX = -1;
         playerPosY = -1;
@@ -48,11 +51,13 @@ public class Model {
     public void doAction(int keyMessage) {
         if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
+            collectedCoins = 0;
             map = levelList.getCurrentMap();
             if (map != null) {
                 scanMap();
             }
         } else if (keyMessage == EXIT) {
+            collectedCoins = 0;
             viewer.showMenu();
         }
 
@@ -81,7 +86,10 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
+            int passedLevel = levelList.getCurrentLevel();
+            dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
             showEndLevelDialog();
+            collectedCoins = 0;
         }
     }
 
@@ -101,6 +109,14 @@ public class Model {
 
     public String getMove() {
         return move;
+    }
+
+    public Player initPlayer(String nickname) {
+        player = dbService.getPlayerInfo(nickname);
+        System.out.println(player.getNickname());
+        System.out.println(player.getAvailableSkins());
+        System.out.println(player.getTotalCoins());
+        return player;
     }
 
     private void showEndLevelDialog() {

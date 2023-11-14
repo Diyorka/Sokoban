@@ -4,6 +4,13 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Font;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
+import java.awt.FontFormatException;
+import java.io.IOException;
 
 public class Canvas extends JPanel {
   private Model model;
@@ -18,9 +25,12 @@ public class Canvas extends JPanel {
   private Image groundImage;
   private Image coinImage;
   private Image errorImage;
+  private Controller controller;
+  private Viewer viewer;
 
-  public Canvas(Model model) {
+  public Canvas(Viewer viewer, Model model, Controller controller) {
     this.model = model;
+    this.controller = controller;
     setBackground(Color.BLACK);
     setOpaque(true);
 
@@ -34,6 +44,16 @@ public class Canvas extends JPanel {
     groundImage = new ImageIcon("images/ground1.png").getImage();
     coinImage = new ImageIcon("images/coin.png").getImage();
     errorImage = new ImageIcon("images/error.png").getImage();
+
+    JButton exitGameButton = new JButton("Exit to menu");
+    exitGameButton.setBounds(10, 10, 150, 40);
+    Font customFont = getCustomFont(new File("fonts/PixelFont.otf"), Font.PLAIN, 18);
+    exitGameButton.setFont(customFont);
+    exitGameButton.setForeground(Color.BLACK);
+    exitGameButton.setBackground(new Color(59, 89, 182));
+    exitGameButton.setFocusPainted(false);
+    exitGameButton.addActionListener(controller);
+    add(exitGameButton);
   }
 
   public void paint(Graphics g) {
@@ -112,6 +132,18 @@ public class Canvas extends JPanel {
     g.setFont(font);
     g.setColor(Color.RED);
     g.drawString("Initialization Error!", 250, 100);
+  }
+
+  private Font getCustomFont(File file, int style, float size) {
+      Font customFont = null;
+      try {
+          customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
+          GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+          ge.registerFont(customFont);
+      } catch (IOException | FontFormatException e) {
+          System.out.println(e);
+      }
+      return customFont;
   }
 
 }
