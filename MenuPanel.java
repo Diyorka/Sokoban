@@ -10,8 +10,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.File;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
 
 public class MenuPanel extends JPanel {
 
