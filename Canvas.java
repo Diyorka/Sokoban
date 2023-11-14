@@ -31,6 +31,7 @@ public class Canvas extends JPanel {
   private Controller controller;
   private Image backgroundImage;
   private JLabel coinsLabel;
+  private JLabel stepsLabel;
 
   public Canvas(Model model, Controller controller) {
       this.model = model;
@@ -50,21 +51,36 @@ public class Canvas extends JPanel {
       coinImage = new ImageIcon("images/coin.png").getImage();
       errorImage = new ImageIcon("images/error.png").getImage();
 
-      JLabel imageLabel = new JLabel();
+      JLabel coinsImageLabel = new JLabel();
       Image coins = new ImageIcon("images/coins.png").getImage();
       Image scaledCoins = coins.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
       ImageIcon coinsIcon = new ImageIcon(scaledCoins);
-      imageLabel.setIcon(coinsIcon);
-      imageLabel.setBounds(1100, 30, 80, 80);
-      add(imageLabel);
+      coinsImageLabel.setIcon(coinsIcon);
+      coinsImageLabel.setBounds(1090, 30, 80, 80);
+      add(coinsImageLabel);
+
+      JLabel stepsImageLabel = new JLabel();
+      Image steps = new ImageIcon("images/steps.png").getImage();
+      Image scaledSteps = steps.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+      ImageIcon stepsIcon = new ImageIcon(scaledSteps);
+      stepsImageLabel.setIcon(stepsIcon);
+      stepsImageLabel.setBounds(30, 30, 80, 80);
+      add(stepsImageLabel);
 
       File fontFile = new File("fonts/PixelFont.otf");
+
       coinsLabel = new JLabel("0");
       coinsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
       coinsLabel.setForeground(Color.WHITE);
-      coinsLabel.setBounds(990, 20, 100, 100);
+      coinsLabel.setBounds(980, 20, 100, 100);
       coinsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       add(coinsLabel);
+
+      stepsLabel = new JLabel("0");
+      stepsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
+      stepsLabel.setForeground(Color.WHITE);
+      stepsLabel.setBounds(120, 20, 100, 100);
+      add(stepsLabel);
 
       JButton exitGameButton = new JButton("Exit to menu");
       exitGameButton.setBounds(40, 700, 150, 40);
@@ -82,7 +98,10 @@ public class Canvas extends JPanel {
 
       g.drawImage(backgroundImage, 0, 0, null);
       String collectedCoins = String.valueOf(model.getCollectedCoins());
+      String totalMoves = String.valueOf(model.getTotalMoves());
+
       coinsLabel.setText(collectedCoins);
+      stepsLabel.setText(totalMoves);
 
       int[][] desktop = model.getDesktop();
       if(desktop != null) {

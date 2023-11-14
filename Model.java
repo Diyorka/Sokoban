@@ -29,7 +29,7 @@ public class Model {
     private int checksCount;
     private int coinsCount;
 
-    private int totalMoves = 0;
+    private int totalMoves;
     private int collectedCoins;
 
     private int[][] checksPos;
@@ -110,6 +110,10 @@ public class Model {
 
     public String getMove() {
         return move;
+    }
+
+    public int getTotalMoves() {
+        return totalMoves;
     }
 
     public int getCollectedCoins() {
