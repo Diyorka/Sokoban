@@ -33,6 +33,7 @@ public class Model {
     private int collectedCoins;
 
     private int[][] checksPos;
+    private int[][] coinsPos;
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
@@ -111,6 +112,10 @@ public class Model {
         return move;
     }
 
+    public int getCollectedCoins() {
+        return collectedCoins;
+    }
+
     public Player initPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
         System.out.println(player.getNickname());
@@ -161,6 +166,7 @@ public class Model {
         boxesCount = 0;
         checksCount = 0;
         totalMoves = 0;
+        coinsCount = 0;
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
@@ -197,6 +203,18 @@ public class Model {
                 }
             }
         }
+
+        coinsPos = new int[coinsCount][2];
+        int coinsQueue = 0;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == COIN) {
+                    coinsPos[coinsQueue][0] = i;
+                    coinsPos[coinsQueue][1] = j;
+                    coinsQueue++;
+                }
+            }
+        }
     }
 
     private boolean isWon() {
@@ -219,6 +237,20 @@ public class Model {
                break;
            }
        }
+
+       for (int i = 0; i < coinsPos.length; i++) {
+           int coinsPosY = coinsPos[i][0];
+           int coinsPosX = coinsPos[i][1];
+           boolean coinsValid = coinsPosY != -1 && coinsPosX != -1;
+
+           if (coinsValid && map[coinsPosY][coinsPosX] == SPACE) {
+               map[coinsPosY][coinsPosX] = COIN;
+               break;
+           } else if (coinsValid && map[coinsPosY][coinsPosX] == BOX) {
+              coinsPos[i][0] = -1;
+              coinsPos[i][1] = -1;
+           }
+       }
    }
 
     private void moveLeft() {
@@ -232,12 +264,11 @@ public class Model {
         }
 
         if (map[playerPosY][playerPosX - 1] == BOX) {
+            if(map[playerPosY][playerPosX - 2] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY][playerPosX - 1] = SPACE;
             map[playerPosY][playerPosX - 2] = BOX;
-        }
-
-        if (map[playerPosY][playerPosX - 1] == COIN) {
-            collectedCoins++;
         }
 
         map[playerPosY][playerPosX - 1] = PLAYER;
@@ -257,12 +288,11 @@ public class Model {
         }
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
+            if(map[playerPosY][playerPosX + 2] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY][playerPosX + 1] = SPACE;
             map[playerPosY][playerPosX + 2] = BOX;
-        }
-
-        if (map[playerPosY][playerPosX + 1] == COIN) {
-            collectedCoins++;
         }
 
         map[playerPosY][playerPosX + 1] = PLAYER;
@@ -282,12 +312,11 @@ public class Model {
         }
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
+            if(map[playerPosY - 2][playerPosX] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY - 1][playerPosX] = SPACE;
             map[playerPosY - 2][playerPosX] = BOX;
-        }
-
-        if (map[playerPosY - 1][playerPosX] == COIN) {
-            collectedCoins++;
         }
 
         map[playerPosY - 1][playerPosX] = PLAYER;
@@ -307,12 +336,11 @@ public class Model {
         }
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
+            if(map[playerPosY + 2][playerPosX] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY + 1][playerPosX] = SPACE;
             map[playerPosY + 2][playerPosX] = BOX;
-        }
-
-        if (map[playerPosY + 1][playerPosX] == COIN) {
-            collectedCoins++;
         }
 
         map[playerPosY + 1][playerPosX] = PLAYER;
