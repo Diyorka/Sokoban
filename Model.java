@@ -40,8 +40,16 @@ public class Model {
     private int[][] checksPos;
     private int[][] coinsPos;
 
+    private boolean isDouble;
+
+    public Model(Viewer viewer, boolean isDouble) {
+        this(viewer);
+        this.isDouble = isDouble;
+    }
+
     public Model(Viewer viewer) {
         this.viewer = viewer;
+        this.isDouble = isDouble;
         dbService = new DBService();
         initPlayer("Stive");
         levelList = new Levels();
@@ -98,9 +106,14 @@ public class Model {
             wonSound.play();
             int passedLevel = levelList.getCurrentLevel();
             dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
-            showEndLevelDialog();
             collectedCoins = 0;
+            if (!isDouble) {
+                showEndLevelDialog();
+            } else {
+                showWonDialog();
+            }
         }
+
     }
 
     public void changeLevel(String command) {
@@ -167,6 +180,23 @@ public class Model {
         } else {
             viewer.showMenu();
             map = null;
+        }
+    }
+
+    private void showWonDialog() {
+        String[] options = {"Wait other player", "Return"};
+        int result = javax.swing.JOptionPane.showOptionDialog(
+                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
+                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]
+        );
+        switch (result) {
+            case 0:
+                System.out.println("Wait option selected");
+                break;
+            case 1:
+                System.out.println("Return option selected");
+                break;
         }
     }
 
