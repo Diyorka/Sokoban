@@ -5,10 +5,12 @@ public class SettingsController implements ActionListener {
 
     private Model model;
     private Viewer viewer;
+    private SettingsPanel settingsPanel;
 
-    public SettingsController(Viewer viewer, Model model) {
+    public SettingsController(SettingsPanel settingsPanel, Viewer viewer, Model model) {
         this.model = model;
         this.viewer = viewer;
+        this.settingsPanel = settingsPanel;
     }
 
     @Override
@@ -16,9 +18,17 @@ public class SettingsController implements ActionListener {
         String command = event.getActionCommand();
 
         switch (command) {
-            case "Default Skins":
+            case "Default Skin":
+                model.updateCurrentSkin("Default Skin");
+                settingsPanel.setEnableDefaultSkinButton(false);
+                settingsPanel.setEnableSantaSkinButton(true);
+                settingsPanel.setEnablePremiumSkinButton(true);
                 break;
             case "Santa Skin":
+                model.updateCurrentSkin("Santa Skin");
+                settingsPanel.setEnableDefaultSkinButton(true);
+                settingsPanel.setEnableSantaSkinButton(false);
+                settingsPanel.setEnablePremiumSkinButton(true);
                 break;
             case "Premium Skin":
                 break;
