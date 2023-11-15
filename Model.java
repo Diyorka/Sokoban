@@ -1,4 +1,9 @@
+import java.io.File;
+
 public class Model {
+    private DBService dbService;
+    private Player player;
+    private Viewer viewer;
 
     private final int SPACE = 0;
     private final int PLAYER = 1;
@@ -14,11 +19,14 @@ public class Model {
     private final int RESTART = 82; //'r' button keycode
     private final int EXIT = 27; //'esc' button keycode
 
+    private final Music boxInTargetSound;
+    private final Music wonSound;
+    private final Music moveSnowSound;
+    private final Music backgroundSnowMusic;
+
     private String move;
     private int playerPosX;
     private int playerPosY;
-
-    private Viewer viewer;
 
     private int[][] map;
     private Levels levelList;
@@ -28,14 +36,32 @@ public class Model {
     private int checksCount;
     private int coinsCount;
 
-    private int totalMoves = 0;
+    private int totalMoves;
     private int collectedCoins;
 
     private int[][] checksPos;
+    private int[][] coinsPos;
+
+    private boolean isDouble;
+
+    public Model(Viewer viewer, boolean isDouble) {
+        this(viewer);
+        this.isDouble = isDouble;
+    }
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
+        this.isDouble = isDouble;
+        dbService = new DBService();
+        initPlayer("Stive");
         levelList = new Levels();
+        wonSound = new Music(new File("music/won.wav"));
+        boxInTargetSound = new Music(new File("music/target.wav"));
+        moveSnowSound = new Music(new File("music/move_snow.wav"));
+
+        backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
+        backgroundSnowMusic.play();
+
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
@@ -48,11 +74,13 @@ public class Model {
     public void doAction(int keyMessage) {
         if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
+            collectedCoins = 0;
             map = levelList.getCurrentMap();
             if (map != null) {
                 scanMap();
             }
         } else if (keyMessage == EXIT) {
+            collectedCoins = 0;
             viewer.showMenu();
         }
 
@@ -81,8 +109,19 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
-            showEndLevelDialog();
+            moveSnowSound.stop();
+            boxInTargetSound.stop();
+            wonSound.play();
+            int passedLevel = levelList.getCurrentLevel();
+            dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
+            collectedCoins = 0;
+            if (!isDouble) {
+                showEndLevelDialog();
+            } else {
+                showWonDialog();
+            }
         }
+
     }
 
     public void changeLevel(String command) {
@@ -103,6 +142,38 @@ public class Model {
         return move;
     }
 
+    public int getTotalMoves() {
+        return totalMoves;
+    }
+
+    public int getCollectedCoins() {
+        return collectedCoins;
+    }
+
+    public Player initPlayer(String nickname) {
+        player = dbService.getPlayerInfo(nickname);
+        System.out.println(player.getNickname());
+        System.out.println(player.getAvailableSkins());
+        System.out.println(player.getTotalCoins());
+        return player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void getNextLevel() {
+        map = levelList.getNextMap();
+        if (map != null) {
+            scanMap();
+        }
+        viewer.showCanvas();
+    }
+
+    public void updateCurrentSkin(String skin) {
+        dbService.updateCurrentSkin(player.getNickname(), skin);
+    }
+
     private void showEndLevelDialog() {
         Object[] options = {"Go to levels", "Next level"};
         int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
@@ -121,6 +192,23 @@ public class Model {
         } else {
             viewer.showMenu();
             map = null;
+        }
+    }
+
+    private void showWonDialog() {
+        String[] options = {"Wait other player", "Return"};
+        int result = javax.swing.JOptionPane.showOptionDialog(
+                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
+                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]
+        );
+        switch (result) {
+            case 0:
+                System.out.println("Wait option selected");
+                break;
+            case 1:
+                System.out.println("Return option selected");
+                break;
         }
     }
 
@@ -145,6 +233,8 @@ public class Model {
         boxesCount = 0;
         checksCount = 0;
         totalMoves = 0;
+        coinsCount = 0;
+        collectedCoins = 0;
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
@@ -181,6 +271,18 @@ public class Model {
                 }
             }
         }
+
+        coinsPos = new int[coinsCount][2];
+        int coinsQueue = 0;
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == COIN) {
+                    coinsPos[coinsQueue][0] = i;
+                    coinsPos[coinsQueue][1] = j;
+                    coinsQueue++;
+                }
+            }
+        }
     }
 
     private boolean isWon() {
@@ -203,6 +305,20 @@ public class Model {
                break;
            }
        }
+
+       for (int i = 0; i < coinsPos.length; i++) {
+           int coinsPosY = coinsPos[i][0];
+           int coinsPosX = coinsPos[i][1];
+           boolean coinsValid = coinsPosY != -1 && coinsPosX != -1;
+
+           if (coinsValid && map[coinsPosY][coinsPosX] == SPACE) {
+               map[coinsPosY][coinsPosX] = COIN;
+               break;
+           } else if (coinsValid && map[coinsPosY][coinsPosX] == BOX) {
+              coinsPos[i][0] = -1;
+              coinsPos[i][1] = -1;
+           }
+       }
    }
 
     private void moveLeft() {
@@ -216,14 +332,18 @@ public class Model {
         }
 
         if (map[playerPosY][playerPosX - 1] == BOX) {
+            if(map[playerPosY][playerPosX - 2] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY][playerPosX - 1] = SPACE;
+
+            if (map[playerPosY][playerPosX - 2] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY][playerPosX - 2] = BOX;
         }
 
-        if (map[playerPosY][playerPosX - 1] == COIN) {
-            collectedCoins++;
-        }
-
+        moveSnowSound.play();
         map[playerPosY][playerPosX - 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
@@ -241,14 +361,18 @@ public class Model {
         }
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
+            if(map[playerPosY][playerPosX + 2] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY][playerPosX + 1] = SPACE;
+
+            if (map[playerPosY][playerPosX + 2] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY][playerPosX + 2] = BOX;
         }
 
-        if (map[playerPosY][playerPosX + 1] == COIN) {
-            collectedCoins++;
-        }
-
+        moveSnowSound.play();
         map[playerPosY][playerPosX + 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX += 1;
@@ -266,14 +390,18 @@ public class Model {
         }
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
+            if(map[playerPosY - 2][playerPosX] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY - 1][playerPosX] = SPACE;
+
+            if (map[playerPosY - 2][playerPosX] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY - 2][playerPosX] = BOX;
         }
 
-        if (map[playerPosY - 1][playerPosX] == COIN) {
-            collectedCoins++;
-        }
-
+        moveSnowSound.play();
         map[playerPosY - 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY -= 1;
@@ -291,14 +419,18 @@ public class Model {
         }
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
+            if(map[playerPosY + 2][playerPosX] == COIN) {
+                collectedCoins++;
+            }
             map[playerPosY + 1][playerPosX] = SPACE;
+
+            if (map[playerPosY + 2][playerPosX] == CHECK) {
+                boxInTargetSound.play();
+            }
             map[playerPosY + 2][playerPosX] = BOX;
         }
 
-        if (map[playerPosY + 1][playerPosX] == COIN) {
-            collectedCoins++;
-        }
-
+        moveSnowSound.play();
         map[playerPosY + 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY += 1;

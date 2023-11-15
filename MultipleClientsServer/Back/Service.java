@@ -31,6 +31,7 @@ public class Service implements Runnable{
         System.out.println("Game started");
         startSession();
 
+        // wait other threads !!!
         SocketPool.removeSocketAt(player1Index);
         SocketPool.removeSocketAt(player2Index);
         System.out.println(player1Channel.isOpen() + " " + player2Channel.isOpen());
@@ -45,62 +46,125 @@ public class Service implements Runnable{
 
 
     public void startSession() {
-       ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
 
+        String player1Level = readData(player1Channel);
+        System.out.println("received level number from client 1 >>> " + player1Level);
+        String player1LevelContent = loadLevel(Integer.parseInt(player1Level));
+        sendData(player1Channel, player1LevelContent);
+
+        String player2Level = readData(player2Channel);
+        System.out.println("received level number from client 2 >>> " + player2Level);
+        String player2LevelContent = loadLevel(Integer.parseInt(player2Level));
+        sendData(player2Channel, player2LevelContent);
+
+        /// send levels of enemies
+        sendData(player1Channel, player2LevelContent);
+        System.out.println("send level of enemy  ");
+        sendData(player2Channel, player1LevelContent);
+        System.out.println("send level of enemy " );
+
+        // exchange data
+        System.out.println("!player1Channel.isOpen() && !player2Channel.isOpen()");
+
+        // always read data from first client and send them to seconds client EnemyFieldController
+        ClientListener firstClientListener = new ClientListener(player1Channel, player2Channel, this, "firstClient");
+        firstClientListener.start();
+
+        // always read data from second client and send them to first  client EnemyFieldController
+        ClientListener secondClientListener = new ClientListener(player1Channel, player2Channel, this, "secondClient");
+        secondClientListener.start();
+
+
+       // try {
+       //
+       //     String player1Level = readData(player1Channel);
+       //     System.out.println("received level number from client 1 >>> " + player1Level);
+       //     String player1LevelContent = loadLevel(Integer.parseInt(player1Level));
+       //     sendData(player1Channel, player1LevelContent);
+       //
+       //     String player2Level = readData(player2Channel);
+       //     System.out.println("received level number from client 2 >>> " + player2Level);
+       //     String player2LevelContent = loadLevel(Integer.parseInt(player2Level));
+       //     sendData(player2Channel, player2LevelContent);
+       //
+       //     /// send levels of enemies
+       //      sendData(player1Channel, player2LevelContent);
+       //       System.out.println("send level of enemy  ");
+       //      sendData(player2Channel, player1LevelContent);
+       //       System.out.println("send level of enemy " );
+       //
+       //    // change data
+       //     while (player1Channel.isOpen() && player2Channel.isOpen()) {
+       //         System.out.println("!player1Channel.isOpen() && !player2Channel.isOpen()");
+       //
+       //         // String infoFromPlayer1 = readData(player1Channel);
+       //         // System.out.println("received info from first player  >>> " + infoFromPlayer1);
+       //         // String infoFromPlayer2 = readData(player2Channel);
+       //         // System.out.println("received info from second player  >>> " + infoFromPlayer2);
+       //         //
+       //         // sendData(player1Channel, infoFromPlayer2);
+       //         // System.out.println("sent info to first player  >>> ");
+       //         //
+       //         // sendData(player2Channel, infoFromPlayer1);
+       //         // System.out.println("sent info to second player  >>> ");
+       //
+       //         // always read data from first client and send them to seconds client EnemyFieldController
+       //         FirstClientListener firstClientListener = new FirstClientListener(player1Channel);
+       //         firstClientListener.start();
+       //
+       //         // always read data from second client and send them to first  client EnemyFieldController
+       //
+       //
+       //
+       //     }
+       // } catch (IOException exception) {
+       //     System.out.println("exception " + exception);
+       //     exception.printStackTrace();
+       // }
+
+
+
+   }
+
+   // private void sendLevelToClients(int level) throws IOException {
+   //     String levelContent = loadLevel(level);
+   //     sendData(player1Channel, levelContent);
+   //     sendData(player2Channel, levelContent);
+   // }
+
+
+   public String readData(SocketChannel channel) {
        try {
-          //getting level from clients
-           String currentLevel = readData(player1Channel);
-           System.out.println("received level number from client 1 >>> " + currentLevel);
-           currentLevel = readData(player2Channel);
-           System.out.println("received level number from client 2 >>> " + currentLevel);
-
-           System.out.println("received level number from clients >>> " + currentLevel);
-           sendLevelToClients(Integer.parseInt(currentLevel));
-
-          // change data
-           while (player1Channel.isOpen() && player2Channel.isOpen()) {
-               System.out.println("!player1Channel.isOpen() && !player2Channel.isOpen()");
-               String infoFromPlayer1 = readData(player1Channel);
-               System.out.println("received info from first player  >>> " + infoFromPlayer1);
-               String infoFromPlayer2 = readData(player2Channel);
-               System.out.println("received info from second player  >>> " + infoFromPlayer2);
-
-               sendData(player1Channel, infoFromPlayer2);
-               System.out.println("sent info to first player  >>> ");
-
-               sendData(player2Channel, infoFromPlayer1);
-               System.out.println("sent info to second player  >>> ");
+           ByteBuffer buffer = ByteBuffer.allocate(1024);
+           int bytesRead = channel.read(buffer);
+           if (bytesRead > 0) {
+               buffer.flip();
+               byte[] data = new byte[buffer.remaining()];
+               buffer.get(data);
+               return new String(data);
            }
        } catch (IOException exception) {
-           System.out.println("exception " + exception);
+           System.out.println("exception while readData from client" + exception);
            exception.printStackTrace();
+           return null;
        }
+        return null;
    }
 
-   private void sendLevelToClients(int level) throws IOException {
-       String levelContent = loadLevel(level);
-       sendData(player1Channel, levelContent);
-       sendData(player2Channel, levelContent);
-   }
+   public void sendData(SocketChannel channel, String data) {
+       try {
+           if (data != null) {
+               ByteBuffer buffer = ByteBuffer.wrap(data.getBytes());
+               channel.write(buffer);
+               System.out.println("sent data to client");
+           }
+       } catch (IOException exception) {
+           System.out.println("exception while readData from client" + exception);
+           exception.printStackTrace();
 
-   private String readData(SocketChannel channel) throws IOException {
-       ByteBuffer buffer = ByteBuffer.allocate(1024);
-       int bytesRead = channel.read(buffer);
-       if (bytesRead > 0) {
-           buffer.flip();
-           byte[] data = new byte[buffer.remaining()];
-           buffer.get(data);
-           return new String(data);
        }
-       return null;
-   }
 
-   private void sendData(SocketChannel channel, String data) throws IOException {
-       if (data != null) {
-           ByteBuffer buffer = ByteBuffer.wrap(data.getBytes());
-           channel.write(buffer);
-           System.out.println("sent data to client");
-       }
    }
 
 

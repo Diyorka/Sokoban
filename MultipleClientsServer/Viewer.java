@@ -10,7 +10,7 @@ public class Viewer {
   public Viewer( Client client) {
     controller = new Controller(this, client);
     Model model = controller.getModel();
-    EnemyModel enemyModel = new EnemyModel(this, model.copyDesktop());
+    EnemyModel enemyModel = new EnemyModel(this, client);
     myCanvas = new Canvas(model);
     enemyCanvas = new Canvas(enemyModel);
 
@@ -37,11 +37,13 @@ public class Viewer {
   }
 
   public void update() {
+    System.out.println("Repaint my canvas");
     myCanvas.repaint();
   }
   public void updateEnemyField() {
+     System.out.println("Repaint enemy canvas");
     enemyCanvas.repaint();
-    
+
   }
 
 
