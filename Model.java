@@ -21,6 +21,8 @@ public class Model {
 
     private final Music boxInTargetSound;
     private final Music wonSound;
+    private final Music moveSnowSound;
+    private final Music backgroundSnowMusic;
 
     private String move;
     private int playerPosX;
@@ -55,6 +57,11 @@ public class Model {
         levelList = new Levels();
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
+        moveSnowSound = new Music(new File("music/move_snow.wav"));
+
+        backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
+        backgroundSnowMusic.play();
+
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
@@ -102,6 +109,7 @@ public class Model {
         System.out.println("Moves: " + totalMoves); //debug
 
         if (isWon()) {
+            moveSnowSound.stop();
             boxInTargetSound.stop();
             wonSound.play();
             int passedLevel = levelList.getCurrentLevel();
@@ -335,6 +343,7 @@ public class Model {
             map[playerPosY][playerPosX - 2] = BOX;
         }
 
+        moveSnowSound.play();
         map[playerPosY][playerPosX - 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
@@ -363,6 +372,7 @@ public class Model {
             map[playerPosY][playerPosX + 2] = BOX;
         }
 
+        moveSnowSound.play();
         map[playerPosY][playerPosX + 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX += 1;
@@ -391,6 +401,7 @@ public class Model {
             map[playerPosY - 2][playerPosX] = BOX;
         }
 
+        moveSnowSound.play();
         map[playerPosY - 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY -= 1;
@@ -419,6 +430,7 @@ public class Model {
             map[playerPosY + 2][playerPosX] = BOX;
         }
 
+        moveSnowSound.play();
         map[playerPosY + 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY += 1;

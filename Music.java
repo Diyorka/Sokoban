@@ -11,37 +11,30 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Music implements AutoCloseable {
-    private boolean released;
-    private AudioInputStream stream;
+
+    private AudioInputStream inputStream;
     private Clip clip;
     private FloatControl volumeControl;
     private boolean playing;
+    private boolean initialization;
 
     public Music(File file) {
         try {
-            stream = AudioSystem.getAudioInputStream(file);
+            inputStream = AudioSystem.getAudioInputStream(file);
             clip = AudioSystem.getClip();
-            clip.open(stream);
+            clip.open(inputStream);
             clip.addLineListener(new SoundController());
             volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            released = true;
+            initialization = true;
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
             System.err.println(exc);
-            released = false;
+            initialization = false;
             close();
         }
     }
 
-    public boolean isReleased() {
-        return released;
-    }
-
-    public boolean isPlaying() {
-        return playing;
-    }
-
     public void play(boolean breakOld) {
-        if (released) {
+        if (initialization) {
             if (breakOld) {
                 clip.stop();
                 clip.setFramePosition(0);
@@ -59,6 +52,22 @@ public class Music implements AutoCloseable {
         play(true);
     }
 
+    public void playLoop() {
+        if (initialization) {
+            while (true) {
+                clip.stop();
+                clip.setFramePosition(0);
+                clip.start();
+                playing = true;
+                if (!isPlaying()) {
+                    clip.setFramePosition(0);
+                    clip.start();
+                    playing = true;
+                }
+            }
+        }
+    }
+
     public void stop() {
         if (playing) {
             clip.stop();
@@ -69,12 +78,24 @@ public class Music implements AutoCloseable {
         if (clip != null)
         clip.close();
 
-        if (stream != null)
+        if (inputStream != null)
         try {
-            stream.close();
+            inputStream.close();
         } catch (IOException ioe) {
             System.err.println(ioe);
         }
+    }
+
+    public boolean isInitialization() {
+        return initialization;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public Clip getClip(){
+        return clip;
     }
 
     // public void setVolume(float x) {
@@ -93,7 +114,7 @@ public class Music implements AutoCloseable {
     // }
 
     // public void join() {
-    //     if (!released) return;
+    //     if (!initialization) return;
     //     synchronized (clip) {
     //         try {
     //             while (playing)
