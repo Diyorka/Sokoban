@@ -162,6 +162,10 @@ public class Model {
         viewer.showCanvas();
     }
 
+    public void updateCurrentSkin(String skin) {
+        dbService.updateCurrentSkin(player.getNickname(), skin);
+    }
+
     private void showEndLevelDialog() {
         Object[] options = {"Go to levels", "Next level"};
         int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
