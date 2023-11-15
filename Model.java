@@ -434,7 +434,7 @@ public class Model {
     }
 
     private boolean canMoveBoxToRight() {
-        if (((map[playerPosY][playerPosX + 2] == WALL) || (map[playerPosY][playerPosX + 2] == BOX)) && (playerPosX + 2 < map.length)) {
+        if (((map[playerPosY][playerPosX + 2] == WALL) || (map[playerPosY][playerPosX + 2] == BOX)) && (playerPosX + 2 < map[playerPosY].length)) {
             System.out.println("Impossible move box to the right"); //debug
             return false;
         }
@@ -450,7 +450,7 @@ public class Model {
     }
 
     private boolean canMoveBoxToBot() {
-        if (((map[playerPosY + 2][playerPosX] == WALL) || (map[playerPosY + 2][playerPosX] == BOX)) && (playerPosY + 2 < map.length)) {
+        if (((map[playerPosY + 2][playerPosX] == WALL) || (map[playerPosY + 2][playerPosX] == BOX)) && (playerPosY + 2 < map[playerPosX].length)) {
             System.out.println("Impossible move box to the bottom"); //debug
             return false;
         }
