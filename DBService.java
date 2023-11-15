@@ -15,6 +15,7 @@ public class DBService {
     private final String coinsPath = "db/passed_levels.csv";
     private final String skinsPath = "db/available_skins.csv";
     private final String totalCoinsPath = "db/total_coins.csv";
+    private final String currentSkinPath = "db/current_skin.csv";
 
     public DBService() {}
 
@@ -52,10 +53,13 @@ public class DBService {
                     writeTotalCoins(nickname, coins - currentCoins);
                 }
 
+                writer.close();
+
             } else {
                 writer.append(nickname + ";" + level + ";" + coins);
                 writer.newLine();
                 writer.close();
+
 
                 writeTotalCoins(nickname, coins);
             }
@@ -84,19 +88,32 @@ public class DBService {
         }
     }
 
-    public void readDataFromCSV() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("passed_levels.csv"))) {
-            reader.readLine();
-            String line;
+    public void updateCurrentSkin(String nickname, String skin) {
+        try {
+            boolean fileExists = Files.exists(Paths.get(currentSkinPath));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(currentSkinPath, true));
 
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(";");
-                String nickname = data[0];
-                int level = Integer.parseInt(data[1]);
-                int coins = Integer.parseInt(data[2]);
+            if (!fileExists) {
+                writer.append("Nickname;Skin");
+                writer.newLine();
             }
 
-        } catch (IOException e) {
+            String fileContent = new String(Files.readAllBytes(Paths.get(currentSkinPath)));
+
+            Pattern pattern = Pattern.compile(nickname +  ";(.+)");
+            Matcher matcher = pattern.matcher(fileContent);
+
+            if(matcher.find()) {
+                String currentSkin = matcher.group(1);
+                fileContent = fileContent.replaceAll(nickname + ";.+", nickname + ";" + skin);
+                Files.write(Paths.get(currentSkinPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            } else {
+                writer.append(nickname + ";" + skin);
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch(IOException e) {
             System.out.println(e);
         }
     }

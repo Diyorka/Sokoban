@@ -42,8 +42,16 @@ public class Model {
     private int[][] checksPos;
     private int[][] coinsPos;
 
+    private boolean isDouble;
+
+    public Model(Viewer viewer, boolean isDouble) {
+        this(viewer);
+        this.isDouble = isDouble;
+    }
+
     public Model(Viewer viewer) {
         this.viewer = viewer;
+        this.isDouble = isDouble;
         dbService = new DBService();
         initPlayer("Stive");
         levelList = new Levels();
@@ -106,9 +114,14 @@ public class Model {
             wonSound.play();
             int passedLevel = levelList.getCurrentLevel();
             dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
-            showEndLevelDialog();
             collectedCoins = 0;
+            if (!isDouble) {
+                showEndLevelDialog();
+            } else {
+                showWonDialog();
+            }
         }
+
     }
 
     public void changeLevel(String command) {
@@ -145,6 +158,22 @@ public class Model {
         return player;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void getNextLevel() {
+        map = levelList.getNextMap();
+        if (map != null) {
+            scanMap();
+        }
+        viewer.showCanvas();
+    }
+
+    public void updateCurrentSkin(String skin) {
+        dbService.updateCurrentSkin(player.getNickname(), skin);
+    }
+
     private void showEndLevelDialog() {
         Object[] options = {"Go to levels", "Next level"};
         int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
@@ -163,6 +192,23 @@ public class Model {
         } else {
             viewer.showMenu();
             map = null;
+        }
+    }
+
+    private void showWonDialog() {
+        String[] options = {"Wait other player", "Return"};
+        int result = javax.swing.JOptionPane.showOptionDialog(
+                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
+                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]
+        );
+        switch (result) {
+            case 0:
+                System.out.println("Wait option selected");
+                break;
+            case 1:
+                System.out.println("Return option selected");
+                break;
         }
     }
 
@@ -188,6 +234,7 @@ public class Model {
         checksCount = 0;
         totalMoves = 0;
         coinsCount = 0;
+        collectedCoins = 0;
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
