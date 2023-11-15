@@ -55,6 +55,7 @@ public class Model {
         dbService = new DBService();
         initPlayer("Stive");
         levelList = new Levels();
+
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
         moveSnowSound = new Music(new File("music/move_snow.wav"));
