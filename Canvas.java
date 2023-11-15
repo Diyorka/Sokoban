@@ -88,9 +88,18 @@ public class Canvas extends JPanel {
       exitGameButton.setFont(customFont);
       exitGameButton.setForeground(Color.BLACK);
       exitGameButton.setBackground(new Color(59, 89, 182));
-      exitGameButton.setFocusPainted(false);
+      exitGameButton.setActionCommand("Exit to menu");
       exitGameButton.addActionListener(controller);
       add(exitGameButton);
+
+      JButton nextLevelButton = new JButton("Next level");
+      nextLevelButton.setBounds(1010, 700, 150, 40);
+      nextLevelButton.setFont(customFont);
+      nextLevelButton.setForeground(Color.BLACK);
+      nextLevelButton.setBackground(new Color(59, 89, 182));
+      nextLevelButton.setActionCommand("Next level");
+      nextLevelButton.addActionListener(controller);
+      add(nextLevelButton);
   }
 
   public void paintComponent(Graphics g) {

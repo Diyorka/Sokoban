@@ -141,6 +141,14 @@ public class Model {
         return player;
     }
 
+    public void getNextLevel() {
+        map = levelList.getNextMap();
+        if (map != null) {
+            scanMap();
+        }
+        viewer.showCanvas();
+    }
+
     private void showEndLevelDialog() {
         Object[] options = {"Go to levels", "Next level"};
         int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
@@ -184,6 +192,7 @@ public class Model {
         checksCount = 0;
         totalMoves = 0;
         coinsCount = 0;
+        collectedCoins = 0;
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
