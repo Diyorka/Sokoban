@@ -16,7 +16,7 @@ import javax.swing.SwingConstants;
 
 import java.awt.Dimension;
 
-public class Canvas extends JPanel {
+public class CanvasForTwoPlayers extends JPanel {
 
   private Image gamerImage;
   private Image frontGamerImage;
@@ -36,7 +36,7 @@ public class Canvas extends JPanel {
   private GeneralModel model;
 
 
-  public Canvas(GeneralModel model, Controller controller) {
+  public CanvasForTwoPlayers(GeneralModel model, Controller controller) {
       this.model = model;
       this.controller = controller;
       backgroundImage = new ImageIcon("images/background.jpg").getImage();
@@ -59,7 +59,7 @@ public class Canvas extends JPanel {
       Image scaledCoins = coins.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
       ImageIcon coinsIcon = new ImageIcon(scaledCoins);
       coinsImageLabel.setIcon(coinsIcon);
-      coinsImageLabel.setBounds(1090, 30, 80, 80);
+      coinsImageLabel.setBounds(500, 30, 80, 80);
       add(coinsImageLabel);
 
       JLabel stepsImageLabel = new JLabel();
@@ -75,7 +75,7 @@ public class Canvas extends JPanel {
       coinsLabel = new JLabel("0");
       coinsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
       coinsLabel.setForeground(Color.WHITE);
-      coinsLabel.setBounds(980, 20, 100, 100);
+      coinsLabel.setBounds(390, 20, 100, 100);
       coinsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
       add(coinsLabel);
 
@@ -94,15 +94,6 @@ public class Canvas extends JPanel {
       exitGameButton.setActionCommand("Exit to menu");
       exitGameButton.addActionListener(controller);
       add(exitGameButton);
-
-      JButton nextLevelButton = new JButton("Next level");
-      nextLevelButton.setBounds(1010, 700, 150, 40);
-      nextLevelButton.setFont(customFont);
-      nextLevelButton.setForeground(Color.BLACK);
-      nextLevelButton.setBackground(new Color(59, 89, 182));
-      nextLevelButton.setActionCommand("Next level");
-      nextLevelButton.addActionListener(controller);
-      add(nextLevelButton);
   }
 
   public void paintComponent(Graphics g) {
@@ -143,7 +134,7 @@ public class Canvas extends JPanel {
   }
 
   private void drawDesktop(Graphics g, int[][] desktop) {
-    int start = 350;
+    int start = 50;
     int y = 150, x;
     x = start;
     int width = 50;
