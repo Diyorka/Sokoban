@@ -185,10 +185,11 @@ public class Levels {
           maxColumnCount = Math.max(maxColumnCount, row.length());
       }
 
-      int[][] array = new int[rowCount][maxColumnCount];
+      int[][] array = new int[rowCount][];
 
       for (int i = 0; i < rowCount; i++) {
           String row = rows[i];
+          array[i] = new int[row.length()];
           for (int j = 0; j < row.length(); j++) {
               char symbol = row.charAt(j);
               int element = Character.getNumericValue(symbol);
