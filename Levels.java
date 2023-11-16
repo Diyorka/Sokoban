@@ -1,53 +1,62 @@
+import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Levels {
-  private int currentLevel;
+    private int currentLevel;
 
-  public Levels() {
-      currentLevel = 1;
-  }
+    public Levels() {
+        currentLevel = 1;
+    }
 
-  public int getCurrentLevel() {
-      return currentLevel;
-  }
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
 
-  public int[][] getNextMap() {
-      currentLevel++;
-      return getCurrentMap();
-  }
+    public int[][] getNextMap() {
+        currentLevel++;
+        return getCurrentMap();
+    }
 
-  public int[][] getCurrentMap() {
-      int[][] map = null;
+    public int[][] getCurrentMap() {
+        int[][] map = null;
 
-      switch (currentLevel) {
-        case 1:
-            map = getFirstLevel();
-            break;
-        case 2:
-            map = getSecondLevel();
-            break;
-        case 3:
-            map = getThirdLevel();
-            break;
-        case 4:
-            map = getFourthLevel();
-            break;
-        case 5:
-            map = getFifthLevel();
-            break;
-        case 6:
-            map = getSixthLevel();
-            break;
-        case 7:
-            map = getSeventhLevel();
-            break;
-        case 8:
-            map = getEighthLevel();
-            break;
-        case 9:
-            map = getNinthLevel();
-            break;
-        default:
-            map = getFirstLevel();
-            currentLevel = 1;
+        switch (currentLevel) {
+            case 1:
+                map = getFirstLevel();
+                break;
+            case 2:
+                map = getSecondLevel();
+                break;
+            case 3:
+                map = getThirdLevel();
+                break;
+            case 4:
+                map = getFourthLevel();
+                break;
+            case 5:
+                map = getFifthLevel();
+                break;
+            case 6:
+                map = getSixthLevel();
+                break;
+            case 7:
+                map = getSeventhLevel();
+                break;
+            case 8:
+                map = getEighthLevel();
+                break;
+            case 9:
+                map = getNinthLevel();
+                break;
+            default:
+                map = getFirstLevel();
+                currentLevel = 1;
       }
 
       return map;
@@ -60,61 +69,68 @@ public class Levels {
   private int[][] getFirstLevel() {
       return new int[][]
       {
-              {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-              {2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
-              {2, 0, 5, 0, 0, 0, 3, 4, 0, 2},
-              {2, 0, 2, 0, 0, 0, 0, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 3, 0, 0, 2},
-              {2, 0, 4, 0, 0, 5, 0, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-              {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 1, 3, 0, 5, 4, 0, 2},
+        {2, 0, 0, 0, 3, 0, 5, 4, 0, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
   }
 
   private int[][] getSecondLevel() {
       return new int[][]
       {
-              {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-              {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-              {2, 0, 2, 0, 0, 5, 0, 0, 0, 2},
-              {2, 0, 2, 0, 2, 0, 0, 0, 0, 2},
-              {2, 0, 0, 0, 2, 0, 0, 0, 0, 2},
-              {2, 0, 5, 4, 2, 0, 0, 0, 0, 2},
-              {2, 0, 0, 0, 2, 0, 1, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 3, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-              {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+          {2, 0, 2, 0, 0, 5, 0, 0, 0, 2},
+          {2, 0, 2, 0, 2, 0, 0, 0, 0, 2},
+          {2, 0, 0, 0, 2, 0, 0, 0, 0, 2},
+          {2, 0, 5, 4, 2, 0, 0, 0, 0, 2},
+          {2, 0, 0, 0, 2, 0, 1, 0, 0, 2},
+          {2, 0, 0, 0, 0, 0, 0, 3, 0, 2},
+          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
   }
 
   private int[][] getThirdLevel() {
       return new int[][]
       {
-              {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-              {2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 3, 0, 0, 2},
-              {2, 0, 0, 5, 0, 0, 4, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-              {2, 0, 0, 0, 0, 0, 0, 5, 0, 2},
-              {2, 0, 0, 5, 0, 0, 3, 0, 0, 2},
-              {2, 0, 4, 0, 0, 0, 0, 0, 0, 2},
-              {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
-              {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+          {2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
+          {2, 0, 0, 0, 0, 0, 3, 0, 0, 2},
+          {2, 0, 0, 5, 0, 0, 4, 0, 0, 2},
+          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+          {2, 0, 0, 0, 0, 0, 0, 5, 0, 2},
+          {2, 0, 0, 5, 0, 0, 3, 0, 0, 2},
+          {2, 0, 4, 0, 0, 0, 0, 0, 0, 2},
+          {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
+          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
   }
 
   private int[][] getFourthLevel() {
-      return null;
+      String levelPath = "levels/level4.sok";
+      String data = loadLevel(levelPath);
+      int[][] map = parseData(data, '\n');
+      return map;
   }
 
   private int[][] getFifthLevel() {
-      return null;
+      String levelPath = "levels/level5.sok";
+      String data = loadLevel(levelPath);
+      int[][] map = parseData(data, '\n');
+      return map;
   }
 
   private int[][] getSixthLevel() {
-      return null;
+      String levelPath = "levels/level6.sok";
+      String data = loadLevel(levelPath);
+      int[][] map = parseData(data, '\n');
+      return map;
   }
 
   private int[][] getSeventhLevel() {
@@ -129,5 +145,58 @@ public class Levels {
       return null;
   }
 
+  private String loadLevel(String levelPath) {
+      StringBuilder data = new StringBuilder();
 
+      try {
+          Path filePath = Paths.get(levelPath);
+
+          List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+          String pattern = "[0-4]";
+          Pattern compiledPattern = Pattern.compile(pattern);
+          Matcher matcher = null;
+
+          for (String line : lines) {
+              matcher = compiledPattern.matcher(line);
+              if(matcher.find()) {
+                  data.append(matcher.group());
+                  while(matcher.find()){
+                      data.append(matcher.group());
+                  }
+                  data.append('\n');
+              }
+          }
+          System.out.println(data.toString());
+          return data.toString();
+
+      } catch (IOException ioe) {
+          System.out.println("Error " + ioe);
+      }
+
+      return data.toString();
+  }
+
+  private int[][] parseData(String data, char newLineSymbol) {
+
+      String[] rows = data.split(String.valueOf(newLineSymbol));
+
+      int rowCount = rows.length;
+      int maxColumnCount = 0;
+
+      for (String row : rows) {
+          maxColumnCount = Math.max(maxColumnCount, row.length());
+      }
+
+      int[][] array = new int[rowCount][maxColumnCount];
+
+      for (int i = 0; i < rowCount; i++) {
+          String row = rows[i];
+          for (int j = 0; j < row.length(); j++) {
+              char symbol = row.charAt(j);
+              int element = Character.getNumericValue(symbol);
+              array[i][j] = element;
+          }
+      }
+      return array;
+  }
 }
