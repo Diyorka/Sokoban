@@ -83,7 +83,7 @@ public class Canvas extends JPanel {
       stepsLabel = new JLabel("0");
       stepsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
       stepsLabel.setForeground(Color.WHITE);
-      stepsLabel.setBounds(120, 20, 100, 100);
+      stepsLabel.setBounds(120, 20, 200, 100);
       add(stepsLabel);
 
       JButton exitGameButton = new JButton("Exit to menu");
