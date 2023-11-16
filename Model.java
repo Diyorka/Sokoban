@@ -73,6 +73,7 @@ public class Model implements GeneralModel {
     }
 
     public void doAction(int keyMessage) {
+        System.out.println("in model do Action");
         if (keyMessage == RESTART) {
             System.out.println("------------ Map restarted ------------\n\n");
             collectedCoins = 0;
@@ -93,19 +94,52 @@ public class Model implements GeneralModel {
         if (keyMessage == LEFT) {
             move = "Left";
             moveLeft();
+            System.out.println("Left");
+            for(int i = 0; i < map.length; i++) {
+                for(int j = 0; j < map[i].length; j++) {
+                    System.out.print(map[i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
         } else if(keyMessage == RIGHT) {
             move = "Right";
             moveRight();
+            System.out.println("Right");
+            for(int i = 0; i < map.length; i++) {
+                for(int j = 0; j < map[i].length; j++) {
+                    System.out.print(map[i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
         } else if(keyMessage == UP) {
             move = "Up";
             moveTop();
+            System.out.println("Up");
+            for(int i = 0; i < map.length; i++) {
+                for(int j = 0; j < map[i].length; j++) {
+                    System.out.print(map[i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
         } else if(keyMessage == DOWN) {
             move = "Down";
             moveBot();
+            System.out.println("Down");
+            for(int i = 0; i < map.length; i++) {
+                for(int j = 0; j < map[i].length; j++) {
+                    System.out.print(map[i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
         }
 
         returnCheck();
-        viewer.update();
+        viewer.update();// when play alone
+        viewer.updateMyCanvas();// when play with enemy
 
         System.out.println("Moves: " + totalMoves); //debug
 

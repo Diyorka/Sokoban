@@ -32,7 +32,7 @@ public class Viewer {
         canvas.addKeyListener(controller);
 
         myCanvas = new Canvas(model, controller);
-        canvas.addKeyListener(controller);
+        myCanvas.addKeyListener(controller);
 
         enemyCanvas = new Canvas(enemyModel, null);
         LevelChooser levelChooser = new LevelChooser(this, model);
@@ -48,7 +48,7 @@ public class Viewer {
 
 
         frame = new JFrame("Sokoban");
-        frame.setSize(1200, 800);// 1200 800
+        frame.setSize(1200, 800);
         frame.setLocation(200, 15);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
@@ -74,6 +74,9 @@ public class Viewer {
         enemyCanvas.repaint();
     }
 
+    public void updateMyCanvas() {
+        myCanvas.repaint();
+    }
 
 
     public void updateSettings(Player player) {
@@ -87,7 +90,6 @@ public class Viewer {
 
     public void showCanvas() {
         update();
-        // frame.add(canvas, "canvas");
         cardLayout.show(frame.getContentPane(), "canvas");
         canvas.requestFocusInWindow();
     }
@@ -113,16 +115,10 @@ public class Viewer {
     }
 
     private void showTwoCanvas() {
-        // if(hasFrameCanvas()) {
-        //      frame.remove(canvas);
-        //      System.out.println("remove canvas");
-        //      System.out.println(hasFrameCanvas());
-        // }
-        // System.out.println("in show two canvas");
         update();
         updateEnemyCanvas();
-        // frame.add(splitPane, "splitPane");
         cardLayout.show(frame.getContentPane(), "splitPane");
+        myCanvas.requestFocusInWindow();
 
     }
     public void showLevelChooser() {

@@ -18,7 +18,6 @@ import java.awt.Dimension;
 
 public class Canvas extends JPanel {
 
-  // private Model model;
   private Image gamerImage;
   private Image frontGamerImage;
   private Image backGamerImage;
