@@ -1,3 +1,12 @@
+import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Levels {
   private int currentLevel;
 
@@ -106,15 +115,24 @@ public class Levels {
   }
 
   private int[][] getFourthLevel() {
-      return null;
+      String levelPath = "levels/level4.sok";
+      String data = loadLevel(levelPath);
+      int[][] map = parseData(data, '\n');
+      return map;
   }
 
   private int[][] getFifthLevel() {
-      return null;
+      String levelPath = "levels/level5.sok";
+      String data = loadLevel(levelPath);
+      int[][] map = parseData(data, '\n');
+      return map;
   }
 
   private int[][] getSixthLevel() {
-      return null;
+      String levelPath = "levels/level6.sok";
+      String data = loadLevel(levelPath);
+      int[][] map = parseData(data, '\n');
+      return map;
   }
 
   private int[][] getSeventhLevel() {
@@ -128,6 +146,62 @@ public class Levels {
   private int[][] getNinthLevel() {
       return null;
   }
+
+  private String loadLevel(String levelPath) {
+      StringBuilder data = new StringBuilder();
+
+      try {
+          Path filePath = Paths.get(levelPath);
+
+          List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+          String pattern = "[0-4]";
+          Pattern compiledPattern = Pattern.compile(pattern);
+          Matcher matcher = null;
+
+          for (String line : lines) {
+              matcher = compiledPattern.matcher(line);
+              if(matcher.find()) {
+                  data.append(matcher.group());
+                  while(matcher.find()){
+                      data.append(matcher.group());
+                  }
+                  data.append('\n');
+              }
+          }
+          System.out.println(data.toString());
+          return data.toString();
+
+      } catch (IOException ioe) {
+          System.out.println("Error " + ioe);
+      }
+
+      return data.toString();
+  }
+
+//TODO UPDATE PARSE DATA
+private int[][] parseData(String data, char newLineSymbol) {
+   String[] rows = data.split(String.valueOf(newLineSymbol));
+
+   int rowCount = rows.length;
+   int maxColumnCount = 0;
+
+   for (String row : rows) {
+       maxColumnCount = Math.max(maxColumnCount, row.length());
+   }
+
+   int[][] array = new int[rowCount][maxColumnCount];
+
+   for (int i = 0; i < rowCount; i++) {
+       String row = rows[i];
+       for (int j = 0; j < row.length(); j++) {
+           char symbol = row.charAt(j);
+           int element = Character.getNumericValue(symbol);
+           array[i][j] = element;
+       }
+   }
+
+   return array;
+}
 
   //
     //
