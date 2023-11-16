@@ -171,13 +171,13 @@ public class Model implements GeneralModel {
 
         if (map != null) {
             scanMap();
-        }
-        System.out.println("getting our map >>>");
-        for(int i = 0; i < map.length; i++) {
-            for(int j = 0; j < map[i].length; j++) {
-                System.out.print(map[i][j] + " ");
+            System.out.println("getting our map >>>");
+            for(int i = 0; i < map.length; i++) {
+                for(int j = 0; j < map[i].length; j++) {
+                    System.out.print(map[i][j] + " ");
+                }
+                System.out.println();
             }
-            System.out.println();
         }
         System.out.println();
         viewer.showCanvas(gamersCount);/////////// ----------------
@@ -276,28 +276,32 @@ public class Model implements GeneralModel {
     }
 
     private void scanMap() {
-        for (int i = 0; i < map.length - 1; i++) {
-            int currentMapLineLength = map[i].length;
-            int nextMapLineLength = map[i + 1].length;
-            if (nextMapLineLength <= currentMapLineLength) {
-                continue;
-            }
+        deleteMapValues();
 
-            int nextMapLineLastElementOfCurrentLine = map[i + 1][map[i].length];
-            int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
-            if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
-                System.out.println("Map have invalid structure\n" + "Problem in mapline " + (i + 1));
-                map = null;
-                return;
-            }
+        if (!(isLeftWallsCorrect() && isRightWallsCorrect())) {
+            return;
         }
 
+        setMapValues();
+
+        if (!isMapPlayable()) {
+            return;
+        }
+
+        saveChecksPos();
+        saveCoinsPos();
+    }
+
+    private void deleteMapValues() {
         playerCount = 0;
         boxesCount = 0;
         checksCount = 0;
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
+    }
+
+    private void setMapValues() {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
@@ -313,16 +317,83 @@ public class Model implements GeneralModel {
                 }
             }
         }
+    }
 
+    private boolean isLeftWallsCorrect(){
+        int wallX = -1;
+        int wallY = -1;
+        int prevWallX = -1;
+        int prevWallY = -1;
+        for(int i = 0; i < map.length; i++) {
+            boolean wallFound = false;
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == 2) {
+                    wallFound = true;
+                    wallY = i;
+                    wallX = j;
+                    break;
+                }
+            }
+            if (i != 0) {
+                int differenceBetweenWalls = Math.abs(prevWallX - wallX);
+                if (prevWallX > wallX) {
+                    for (int k = prevWallX; k > prevWallX - differenceBetweenWalls; k--) {
+                        if (map[wallY][k] != 2) {
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(prevWallX>wallX)");
+                            map = null;
+                            return false;
+                        }
+                    }
+                }
+                if (wallX > prevWallX) {
+                    for (int k = prevWallX; k < wallX - 1; k++) {
+                        if (map[prevWallY][k] != 2) {
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(wallX>prevWallX)");
+                            map = null;
+                            return false;
+                        }
+                    }
+                }
+            }
+            prevWallY = wallY;
+            prevWallX = wallX;
+            wallFound = false;
+        }
+        return true;
+    }
+
+    private boolean isRightWallsCorrect() {
+        for (int i = 0; i < map.length - 1; i++) {
+            int currentMapLineLength = map[i].length;
+            int nextMapLineLength = map[i + 1].length;
+            if (nextMapLineLength <= currentMapLineLength) {
+                continue;
+            }
+
+            int nextMapLineLastElementOfCurrentLine = map[i + 1][map[i].length];
+            int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
+            if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
+                System.out.println("isRightWallsCorrect(): problems with element in mapline " + (i + 1));
+                map = null;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isMapPlayable() {
         if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && checksCount == 0) {
-            System.out.println("Map have invalid game parameters");
-            System.out.println("players: " + playerCount);
+            System.out.println("isMapPlayable(): map have invalid game parameters");
+            System.out.println("players: " + playerCount + ("(should be equal to 1)"));
             System.out.println("boxes: " + boxesCount);
             System.out.println("checks: " + checksCount);
             map = null;
-            return;
+            return false;
         }
+        return true;
+    }
 
+    private void saveChecksPos() {
         checksPos = new int[checksCount][2];
         int checksQueue = 0;
         for (int i = 0; i < map.length; i++) {
@@ -334,7 +405,9 @@ public class Model implements GeneralModel {
                 }
             }
         }
+    }
 
+    private void saveCoinsPos() {
         coinsPos = new int[coinsCount][2];
         int coinsQueue = 0;
         for (int i = 0; i < map.length; i++) {
