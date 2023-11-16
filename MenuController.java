@@ -5,11 +5,13 @@ public class MenuController implements ActionListener {
     private MenuPanel menuPanel;
     private Viewer viewer;
     private Model model;
+    private EnemyModel enemyModel;
 
-    public MenuController(MenuPanel menuPanel, Viewer viewer, Model model) {
+    public MenuController(MenuPanel menuPanel, Viewer viewer, Model model, EnemyModel enemyModel) {
         this.viewer = viewer;
         this.model = model;
         this.menuPanel = menuPanel;
+        this.enemyModel = enemyModel;
     }
 
     @Override
@@ -23,7 +25,14 @@ public class MenuController implements ActionListener {
                 viewer.updateSettings(model.getPlayer());
                 break;
             case "Play":
-                model.changeLevel("Level 1");
+                model.changeLevel("Level 1", 1);
+                break;
+            case "PlayWithEnemy":
+                System.out.println("play with enemy");
+                model.changeLevel("Level 1", 2);
+                /////
+                enemyModel.changeLevel("Level 1");
+
                 break;
             case "Level":
                 viewer.showLevelChooser();

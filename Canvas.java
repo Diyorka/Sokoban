@@ -14,9 +14,11 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import java.awt.Dimension;
+
 public class Canvas extends JPanel {
 
-  private Model model;
+  // private Model model;
   private Image gamerImage;
   private Image frontGamerImage;
   private Image backGamerImage;
@@ -32,14 +34,16 @@ public class Canvas extends JPanel {
   private Image backgroundImage;
   private JLabel coinsLabel;
   private JLabel stepsLabel;
+  private GeneralModel model;
 
-  public Canvas(Model model, Controller controller) {
+
+  public Canvas(GeneralModel model, Controller controller) {
       this.model = model;
       this.controller = controller;
       backgroundImage = new ImageIcon("images/background.jpg").getImage();
       setLayout(null);
       setOpaque(true);
-
+      setPreferredSize(new Dimension(400, 800));
       frontGamerImage = new ImageIcon("images/front-player.png").getImage();
       backGamerImage = new ImageIcon("images/back-player.png").getImage();
       leftGamerImage = new ImageIcon("images/left-side-player.png").getImage();
