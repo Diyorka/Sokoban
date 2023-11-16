@@ -23,6 +23,7 @@ public class Model implements GeneralModel {
     private final Music wonSound;
     private final Music moveSnowSound;
     private final Music backgroundSnowMusic;
+    private final Music coinSound;
 
     private String move;
     private int playerPosX;
@@ -59,6 +60,7 @@ public class Model implements GeneralModel {
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
         moveSnowSound = new Music(new File("music/move_snow.wav"));
+        coinSound = new Music(new File("music/coin.wav"));
 
         backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
         // backgroundSnowMusic.play();
@@ -394,6 +396,7 @@ public class Model implements GeneralModel {
 
         if (map[playerPosY][playerPosX - 1] == BOX) {
             if(map[playerPosY][playerPosX - 2] == COIN) {
+                coinSound.play();
                 collectedCoins++;
             }
             map[playerPosY][playerPosX - 1] = SPACE;
@@ -423,6 +426,7 @@ public class Model implements GeneralModel {
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
             if(map[playerPosY][playerPosX + 2] == COIN) {
+                coinSound.play();
                 collectedCoins++;
             }
             map[playerPosY][playerPosX + 1] = SPACE;
@@ -452,6 +456,7 @@ public class Model implements GeneralModel {
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
             if(map[playerPosY - 2][playerPosX] == COIN) {
+                coinSound.play();
                 collectedCoins++;
             }
             map[playerPosY - 1][playerPosX] = SPACE;
@@ -481,6 +486,7 @@ public class Model implements GeneralModel {
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
             if(map[playerPosY + 2][playerPosX] == COIN) {
+                coinSound.play();
                 collectedCoins++;
             }
             map[playerPosY + 1][playerPosX] = SPACE;
