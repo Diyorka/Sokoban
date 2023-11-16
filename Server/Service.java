@@ -8,35 +8,36 @@ import java.util.regex.Pattern;
 import java.nio.ByteBuffer;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 
 public class Service implements Runnable{
 
     private Thread thread;
-    private SocketChannel player1Channel;
-    private SocketChannel player2Channel;
-    private int player1Index;
-    private int player2Index;
+    private SocketChannel playerChannel;
+    private int playerIndex;
+    private boolean gameIsRunning;
+    private static final String LAST_LEVEL = "9";
 
-    public Service(SocketChannel player1Channel, SocketChannel player2Channel, int player1Index, int player2Index) {
+    public Service(SocketChannel playerChannel,int playerIndex) {
         thread = new Thread(this);
-        this.player1Channel = player1Channel;
-        this.player2Channel = player2Channel;
-        this.player1Index = player1Index;
-        this.player2Index = player2Index;
+        this.playerChannel = playerChannel;
+        this.playerIndex = playerIndex;
+        gameIsRunning = true;
+    }
+    public Service() {
+        
     }
 
     @Override
     public void run() {
         System.out.println("Game started");
-        startSession();
-
-        // wait other threads !!!
-        SocketPool.removeSocketAt(player1Index);
-        SocketPool.removeSocketAt(player2Index);
-        System.out.println(player1Channel.isOpen() + " " + player2Channel.isOpen());
+        String levelNumber = "";
+        while(gameIsRunning && playerChannel.isOpen()) {
+            sendLevelToClient();
+        }
+        closeConnection();
         System.out.println("Game over");
-
     }
 
     public void startService() {
@@ -44,40 +45,7 @@ public class Service implements Runnable{
     }
 
 
-
-    public void startSession() {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-
-        String player1Level = readData(player1Channel);
-        System.out.println("received level number from client 1 >>> " + player1Level);
-        String player1LevelContent = loadLevel(Integer.parseInt(player1Level));
-        sendData(player1Channel, player1LevelContent);
-
-        String player2Level = readData(player2Channel);
-        System.out.println("received level number from client 2 >>> " + player2Level);
-        String player2LevelContent = loadLevel(Integer.parseInt(player2Level));
-        sendData(player2Channel, player2LevelContent);
-
-        /// send levels of enemies
-        sendData(player1Channel, player2LevelContent);
-        System.out.println("send level of enemy  ");
-        sendData(player2Channel, player1LevelContent);
-        System.out.println("send level of enemy " );
-
-        // exchange data
-        System.out.println("!player1Channel.isOpen() && !player2Channel.isOpen()");
-
-        // always read data from first client and send them to seconds client EnemyFieldController
-        ClientListener firstClientListener = new ClientListener(player1Channel, player2Channel, this, "firstClient");
-        firstClientListener.start();
-
-        // always read data from second client and send them to first  client EnemyFieldController
-        ClientListener secondClientListener = new ClientListener(player1Channel, player2Channel, this, "secondClient");
-        secondClientListener.start();
-
-   }
-
-   public String readData(SocketChannel channel) {
+   public static String readData(SocketChannel channel) {
        try {
            ByteBuffer buffer = ByteBuffer.allocate(1024);
            int bytesRead = channel.read(buffer);
@@ -87,6 +55,10 @@ public class Service implements Runnable{
                buffer.get(data);
                return new String(data);
            }
+       } catch (SocketException socketExc) {
+           System.out.println("exception while readData from client" + socketExc);
+           socketExc.printStackTrace();
+           return null;
        } catch (IOException exception) {
            System.out.println("exception while readData from client" + exception);
            exception.printStackTrace();
@@ -95,21 +67,41 @@ public class Service implements Runnable{
         return null;
    }
 
-   public void sendData(SocketChannel channel, String data) {
+   public  void sendData(SocketChannel channel, String data) {
        try {
            if (data != null) {
                ByteBuffer buffer = ByteBuffer.wrap(data.getBytes());
                channel.write(buffer);
                System.out.println("sent data to client");
            }
+       }  catch (SocketException socketExc) {
+           System.out.println("exception while sendData from client" + socketExc);
+           socketExc.printStackTrace();
+           gameIsRunning = false;
        } catch (IOException exception) {
-           System.out.println("exception while readData from client" + exception);
+           System.out.println("exception while sendData from client" + exception);
            exception.printStackTrace();
 
        }
 
    }
 
+   private void sendLevelToClient() {
+       // getting level number from client
+       String levelNumber = readData(playerChannel);
+       if(levelNumber != null) {
+           if(levelNumber.equals(LAST_LEVEL)) {
+               gameIsRunning = false;
+           }
+           System.out.println("Successfully get level from client >>> " + levelNumber);
+           String levelContent = loadLevel(Integer.parseInt(levelNumber));
+           if(levelContent != null) {
+                sendData(playerChannel, levelContent);
+                return;
+           }
+       }
+       gameIsRunning = false;
+   }
 
     //load level from file on server with parsing
     private String loadLevel(int level) {
@@ -142,14 +134,22 @@ public class Service implements Runnable{
                 System.out.println("Error " + ioe);
             }
 
-
             return data.toString();
         }
         return null;
     }
 
+    private void closeConnection() {
+        SocketPool.removeSocketAt(playerIndex);
+        if(playerChannel.isOpen()) {
+            try {
+                playerChannel.close();
+            } catch (IOException exc) {
+                System.out.println(exc);
+            }
+        }
+        System.out.println(playerChannel.isOpen());
 
-
-
+    }
 
 }

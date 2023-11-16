@@ -9,9 +9,11 @@ import java.util.regex.Pattern;
 
 public class Levels {
     private int currentLevel;
+    private Client client;
 
-    public Levels() {
+    public Levels(Client client) {
         currentLevel = 1;
+        this.client = client;
     }
 
     public int getCurrentLevel() {
@@ -53,6 +55,8 @@ public class Levels {
                 break;
             case 9:
                 map = getNinthLevel();
+                
+
                 break;
             default:
                 map = getFirstLevel();
@@ -78,6 +82,7 @@ public class Levels {
         {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
         {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
+
   }
 
   private int[][] getSecondLevel() {
@@ -94,6 +99,7 @@ public class Levels {
           {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
           {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
+
   }
 
   private int[][] getThirdLevel() {
@@ -110,6 +116,7 @@ public class Levels {
           {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
           {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
+
   }
 
   private int[][] getFourthLevel() {
@@ -117,6 +124,7 @@ public class Levels {
       String data = loadLevel(levelPath);
       int[][] map = parseData(data, '\n');
       return map;
+
   }
 
   private int[][] getFifthLevel() {
@@ -124,6 +132,7 @@ public class Levels {
       String data = loadLevel(levelPath);
       int[][] map = parseData(data, '\n');
       return map;
+
   }
 
   private int[][] getSixthLevel() {
@@ -131,20 +140,26 @@ public class Levels {
       String data = loadLevel(levelPath);
       int[][] map = parseData(data, '\n');
       return map;
+
   }
 
   private int[][] getSeventhLevel() {
-      return null;
+      return getLevelFromServer("7");
   }
 
   private int[][] getEighthLevel() {
-      return null;
+      return getLevelFromServer("8");
   }
 
   private int[][] getNinthLevel() {
-      return null;
+      return getLevelFromServer("9");
   }
 
+  public int[][] getLevelFromServer(String level) {
+      String levelContent = client.loadLevelFromServer(level);
+      System.out.println(levelContent);
+      return parseData(levelContent, 'A');
+  }
   private String loadLevel(String levelPath) {
       StringBuilder data = new StringBuilder();
 

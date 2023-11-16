@@ -36,6 +36,8 @@ public class EnemyModel implements GeneralModel{
 
     private int[][] checksPos;
     private int[][] coinsPos;
+    ////////
+    private Client client;
 
     // private boolean isDouble;
 
@@ -49,7 +51,7 @@ public class EnemyModel implements GeneralModel{
         // this.isDouble = isDouble;
         // dbService = new DBService();
         // initPlayer("Stive");
-        levelList = new Levels();
+        levelList = new Levels(client);
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
@@ -106,7 +108,7 @@ public class EnemyModel implements GeneralModel{
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levelList.setCurrentLevel(levelNumber);
-        map = levelList.getCurrentMap();/// map for enemy model
+        // map = ;/// map for enemy model
 
         if (map != null) {
             scanMap();
