@@ -9,9 +9,11 @@ import java.util.regex.Pattern;
 
 public class Levels {
     private int currentLevel;
+    private Client client;
 
-    public Levels() {
+    public Levels(Client client) {
         currentLevel = 1;
+        this.client = client;
     }
 
     public int getCurrentLevel() {
@@ -53,6 +55,8 @@ public class Levels {
                 break;
             case 9:
                 map = getNinthLevel();
+                
+
                 break;
             default:
                 map = getFirstLevel();
@@ -78,38 +82,39 @@ public class Levels {
         {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
         {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
+
   }
 
   private int[][] getSecondLevel() {
       return new int[][]
       {
-          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-          {2, 0, 2, 0, 0, 5, 0, 0, 0, 2},
-          {2, 0, 2, 0, 2, 0, 0, 0, 0, 2},
-          {2, 0, 0, 0, 2, 0, 0, 0, 0, 2},
-          {2, 0, 5, 4, 2, 0, 0, 0, 0, 2},
-          {2, 0, 0, 0, 2, 0, 1, 0, 0, 2},
-          {2, 0, 0, 0, 0, 0, 0, 3, 0, 2},
-          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+        {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
+        {2, 4, 3, 5, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 0, 1, 0, 0, 0, 0, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 0, 0, 0, 5, 3, 4, 2},
+        {2, 0, 0, 0, 0, 0, 4, 3, 0, 2},
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
+
   }
 
   private int[][] getThirdLevel() {
       return new int[][]
       {
           {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-          {2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
-          {2, 0, 0, 0, 0, 0, 3, 0, 0, 2},
-          {2, 0, 0, 5, 0, 0, 4, 0, 0, 2},
           {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-          {2, 0, 0, 0, 0, 0, 0, 5, 0, 2},
-          {2, 0, 0, 5, 0, 0, 3, 0, 0, 2},
-          {2, 0, 4, 0, 0, 0, 0, 0, 0, 2},
-          {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
+          {2, 0, 0, 0, 1, 0, 0, 0, 0, 2},
+          {2, 0, 0, 0, 0, 5, 2, 0, 0, 2},
+          {2, 0, 2, 4, 3, 4, 0, 2, 0, 2},
+          {2, 0, 0, 5, 3, 2, 0, 2, 0, 2},
+          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
           {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
+
   }
 
   private int[][] getFourthLevel() {
@@ -117,6 +122,7 @@ public class Levels {
       String data = loadLevel(levelPath);
       int[][] map = parseData(data, '\n');
       return map;
+
   }
 
   private int[][] getFifthLevel() {
@@ -124,6 +130,7 @@ public class Levels {
       String data = loadLevel(levelPath);
       int[][] map = parseData(data, '\n');
       return map;
+
   }
 
   private int[][] getSixthLevel() {
@@ -131,20 +138,26 @@ public class Levels {
       String data = loadLevel(levelPath);
       int[][] map = parseData(data, '\n');
       return map;
+
   }
 
   private int[][] getSeventhLevel() {
-      return null;
+      return getLevelFromServer("7");
   }
 
   private int[][] getEighthLevel() {
-      return null;
+      return getLevelFromServer("8");
   }
 
   private int[][] getNinthLevel() {
-      return null;
+      return getLevelFromServer("9");
   }
 
+  public int[][] getLevelFromServer(String level) {
+      String levelContent = client.loadLevelFromServer(level);
+      System.out.println(levelContent);
+      return parseData(levelContent, 'A');
+  }
   private String loadLevel(String levelPath) {
       StringBuilder data = new StringBuilder();
 
@@ -187,10 +200,11 @@ public class Levels {
           maxColumnCount = Math.max(maxColumnCount, row.length());
       }
 
-      int[][] array = new int[rowCount][maxColumnCount];
+      int[][] array = new int[rowCount][];
 
       for (int i = 0; i < rowCount; i++) {
           String row = rows[i];
+          array[i] = new int[row.length()];
           for (int j = 0; j < row.length(); j++) {
               char symbol = row.charAt(j);
               int element = Character.getNumericValue(symbol);

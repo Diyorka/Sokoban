@@ -5,6 +5,8 @@ import java.nio.channels.SocketChannel;
 
 public class ServerController {
     private ServerSocketChannel serverSocketChannel;
+    private SocketChannel notAloneClient;
+    private int notAloneClientIndex;
 
     public ServerController() {
         int activePort = 4444;
@@ -18,31 +20,51 @@ public class ServerController {
     }
 
     public void launchServer() {
+
         while (true) {
             try {
-                // First gamer connection
+
+                //  client acception
                 SocketChannel client1Channel = serverSocketChannel.accept();
-                System.out.println("Client1 connected from " + client1Channel.getRemoteAddress());
                 int client1Index = SocketPool.addSocketChannel(client1Channel);
 
-                // Second gamer connection
-                SocketChannel client2Channel = serverSocketChannel.accept();
-                System.out.println("Client2 connected from " + client2Channel.getRemoteAddress());
-                int client2Index = SocketPool.addSocketChannel(client2Channel);
-
-                // If both clients have successfully connected
-                if (client1Index != -1 && client2Index != -1) {
-                    // Creating separate service for clients communication and separate thread
-                    System.out.println("Creating new Thread ...");
-                    Service service = new Service(client1Channel, client2Channel, client1Index, client2Index);
-                    System.out.println("Indexes: " + client1Index + " " + client2Index);
-                    service.startService();
+                if(client1Index != -1) {
+                    System.out.println("Client1 connected from " + client1Channel.getRemoteAddress());
+                    acceptClient(client1Channel, client1Index);
                 }
+
+
 
 
             } catch(IOException ioe) {
                 System.out.println("Error while trying to connect client " + ioe);
             }
+        }
+    }
+
+    private void acceptClient(SocketChannel clientChannel, int clientChannelIndex) {
+        // read info about how client wants to play(alone, with someone)
+        String clientMessage = Service.readData(clientChannel);
+        System.out.println("ClientMessage = " + clientMessage);
+        if(clientMessage.equals("alone")) {
+            Service service = new Service(clientChannel, clientChannelIndex);
+            service.startService();
+            System.out.println("Started new Thread for one player" );
+            return;
+
+        } else if (clientMessage.equals("battle")) {
+            // if there is a client who also wants to play with someone
+            if(notAloneClient != null) {
+                ServiceForTwoPlayers serviceForTwoPlayers = new ServiceForTwoPlayers(clientChannel, notAloneClient, clientChannelIndex, notAloneClientIndex);
+                serviceForTwoPlayers.startService();
+                System.out.println("Started new Thread for two players" );
+                notAloneClient = null;
+                notAloneClientIndex = -1;
+                return;
+            }
+            notAloneClient = clientChannel;
+            notAloneClientIndex = clientChannelIndex;
+
         }
     }
 

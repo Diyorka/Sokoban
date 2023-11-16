@@ -6,6 +6,7 @@ public class MenuController implements ActionListener {
     private Viewer viewer;
     private Model model;
     private EnemyModel enemyModel;
+    private Client client;
 
     public MenuController(MenuPanel menuPanel, Viewer viewer, Model model, EnemyModel enemyModel) {
         this.viewer = viewer;
@@ -25,11 +26,15 @@ public class MenuController implements ActionListener {
                 viewer.updateSettings(model.getPlayer());
                 break;
             case "Play":
-                model.changeLevel("Level 1", 1);
+                client = new Client("alone");
+                model.setClient(client);
+                model.changeLevel("Level 1");
                 break;
             case "PlayWithEnemy":
                 System.out.println("play with enemy");
-                model.changeLevel("Level 1", 2);
+                client = new Client("battle");
+                model.setClient(client);
+                model.changeLevel("Level 1");
                 /////
                 enemyModel.changeLevel("Level 1");
 
@@ -41,6 +46,9 @@ public class MenuController implements ActionListener {
                 viewer.showSettings();
                 break;
             case "Exit":
+                if(client != null) {
+                    client.closeClient();
+                }
                 System.exit(0);
                 break;
         }

@@ -94,9 +94,9 @@ public class Viewer {
         canvas.requestFocusInWindow();
     }
 
-    public void showCanvas(int gamersCount) {
-        System.out.println("in show canvas gamersCount = " + gamersCount);
-        if(gamersCount == 1) {
+    public void showCanvas(String gameType) {
+        System.out.println("in show canvas gameType" + gameType);
+        if(gameType.equals("alone")) {
             showCanvas();
             return;
         }

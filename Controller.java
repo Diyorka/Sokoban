@@ -37,6 +37,8 @@ public class Controller implements KeyListener, ActionListener {
             model.getNextLevel();
             break;
         case "Exit to menu":
+            System.out.println("Exit to menu ");
+            model.getClient().closeClient();
             viewer.showMenu();
             break;
       }
