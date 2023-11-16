@@ -15,8 +15,8 @@ public class Viewer {
 
     private Controller controller;
     private Canvas canvas;
-    private Canvas myCanvas;
-    private Canvas enemyCanvas;
+    private CanvasForTwoPlayers myCanvas;
+    private CanvasForTwoPlayers enemyCanvas;
     private JSplitPane splitPane;
     private SettingsPanel settings;
     private JFrame frame;
@@ -31,10 +31,10 @@ public class Viewer {
         canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
 
-        myCanvas = new Canvas(model, controller);
+        myCanvas = new CanvasForTwoPlayers(model, controller);
         myCanvas.addKeyListener(controller);
 
-        enemyCanvas = new Canvas(enemyModel, null);
+        enemyCanvas = new CanvasForTwoPlayers(enemyModel, null);
         LevelChooser levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
@@ -48,8 +48,8 @@ public class Viewer {
 
 
         frame = new JFrame("Sokoban");
-        frame.setSize(1200, 800);
-        frame.setLocation(200, 15);
+        frame.setSize(1200, 720);
+        frame.setLocation(150, 5);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 
@@ -115,7 +115,7 @@ public class Viewer {
     }
 
     private void showTwoCanvas() {
-        update();
+        updateMyCanvas();
         updateEnemyCanvas();
         cardLayout.show(frame.getContentPane(), "splitPane");
         myCanvas.requestFocusInWindow();

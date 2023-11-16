@@ -69,16 +69,14 @@ public class Levels {
   private int[][] getFirstLevel() {
       return new int[][]
       {
-          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-          {2, 0, 0, 0, 0, 0, 1, 0, 0, 2},
-          {2, 0, 5, 0, 0, 0, 3, 4, 0, 2},
-          {2, 0, 2, 0, 0, 0, 0, 0, 0, 2},
-          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-          {2, 0, 0, 0, 0, 0, 3, 0, 0, 2},
-          {2, 0, 4, 0, 0, 5, 0, 0, 0, 2},
-          {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-          {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 1, 3, 0, 5, 4, 0, 2},
+        {2, 0, 0, 0, 3, 0, 5, 4, 0, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
   }
 
@@ -154,7 +152,7 @@ public class Levels {
           Path filePath = Paths.get(levelPath);
 
           List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
-          String pattern = "[0-4]";
+          String pattern = "[0-5]";
           Pattern compiledPattern = Pattern.compile(pattern);
           Matcher matcher = null;
 
