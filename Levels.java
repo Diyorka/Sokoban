@@ -152,7 +152,7 @@ public class Levels {
           Path filePath = Paths.get(levelPath);
 
           List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
-          String pattern = "[0-4]";
+          String pattern = "[0-5]";
           Pattern compiledPattern = Pattern.compile(pattern);
           Matcher matcher = null;
 
