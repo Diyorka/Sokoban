@@ -39,7 +39,7 @@ public class CanvasForTwoPlayers extends JPanel {
   public CanvasForTwoPlayers(GeneralModel model, Controller controller) {
       this.model = model;
       this.controller = controller;
-      backgroundImage = new ImageIcon("images/background.jpg").getImage();
+      backgroundImage = new ImageIcon("images/background2.jpg").getImage();
       setLayout(null);
       setOpaque(true);
       setPreferredSize(new Dimension(400, 800));
@@ -54,14 +54,6 @@ public class CanvasForTwoPlayers extends JPanel {
       coinImage = new ImageIcon("images/coin.png").getImage();
       errorImage = new ImageIcon("images/error.png").getImage();
 
-      JLabel coinsImageLabel = new JLabel();
-      Image coins = new ImageIcon("images/coins.png").getImage();
-      Image scaledCoins = coins.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-      ImageIcon coinsIcon = new ImageIcon(scaledCoins);
-      coinsImageLabel.setIcon(coinsIcon);
-      coinsImageLabel.setBounds(500, 30, 80, 80);
-      add(coinsImageLabel);
-
       JLabel stepsImageLabel = new JLabel();
       Image steps = new ImageIcon("images/steps.png").getImage();
       Image scaledSteps = steps.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -71,13 +63,6 @@ public class CanvasForTwoPlayers extends JPanel {
       add(stepsImageLabel);
 
       File fontFile = new File("fonts/PixelFont.otf");
-
-      coinsLabel = new JLabel("0");
-      coinsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
-      coinsLabel.setForeground(Color.WHITE);
-      coinsLabel.setBounds(390, 20, 100, 100);
-      coinsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      add(coinsLabel);
 
       stepsLabel = new JLabel("0");
       stepsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
@@ -102,8 +87,6 @@ public class CanvasForTwoPlayers extends JPanel {
       g.drawImage(backgroundImage, 0, 0, null);
       String collectedCoins = String.valueOf(model.getCollectedCoins());
       String totalMoves = String.valueOf(model.getTotalMoves());
-
-      coinsLabel.setText(collectedCoins);
       stepsLabel.setText(totalMoves);
 
       int[][] desktop = model.getDesktop();
