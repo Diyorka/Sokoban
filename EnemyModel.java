@@ -1,8 +1,8 @@
 import java.io.File;
 
-public class Model implements GeneralModel {
-    private DBService dbService;
-    private Player player;
+public class EnemyModel implements GeneralModel{
+    // private DBService dbService;
+    // private Player player;
     private Viewer viewer;
 
     private final int SPACE = 0;
@@ -18,11 +18,6 @@ public class Model implements GeneralModel {
     private final int DOWN =  40; //arrow down keycode
     private final int RESTART = 82; //'r' button keycode
     private final int EXIT = 27; //'esc' button keycode
-
-    private final Music boxInTargetSound;
-    private final Music wonSound;
-    private final Music moveSnowSound;
-    private final Music backgroundSnowMusic;
 
     private String move;
     private int playerPosX;
@@ -42,49 +37,33 @@ public class Model implements GeneralModel {
     private int[][] checksPos;
     private int[][] coinsPos;
 
-    private boolean isDouble;
+    // private boolean isDouble;
 
-    public Model(Viewer viewer, boolean isDouble) {
-        this(viewer);
-        this.isDouble = isDouble;
-    }
+    // public Model(Viewer viewer, boolean isDouble) {
+    //     this(viewer);
+    //     this.isDouble = isDouble;
+    // }
 
-    public Model(Viewer viewer) {
+    public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
-        this.isDouble = isDouble;
-        dbService = new DBService();
-        initPlayer("Stive");
+        // this.isDouble = isDouble;
+        // dbService = new DBService();
+        // initPlayer("Stive");
         levelList = new Levels();
-
-        wonSound = new Music(new File("music/won.wav"));
-        boxInTargetSound = new Music(new File("music/target.wav"));
-        moveSnowSound = new Music(new File("music/move_snow.wav"));
-
-        backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
-        // backgroundSnowMusic.play();
-
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
     }
 
+
+    private void initializeMap() {
+
+    }
     public int[][] getDesktop(){
         return map;
     }
 
     public void doAction(int keyMessage) {
-        System.out.println("in model do Action");
-        if (keyMessage == RESTART) {
-            System.out.println("------------ Map restarted ------------\n\n");
-            collectedCoins = 0;
-            map = levelList.getCurrentMap();
-            if (map != null) {
-                scanMap();
-            }
-        } else if (keyMessage == EXIT) {
-            collectedCoins = 0;
-            viewer.showMenu();
-        }
 
         if (map == null) {
             System.out.println("NO MAP FOUND\n\n");
@@ -94,83 +73,47 @@ public class Model implements GeneralModel {
         if (keyMessage == LEFT) {
             move = "Left";
             moveLeft();
-            System.out.println("Left");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
         } else if(keyMessage == RIGHT) {
             move = "Right";
             moveRight();
-            System.out.println("Right");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
         } else if(keyMessage == UP) {
             move = "Up";
             moveTop();
-            System.out.println("Up");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
         } else if(keyMessage == DOWN) {
             move = "Down";
             moveBot();
-            System.out.println("Down");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
         }
 
         returnCheck();
-        viewer.update();// when play alone
-        viewer.updateMyCanvas();// when play with enemy
+        viewer.updateEnemyCanvas();////////---------------
 
         System.out.println("Moves: " + totalMoves); //debug
 
-        if (isWon()) {
-            moveSnowSound.stop();
-            boxInTargetSound.stop();
-            wonSound.play();
-            int passedLevel = levelList.getCurrentLevel();
-            dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
-            collectedCoins = 0;
-            if (!isDouble) {
-                showEndLevelDialog();
-            } else {
-                showWonDialog();
-            }
-        }
+        // if (isWon()) {
+        //     int passedLevel = levelList.getCurrentLevel();
+        //     dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
+        //     collectedCoins = 0;
+        //     if (!isDouble) {
+        //         showEndLevelDialog();
+        //     } else {
+        //         showWonDialog();
+        //     }
+        // }
 
     }
 
-    public void changeLevel(String command, int gamersCount) {
-
+    public void changeLevel(String command) {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levelList.setCurrentLevel(levelNumber);
-        ////////// ------------
-        map = levelList.getCurrentMap();// map for current our model
+        map = levelList.getCurrentMap();/// map for enemy model
 
         if (map != null) {
             scanMap();
         }
-        System.out.println("getting our map >>>");
+
+        totalMoves = 0;
+        System.out.println("getting enemy map >>> ");
         for(int i = 0; i < map.length; i++) {
             for(int j = 0; j < map[i].length; j++) {
                 System.out.print(map[i][j] + " ");
@@ -178,11 +121,8 @@ public class Model implements GeneralModel {
             System.out.println();
         }
         System.out.println();
-        viewer.showCanvas(gamersCount);/////////// ----------------
-        totalMoves = 0;
-
     }
-
+    //
     // public void changeLevel(String command) {
     //     String stringLevelNumber = command.substring(command.length() - 1, command.length());
     //     int levelNumber = Integer.parseInt(stringLevelNumber);
@@ -211,67 +151,67 @@ public class Model implements GeneralModel {
         return collectedCoins;
     }
 
-    public Player initPlayer(String nickname) {
-        player = dbService.getPlayerInfo(nickname);
-        System.out.println(player.getNickname());
-        System.out.println(player.getAvailableSkins());
-        System.out.println(player.getTotalCoins());
-        return player;
-    }
+    // public Player initPlayer(String nickname) {
+    //     player = dbService.getPlayerInfo(nickname);
+    //     System.out.println(player.getNickname());
+    //     System.out.println(player.getAvailableSkins());
+    //     System.out.println(player.getTotalCoins());
+    //     return player;
+    // }
 
-    public Player getPlayer() {
-        return player;
-    }
+    // public Player getPlayer() {
+    //     return player;
+    // }
 
-    public void getNextLevel() {
-        map = levelList.getNextMap();
-        if (map != null) {
-            scanMap();
-        }
-        viewer.showCanvas();
-    }
+    // public void getNextLevel() {
+    //     map = levelList.getNextMap();
+    //     if (map != null) {
+    //         scanMap();
+    //     }
+    //     viewer.showCanvas();
+    // }
 
-    public void updateCurrentSkin(String skin) {
-        dbService.updateCurrentSkin(player.getNickname(), skin);
-    }
+    // public void updateCurrentSkin(String skin) {
+    //     dbService.updateCurrentSkin(player.getNickname(), skin);
+    // }
 
-    private void showEndLevelDialog() {
-        Object[] options = {"Go to levels", "Next level"};
-        int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
-                                                                  "!\n                        Total moves: " + totalMoves, "Congratulations!",
-                                                                  javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.PLAIN_MESSAGE,
-                                                                  null, options, options[1]);
-        if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
-            map = levelList.getNextMap();
-            if (map != null) {
-                scanMap();
-            }
-            viewer.update();
-        } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
-            viewer.showLevelChooser();
-            map = null;
-        } else {
-            viewer.showMenu();
-            map = null;
-        }
-    }
+    // private void showEndLevelDialog() {
+    //     Object[] options = {"Go to levels", "Next level"};
+    //     int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
+    //                                                               "!\n                        Total moves: " + totalMoves, "Congratulations!",
+    //                                                               javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.PLAIN_MESSAGE,
+    //                                                               null, options, options[1]);
+    //     if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
+    //         map = levelList.getNextMap();
+    //         if (map != null) {
+    //             scanMap();
+    //         }
+    //         viewer.update();
+    //     } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
+    //         viewer.showLevelChooser();
+    //         map = null;
+    //     } else {
+    //         viewer.showMenu();
+    //         map = null;
+    //     }
+    // }
 
-    private void showWonDialog() {
-        String[] options = {"Wait other player", "Return"};
-        int result = javax.swing.JOptionPane.showOptionDialog(
-                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
-                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]
-        );
-        switch (result) {
-            case 0:
-                System.out.println("Wait option selected");
-                break;
-            case 1:
-                System.out.println("Return option selected");
-                break;
-        }
-    }
+    // private void showWonDialog() {
+    //     String[] options = {"Wait other player", "Return"};
+    //     int result = javax.swing.JOptionPane.showOptionDialog(
+    //             null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
+    //             javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+    //             null, options, options[0]
+    //     );
+    //     switch (result) {
+    //         case 0:
+    //             System.out.println("Wait option selected");
+    //             break;
+    //         case 1:
+    //             System.out.println("Return option selected");
+    //             break;
+    //     }
+    // }
 
     private void scanMap() {
         for (int i = 0; i < map.length - 1; i++) {
@@ -399,12 +339,12 @@ public class Model implements GeneralModel {
             map[playerPosY][playerPosX - 1] = SPACE;
 
             if (map[playerPosY][playerPosX - 2] == CHECK) {
-                boxInTargetSound.play();
+                // boxInTargetSound.play();
             }
             map[playerPosY][playerPosX - 2] = BOX;
         }
 
-        moveSnowSound.play();
+        // moveSnowSound.play();
         map[playerPosY][playerPosX - 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
@@ -428,12 +368,12 @@ public class Model implements GeneralModel {
             map[playerPosY][playerPosX + 1] = SPACE;
 
             if (map[playerPosY][playerPosX + 2] == CHECK) {
-                boxInTargetSound.play();
+                // boxInTargetSound.play();
             }
             map[playerPosY][playerPosX + 2] = BOX;
         }
 
-        moveSnowSound.play();
+        // moveSnowSound.play();
         map[playerPosY][playerPosX + 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX += 1;
@@ -457,12 +397,12 @@ public class Model implements GeneralModel {
             map[playerPosY - 1][playerPosX] = SPACE;
 
             if (map[playerPosY - 2][playerPosX] == CHECK) {
-                boxInTargetSound.play();
+                // boxInTargetSound.play();
             }
             map[playerPosY - 2][playerPosX] = BOX;
         }
 
-        moveSnowSound.play();
+        // moveSnowSound.play();
         map[playerPosY - 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY -= 1;
@@ -486,12 +426,12 @@ public class Model implements GeneralModel {
             map[playerPosY + 1][playerPosX] = SPACE;
 
             if (map[playerPosY + 2][playerPosX] == CHECK) {
-                boxInTargetSound.play();
+                // boxInTargetSound.play();
             }
             map[playerPosY + 2][playerPosX] = BOX;
         }
 
-        moveSnowSound.play();
+        // moveSnowSound.play();
         map[playerPosY + 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY += 1;
