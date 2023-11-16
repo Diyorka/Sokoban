@@ -10,7 +10,7 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Music implements AutoCloseable {
+public class Music {
 
     private AudioInputStream inputStream;
     private Clip clip;
@@ -116,17 +116,6 @@ public class Music implements AutoCloseable {
     //             clip.wait();
     //         } catch (InterruptedException ie) {
     //             System.err.println(ie);
-    //         }
-    //     }
-    // }
-
-    // private class SoundController implements LineListener {
-    //     public void update(LineEvent ev) {
-    //         if (ev.getType() == LineEvent.Type.STOP) {
-    //             playing = false;
-    //             synchronized (clip) {
-    //                 clip.notify();
-    //             }
     //         }
     //     }
     // }
