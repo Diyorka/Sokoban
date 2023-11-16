@@ -14,9 +14,9 @@ public class MenuPanel extends JPanel {
     private MenuController menuController;
     private JTextField nickname;
 
-    public MenuPanel(Viewer viewer, Model model) {
+    public MenuPanel(Viewer viewer, Model model, EnemyModel enemyModel) {
         this.viewer = viewer;
-        menuController = new MenuController(this, viewer, model);
+        menuController = new MenuController(this, viewer, model, enemyModel);
         init();
     }
 
@@ -54,22 +54,27 @@ public class MenuPanel extends JPanel {
         JButton playButton = createButton("Play", "Play", 500, 315);
         playButton.addActionListener(menuController);
 
-        JButton levelsButton = createButton("Choose level", "Level", 500, 385);
+        JButton playWithEnemyButton = createButton("Play With Enemy", "PlayWithEnemy", 500, 385);
+        playWithEnemyButton.addActionListener(menuController);
+
+        JButton levelsButton = createButton("Choose level", "Level", 500, 455);
         levelsButton.addActionListener(menuController);
 
-        JButton settingsButton = createButton("Settings", "Settings", 500, 455);
+        JButton settingsButton = createButton("Settings", "Settings", 500, 525);
         settingsButton.addActionListener(menuController);
 
-        JButton exitButton = createButton("Exit", "Exit", 500, 525);
+        JButton exitButton = createButton("Exit", "Exit", 500, 585);
         exitButton.addActionListener(menuController);
 
         add(label);
         add(nickname);
         add(setNameButton);
         add(playButton);
+        add(playWithEnemyButton);
         add(levelsButton);
         add(settingsButton);
         add(exitButton);
+
     }
 
     private JButton createButton(String name, String command, int x, int y) {

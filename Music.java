@@ -10,7 +10,7 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Music implements AutoCloseable {
+public class Music {
 
     private AudioInputStream inputStream;
     private Clip clip;
@@ -23,7 +23,6 @@ public class Music implements AutoCloseable {
             inputStream = AudioSystem.getAudioInputStream(file);
             clip = AudioSystem.getClip();
             clip.open(inputStream);
-            clip.addLineListener(new SoundController());
             volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             initialization = true;
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
@@ -33,23 +32,19 @@ public class Music implements AutoCloseable {
         }
     }
 
-    public void play(boolean breakOld) {
-        if (initialization) {
-            if (breakOld) {
-                clip.stop();
-                clip.setFramePosition(0);
-                clip.start();
-                playing = true;
-            } else if (!isPlaying()) {
-                clip.setFramePosition(0);
-                clip.start();
-                playing = true;
-            }
-        }
-    }
-
     public void play() {
-        play(true);
+        if (initialization) {
+            if (!isPlaying()) {
+                clip.setFramePosition(0);
+                clip.start();
+                playing = true;
+                return;
+            }
+            clip.stop();
+            clip.setFramePosition(0);
+            clip.start();
+            playing = true;
+        }
     }
 
     public void playLoop() {
@@ -124,15 +119,4 @@ public class Music implements AutoCloseable {
     //         }
     //     }
     // }
-
-    private class SoundController implements LineListener {
-        public void update(LineEvent ev) {
-            if (ev.getType() == LineEvent.Type.STOP) {
-                playing = false;
-                synchronized (clip) {
-                    clip.notify();
-                }
-            }
-        }
-    }
 }

@@ -23,7 +23,7 @@ public class LevelChooserController implements ActionListener {
             case "Level 7":
             case "Level 8":
             case "Level 9":
-                model.changeLevel(command);
+                model.changeLevel(command, 1);
                 break;
             case "Back":
                 viewer.showMenu();
