@@ -48,8 +48,8 @@ public class Viewer {
 
 
         frame = new JFrame("Sokoban");
-        frame.setSize(1200, 720);
-        frame.setLocation(150, 5);
+        frame.setSize(1200, 800);
+        frame.setLocation(200, 15);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 
@@ -59,7 +59,7 @@ public class Viewer {
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
 
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 

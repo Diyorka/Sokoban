@@ -86,7 +86,7 @@ public class Canvas extends JPanel {
       add(stepsLabel);
 
       JButton exitGameButton = new JButton("Exit to menu");
-      exitGameButton.setBounds(40, 600, 150, 40);
+      exitGameButton.setBounds(40, 700, 150, 40);
       Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
       exitGameButton.setFont(customFont);
       exitGameButton.setForeground(Color.BLACK);
@@ -96,7 +96,7 @@ public class Canvas extends JPanel {
       add(exitGameButton);
 
       JButton nextLevelButton = new JButton("Next level");
-      nextLevelButton.setBounds(1010, 600, 150, 40);
+      nextLevelButton.setBounds(1010, 700, 150, 40);
       nextLevelButton.setFont(customFont);
       nextLevelButton.setForeground(Color.BLACK);
       nextLevelButton.setBackground(new Color(59, 89, 182));

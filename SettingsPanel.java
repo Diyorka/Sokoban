@@ -72,10 +72,10 @@ public class SettingsPanel extends JPanel {
         JLabel musicLabel = createLabel("Music:", 80, 450, 100, 30, labelFont);
         showMusicSettings();
 
-        JLabel themeLabel = createLabel("Theme:", 80, 590, 100, 30, labelFont);
+        JLabel themeLabel = createLabel("Theme:", 80, 600, 100, 30, labelFont);
         showThemeSettings();
 
-        JButton returnButton = createButton("Back", "Back", 40, 640, true);
+        JButton returnButton = createButton("Back", "Back", 40, 680, true);
 
         add(coinImage);
         add(nickname);
@@ -140,8 +140,9 @@ public class SettingsPanel extends JPanel {
     }
 
     private void showThemeSettings() {
-        JRadioButton defaultTheme = createJRadioButton("Default", "Default Theme", 420, 590, true);
-        JRadioButton brightTheme = createJRadioButton("Bright", "Bright Theme", 620, 590, false);
+        JRadioButton defaultTheme = createJRadioButton("Default", "Default Theme", 420, 600, true);
+        JRadioButton brightTheme = createJRadioButton("Bright", "Bright Theme", 620, 600, false);
+
 
         ButtonGroup theme = new ButtonGroup();
         theme.add(defaultTheme);
