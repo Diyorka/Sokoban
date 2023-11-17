@@ -4,10 +4,13 @@ import java.awt.event.ActionEvent;
 public class LevelChooserController implements ActionListener {
     private Model model;
     private Viewer viewer;
+    private Client client;
 
     public LevelChooserController(Viewer viewer, Model model) {
         this.model = model;
         this.viewer = viewer;
+        client = new Client("alone");
+        model.setClient(client);
     }
 
     public void actionPerformed(ActionEvent event) {
