@@ -31,6 +31,8 @@ public class Client {
             socketChannel.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
             System.out.println("Successfully connected to server ...");
             sendDataToServer(gameType);
+            String serverResponse = getDataFromServer();
+            System.out.println(serverResponse);
 
         } catch (IOException e) {
             System.out.println("ERROR occurred while trying to make connection");

@@ -177,6 +177,7 @@ public class Model implements GeneralModel {
         if(gameType.equals("alone")) {
             map = levelList.getCurrentMap();// map for current our model
         }
+        // initialize out map
         if(gameType.equals("battle")) {
             map = levelList.getLevelFromServer(String.valueOf(levelNumber));
         }

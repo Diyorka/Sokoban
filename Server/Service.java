@@ -26,7 +26,7 @@ public class Service implements Runnable{
         gameIsRunning = true;
     }
     public Service() {
-        
+
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Service implements Runnable{
     }
 
 
-   public static String readData(SocketChannel channel) {
+   public  String readData(SocketChannel channel) {
        try {
            ByteBuffer buffer = ByteBuffer.allocate(1024);
            int bytesRead = channel.read(buffer);

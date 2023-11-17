@@ -39,18 +39,8 @@ public class EnemyModel implements GeneralModel{
     ////////
     private Client client;
 
-    // private boolean isDouble;
-
-    // public Model(Viewer viewer, boolean isDouble) {
-    //     this(viewer);
-    //     this.isDouble = isDouble;
-    // }
-
     public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
-        // this.isDouble = isDouble;
-        // dbService = new DBService();
-        // initPlayer("Stive");
         levelList = new Levels(client);
         playerPosX = -1;
         playerPosY = -1;
@@ -58,9 +48,11 @@ public class EnemyModel implements GeneralModel{
     }
 
 
-    private void initializeMap() {
-
+    public void setClient(Client client) {
+        levelList = new Levels(client);
+        this.client = client;
     }
+
     public int[][] getDesktop(){
         return map;
     }
@@ -104,11 +96,11 @@ public class EnemyModel implements GeneralModel{
 
     }
 
-    public void changeLevel(String command) {
-        String stringLevelNumber = command.substring(command.length() - 1, command.length());
-        int levelNumber = Integer.parseInt(stringLevelNumber);
-        levelList.setCurrentLevel(levelNumber);
-        // map = ;/// map for enemy model
+    public void changeLevel() {
+        // initialize enemyMap
+        System.out.println("initialize enemy Map [~]");
+        map = levelList.getEnemyLevelFromServer();
+
 
         if (map != null) {
             scanMap();
@@ -123,6 +115,8 @@ public class EnemyModel implements GeneralModel{
             System.out.println();
         }
         System.out.println();
+
+        viewer.showCanvas("battle");
     }
     //
     // public void changeLevel(String command) {
