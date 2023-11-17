@@ -4,13 +4,10 @@ import java.awt.event.ActionEvent;
 public class LevelChooserController implements ActionListener {
     private Model model;
     private Viewer viewer;
-    private Client client;
 
     public LevelChooserController(Viewer viewer, Model model) {
         this.model = model;
         this.viewer = viewer;
-        client = new Client("alone");
-        model.setClient(client);
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -26,6 +23,8 @@ public class LevelChooserController implements ActionListener {
             case "Level 7":
             case "Level 8":
             case "Level 9":
+                Client client = new Client("alone");
+                model.setClient(client);
                 model.changeLevel(command);
                 break;
             case "Back":
