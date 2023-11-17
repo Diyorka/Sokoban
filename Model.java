@@ -72,6 +72,7 @@ public class Model implements GeneralModel {
         this.client = client;
         gameType = client.getGameType();
     }
+    
     public Client getClient() {
         return client;
     }
@@ -274,6 +275,7 @@ public class Model implements GeneralModel {
                 break;
         }
     }
+
     public void showEndGameDialog() {
         String[] options = {"Exit to Menu"};
         int result = javax.swing.JOptionPane.showOptionDialog(
@@ -291,6 +293,7 @@ public class Model implements GeneralModel {
             map = null;
         }
     }
+
     private void scanMap() {
         deleteMapValues();
 
