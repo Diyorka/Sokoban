@@ -35,10 +35,13 @@ public class MenuController implements ActionListener {
                 client = new Client("battle");
                 model.setClient(client);
                 model.changeLevel("Level 7");
-                /////
+
                 enemyModel.setClient(client);
                 enemyModel.changeLevel();
-
+                
+                System.out.println("creating new Thread enemyFieldController");
+                EnemyFieldController enemyFieldController = new EnemyFieldController(client, viewer, enemyModel);
+                enemyFieldController.go();
                 break;
             case "Level":
                 viewer.showLevelChooser();

@@ -3,6 +3,6 @@ public interface GeneralModel {
     public int getTotalMoves();
     public int getCollectedCoins();
     public int[][] getDesktop();
-    public void doAction(int keyMessage);
+    // public void doAction(int keyMessage);
 
 }

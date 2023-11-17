@@ -57,29 +57,29 @@ public class EnemyModel implements GeneralModel{
         return map;
     }
 
-    public void doAction(int keyMessage) {
+    public void doAction(String action) {
 
         if (map == null) {
             System.out.println("NO MAP FOUND\n\n");
             return;
         }
 
-        if (keyMessage == LEFT) {
+        if (action.equals("Left")) {
             move = "Left";
             moveLeft();
-        } else if(keyMessage == RIGHT) {
+        } else if(action.equals("Right")) {
             move = "Right";
             moveRight();
-        } else if(keyMessage == UP) {
+        } else if(action.equals("Up")) {
             move = "Up";
             moveTop();
-        } else if(keyMessage == DOWN) {
+        } else if(action.equals("Down")) {
             move = "Down";
             moveBot();
         }
 
         returnCheck();
-        viewer.updateEnemyCanvas();////////---------------
+        viewer.updateEnemyCanvas();
 
         System.out.println("Moves: " + totalMoves); //debug
 

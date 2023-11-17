@@ -104,7 +104,9 @@ public class Canvas extends JPanel {
       nextLevelButton.addActionListener(controller);
       add(nextLevelButton);
   }
-
+  // public GeneralModel getModel() {
+  //     return model;
+  // }
   public void paintComponent(Graphics g) {
       super.paintComponent(g);
 
