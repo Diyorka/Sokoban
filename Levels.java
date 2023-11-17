@@ -55,7 +55,7 @@ public class Levels {
                 break;
             case 9:
                 map = getNinthLevel();
-                
+
 
                 break;
             default:
@@ -158,6 +158,7 @@ public class Levels {
       System.out.println(levelContent);
       return parseData(levelContent, 'A');
   }
+  
   private String loadLevel(String levelPath) {
       StringBuilder data = new StringBuilder();
 
