@@ -110,14 +110,14 @@ public class Service implements Runnable{
     //load level from file on server with parsing
     private String loadLevel(int level) {
         if(level <= 9 && level >= 7) {
-            String levelFileName = "Levels/level" + level + ".sok";
+            String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 
             try {
                 Path filePath = Paths.get(levelFileName);
 
                 List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
-                String pattern = "[0-4]";
+                String pattern = "[0-5]";
                 Pattern compiledPattern = Pattern.compile(pattern);
                 Matcher matcher = null;
 

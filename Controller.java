@@ -9,8 +9,8 @@ public class Controller implements KeyListener, ActionListener {
     private Viewer viewer;
 
     public Controller(Viewer viewer, Model model) {
-    this.viewer = viewer;
-    this.model = model;
+        this.viewer = viewer;
+        this.model = model;
     }
 
     public Model getModel() {
