@@ -42,6 +42,9 @@ public class Client {
     public String getGameType() {
         return gameType;
     }
+    public boolean hasConnectionToServer() {
+        return socketChannel.isOpen();
+    }
     public void closeClient() {
         if (socketChannel != null && socketChannel.isOpen()) {
             try {
@@ -85,13 +88,7 @@ public class Client {
             } catch(IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
                 exc.printStackTrace();
-                boolean reconnected = reconnect();
-
-                if (reconnected) {
-                    System.out.println("Successfully reconnected to the server.");
-                } else {
-                    break;
-                }
+                break;
 
             }
         }
@@ -114,34 +111,13 @@ public class Client {
             } catch(IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();
-                boolean reconnected = reconnect();
-
-                if (reconnected) {
-                    System.out.println("Successfully reconnected to the server.");
-                } else {
-                    break;
-                }
+                break;
 
             }
         }
         return data;
     }
 
-
-    private boolean reconnect() {
-
-        try {
-            if (socketChannel.isOpen()) {
-                socketChannel.close();
-            }
-            socketChannel = SocketChannel.open();
-            socketChannel.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
-            return true;
-        } catch (IOException e) {
-            System.out.println("Failed to reconnect: " + e.getMessage());
-            return false;
-        }
-    }
 
 
 

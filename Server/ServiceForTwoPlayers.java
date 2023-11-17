@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import java.nio.ByteBuffer;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 
 public class ServiceForTwoPlayers implements Runnable{
@@ -30,8 +31,21 @@ public class ServiceForTwoPlayers implements Runnable{
     public void run() {
         System.out.println("Game started");
         startSession();
+        // always read data from first client and send them to seconds client EnemyFieldController
+        ClientListener firstClientListener = new ClientListener(player1Channel, player2Channel, this, "firstClient");
+        firstClientListener.start();
 
+        // always read data from second client and send them to first  client EnemyFieldController
+        ClientListener secondClientListener = new ClientListener(player1Channel, player2Channel, this, "secondClient");
+        secondClientListener.start();
+        
         // wait other threads !!!
+        try {
+            firstClientListener.join();
+            secondClientListener.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         SocketPool.removeSocketAt(player1Index);
         SocketPool.removeSocketAt(player2Index);
         System.out.println(player1Channel.isOpen() + " " + player2Channel.isOpen());
@@ -63,15 +77,6 @@ public class ServiceForTwoPlayers implements Runnable{
         System.out.println("send level of enemy  ");
         sendData(player2Channel, player1LevelContent);
         System.out.println("send level of enemy " );
-   
-
-        // always read data from first client and send them to seconds client EnemyFieldController
-        ClientListener firstClientListener = new ClientListener(player1Channel, player2Channel, this, "firstClient");
-        firstClientListener.start();
-
-        // always read data from second client and send them to first  client EnemyFieldController
-        ClientListener secondClientListener = new ClientListener(player1Channel, player2Channel, this, "secondClient");
-        secondClientListener.start();
 
    }
 
@@ -85,6 +90,11 @@ public class ServiceForTwoPlayers implements Runnable{
                buffer.get(data);
                return new String(data);
            }
+       } catch (SocketException socketExc) {
+           System.out.println("exception while readData from client" + socketExc);
+           socketExc.printStackTrace();
+           closeConnection();
+           return null;
        } catch (IOException exception) {
            System.out.println("exception while readData from client" + exception);
            exception.printStackTrace();
@@ -100,6 +110,11 @@ public class ServiceForTwoPlayers implements Runnable{
                channel.write(buffer);
                System.out.println("sent data to client");
            }
+       } catch (SocketException socketExc) {
+           System.out.println("exception while readData from client" + socketExc);
+           socketExc.printStackTrace();
+           closeConnection();
+
        } catch (IOException exception) {
            System.out.println("exception while readData from client" + exception);
            exception.printStackTrace();
@@ -146,8 +161,24 @@ public class ServiceForTwoPlayers implements Runnable{
         return null;
     }
 
+    private void closeConnection() {
+        SocketPool.removeSocketAt(player1Index);
+        SocketPool.removeSocketAt(player2Index);
+        closeChannel(player1Channel);
+        closeChannel(player2Channel);
 
+        System.out.println("Closing connection  player1Channel.isOpen() = "+ player1Channel.isOpen());
+        System.out.println("player2Channel.isOpen() = "+ player2Channel.isOpen());
 
+    }
+    private void closeChannel(SocketChannel playerChannel) {
+        if(playerChannel.isOpen()) {
+            try {
+                playerChannel.close();
+            } catch (IOException exc) {
+                System.out.println(exc);
 
-
+            }
+        }
+    }
 }

@@ -66,7 +66,9 @@ public class Viewer {
     public Viewer getViewer() {
         return this;
     }
-
+    public CanvasForTwoPlayers getEnemyCanvas() {
+        return enemyCanvas;
+    }
     public void update() {
         canvas.repaint();
     }
