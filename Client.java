@@ -21,9 +21,11 @@ public class Client {
     private  SocketChannel socketChannel;
     private ByteBuffer buffer;
     private String gameType;
+    private Viewer viewer;
 
 
-    public Client(String gameType) {
+    public Client(Viewer viewer, String gameType) {
+        this.viewer = viewer;
         this.gameType = gameType;
         buffer = ByteBuffer.allocate(1024);
         try {
@@ -88,6 +90,8 @@ public class Client {
             } catch(IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
                 exc.printStackTrace();
+                System.out.println("has connection to server = " + hasConnectionToServer());
+                viewer.showMenu();
                 break;
 
             }
@@ -111,6 +115,8 @@ public class Client {
             } catch(IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();
+                System.out.println("has connection to server = " + hasConnectionToServer());
+                viewer.showMenu();
                 break;
 
             }
