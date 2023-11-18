@@ -103,10 +103,18 @@ public class Canvas extends JPanel {
       nextLevelButton.setActionCommand("Next level");
       nextLevelButton.addActionListener(controller);
       add(nextLevelButton);
+
+      ImageButton replayButton = new ImageButton("", "images/restart.png", 36, false);
+      replayButton.setBounds(1090, 130, 80, 80);
+      replayButton.setActionCommand("Restart");
+      replayButton.addActionListener(controller);
+      add(replayButton);
   }
+
   // public GeneralModel getModel() {
   //     return model;
   // }
+
   public void paintComponent(Graphics g) {
       super.paintComponent(g);
 
