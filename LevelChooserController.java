@@ -23,7 +23,7 @@ public class LevelChooserController implements ActionListener {
             case "Level 7":
             case "Level 8":
             case "Level 9":
-                Client client = new Client("alone");
+                Client client = new Client(viewer, "alone");
                 model.setClient(client);
                 model.changeLevel(command);
                 break;
