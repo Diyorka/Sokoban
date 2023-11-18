@@ -152,9 +152,6 @@ public class EnemyModel implements GeneralModel{
 
     public Player initPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
-        System.out.println(player.getNickname());
-        System.out.println(player.getAvailableSkins());
-        System.out.println(player.getTotalCoins());
         return player;
     }
 
