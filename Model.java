@@ -157,7 +157,7 @@ public class Model implements GeneralModel {
             if (gameType.equals("alone")) {
                 askSoloPlayerFurtherAction();
             } else if (gameType.equals("battle")){
-                showWonDialog();
+                askOnlinePlayerFurtherAction();
             }
         }
 
@@ -268,23 +268,6 @@ public class Model implements GeneralModel {
         player = dbService.getPlayerInfo(nickname);
         viewer.updateSettings(player);
         viewer.updateButtonText();
-    }
-
-    public void showWonDialog() {
-        String[] options = {"Wait other player", "Return"};
-        int result = javax.swing.JOptionPane.showOptionDialog(
-                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
-                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]
-        );
-        switch (result) {
-            case 0:
-                System.out.println("Wait option selected");
-                break;
-            case 1:
-                System.out.println("Return option selected");
-                break;
-        }
     }
 
     private void askSoloPlayerFurtherAction() {
