@@ -31,6 +31,8 @@ public class SettingsController implements ActionListener {
                 break;
             case "Christmas_Music":
                 break;
+            case "No_Sound":
+                break;
             case "Back":
                 viewer.showMenu();
                 break;
