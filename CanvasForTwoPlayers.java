@@ -35,7 +35,6 @@ public class CanvasForTwoPlayers extends JPanel {
   private JLabel stepsLabel;
   private GeneralModel model;
 
-
   public CanvasForTwoPlayers(GeneralModel model, Controller controller) {
       this.model = model;
       this.controller = controller;
@@ -53,6 +52,8 @@ public class CanvasForTwoPlayers extends JPanel {
       groundImage = new ImageIcon("images/ground1.png").getImage();
       coinImage = new ImageIcon("images/coin.png").getImage();
       errorImage = new ImageIcon("images/error.png").getImage();
+
+      // setSkin();                  TODO: uncomment when logic is done
 
       JLabel stepsImageLabel = new JLabel();
       Image steps = new ImageIcon("images/steps.png").getImage();
@@ -97,6 +98,18 @@ public class CanvasForTwoPlayers extends JPanel {
           drawErrorMessage(g);
       }
   }
+
+  // public void setSkin() {                                          getting skin from player
+  //     PlayerSkin skin = model.getPlayer().getCurrentSkin();
+  //     frontPlayerImage = skin.getFrontPlayerImage();
+  //     backPlayerImage = skin.getBackPlayerImage();
+  //     rightPlayerImage = skin.getRightPlayerImage();
+  //     leftPlayerImage = skin.getLeftPlayerImage();
+  //     wallImage = skin.getWallImage();
+  //     boxImage = skin.getBoxImage();
+  //     targetImage = skin.getTargetImage();
+  //     groundImage = skin.getGroundImage();
+  // }
 
   private void rotateGamer() {
       String move = model.getMove();

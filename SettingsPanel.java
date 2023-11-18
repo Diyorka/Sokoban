@@ -30,6 +30,22 @@ public class SettingsPanel extends JPanel {
         backgroundImage = new ImageIcon("images/settings-background.png").getImage();
         font = viewer.getCustomFont(Font.PLAIN, 24f);
         init();
+        updateButtonStates(player.getCurrentSkin().getType());
+    }
+
+    public void updateButtonStates(String type) {
+        System.out.println("\nSettings Panel: " + type);
+        switch (type) {
+            case "Default Skin":
+                enableButtons(false, true, true);
+                break;
+            case "Santa Skin":
+                enableButtons(true, false, true);
+                break;
+            case "Premium Skin":
+                enableButtons(true, true, false);
+
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -41,18 +57,6 @@ public class SettingsPanel extends JPanel {
 
     public void setPlayer(Player player) {
         this.player = player;
-    }
-
-    public void setEnableSantaSkinButton(boolean enable) {
-        santaSkinButton.setEnabled(enable);
-    }
-
-    public void setEnableDefaultSkinButton(boolean enable) {
-        defaultSkinButton.setEnabled(enable);
-    }
-
-    public void setEnablePremiumSkinButton(boolean enable) {
-        premiumSkinButton.setEnabled(enable);
     }
 
     private void init() {
@@ -87,7 +91,7 @@ public class SettingsPanel extends JPanel {
         add(returnButton);
     }
 
-    private void showSkinSettings() {      //TODO: get skins from DB
+    private void showSkinSettings() {
         ImageIcon defaultIcon = new ImageIcon("images/default-skin.png");
         ImageIcon santaIcon = new ImageIcon("images/santa-skin.png");
         ImageIcon premiumIcon = new ImageIcon("images/premium-skin.png");
@@ -101,8 +105,8 @@ public class SettingsPanel extends JPanel {
         JLabel premiumSkinPrice = createLabel("15 coins", 755, 320, 110, 30, font);
 
         defaultSkinButton = createButton("Choose", "Default Skin", 350, 375, false);
-        santaSkinButton = createButton("Choose", "Santa Skin", 550, 375, true);
-        premiumSkinButton = createButton("Buy", "Premium Skin", 740, 375, true);
+        santaSkinButton = createButton("Choose", "Santa Skin", 550, 375, false);
+        premiumSkinButton = createButton("Buy", "Premium Skin", 740, 375, false);
 
         add(defaultSkinImage);
         add(santaSkinImage);
@@ -113,6 +117,16 @@ public class SettingsPanel extends JPanel {
         add(defaultSkinButton);
         add(premiumSkinButton);
         add(santaSkinButton);
+    }
+
+    private void enableButtons(boolean defaultSkinEnable, boolean santaSkinEnable, boolean premiumSkinEnable) {
+        defaultSkinButton.setEnabled(defaultSkinEnable);
+        santaSkinButton.setEnabled(santaSkinEnable);
+        premiumSkinButton.setEnabled(premiumSkinEnable);
+    }
+
+    private void updatePremiumButtonText() {
+        premiumSkinButton.setText("Choose");
     }
 
     private void showMusicSettings() {
