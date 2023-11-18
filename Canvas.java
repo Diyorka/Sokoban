@@ -44,7 +44,6 @@ public class Canvas extends JPanel {
         setPreferredSize(new Dimension(400, 800));
 
         setSkin();
-        coinImage = new ImageIcon("images/coin.png").getImage();
         errorImage = new ImageIcon("images/error.png").getImage();
 
         JLabel coinsImageLabel = new JLabel();
@@ -103,7 +102,7 @@ public class Canvas extends JPanel {
         replayButton.addActionListener(controller);
         add(replayButton);
     }
-    
+
   // public GeneralModel getModel() {
   //     return model;
   // }
@@ -137,6 +136,7 @@ public class Canvas extends JPanel {
         boxImage = skin.getBoxImage();
         targetImage = skin.getTargetImage();
         groundImage = skin.getGroundImage();
+        coinImage = skin.getCoinImage();
     }
 
     private void rotateGamer() {

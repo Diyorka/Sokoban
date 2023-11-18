@@ -12,6 +12,7 @@ public class SantaSkin implements PlayerSkin {
     private Image boxImage;
     private Image targetImage;
     private Image groundImage;
+    private Image coinImage;
 
     public SantaSkin() {
         type = "Santa Skin";
@@ -23,6 +24,7 @@ public class SantaSkin implements PlayerSkin {
         boxImage = new ImageIcon("images/present-box.png").getImage();
         targetImage = new ImageIcon("images/target2.png").getImage();
         groundImage = new ImageIcon("images/ground2.png").getImage();
+        coinImage = new ImageIcon("images/coin1.png").getImage();
     }
 
     public String getType() {
@@ -59,5 +61,9 @@ public class SantaSkin implements PlayerSkin {
 
     public Image getGroundImage() {
         return groundImage;
+    }
+
+    public Image getCoinImage() {
+        return coinImage;
     }
 }

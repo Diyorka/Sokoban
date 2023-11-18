@@ -12,6 +12,7 @@ public class DefaultSkin implements PlayerSkin {
     private Image boxImage;
     private Image targetImage;
     private Image groundImage;
+    private Image coinImage;
 
     public DefaultSkin() {
         type = "Default Skin";
@@ -23,6 +24,7 @@ public class DefaultSkin implements PlayerSkin {
         boxImage = new ImageIcon("images/box.png").getImage();
         targetImage = new ImageIcon("images/target1.png").getImage();
         groundImage = new ImageIcon("images/ground1.png").getImage();
+        coinImage = new ImageIcon("images/coin.png").getImage();
     }
 
     public String getType() {
@@ -59,5 +61,9 @@ public class DefaultSkin implements PlayerSkin {
 
     public Image getGroundImage() {
         return groundImage;
+    }
+
+    public Image getCoinImage() {
+        return coinImage;
     }
 }
