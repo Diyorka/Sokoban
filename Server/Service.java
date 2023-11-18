@@ -94,14 +94,14 @@ public class Service implements Runnable{
        // getting level number from client
        String levelNumber = readData(playerChannel);
        if(levelNumber != null) {
-           if(levelNumber.equals(LAST_LEVEL)) {
-               return false;
-           }
            System.out.println("Successfully get level from client >>> " + levelNumber);
            String levelContent = loadLevel(Integer.parseInt(levelNumber));
            if(levelContent != null) {
-
-                return sendData(playerChannel, levelContent);
+               boolean wasDataSendSuccessfully = sendData(playerChannel, levelContent);
+               if(levelNumber.equals(LAST_LEVEL)) {
+                   return false;
+               }
+                return wasDataSendSuccessfully;
            }
        }
        return false;
