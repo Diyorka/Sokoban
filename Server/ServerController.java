@@ -43,11 +43,14 @@ public class ServerController {
     }
 
     private void acceptClient(SocketChannel clientChannel, int clientChannelIndex) {
+        Service service = new Service();
         // read info about how client wants to play(alone, with someone)
-        String clientMessage = Service.readData(clientChannel);
+        String clientMessage = service.readData(clientChannel);
         System.out.println("ClientMessage = " + clientMessage);
+        //  to say client that serever read message
+        service.sendData(clientChannel, "ok");
         if(clientMessage.equals("alone")) {
-            Service service = new Service(clientChannel, clientChannelIndex);
+            service = new Service(clientChannel, clientChannelIndex);
             service.startService();
             System.out.println("Started new Thread for one player" );
             return;

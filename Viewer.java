@@ -67,9 +67,20 @@ public class Viewer {
         return this;
     }
 
+    public CanvasForTwoPlayers getEnemyCanvas() {
+        return enemyCanvas;
+    }
+
     public void update() {
         canvas.repaint();
     }
+
+    public void updateSkin() {
+        canvas.setSkin();
+        canvas.repaint();
+        settings.updateButtonStates();
+    }
+
     public void updateEnemyCanvas() {
         enemyCanvas.repaint();
     }
@@ -78,10 +89,13 @@ public class Viewer {
         myCanvas.repaint();
     }
 
-
     public void updateSettings(Player player) {
         settings.setPlayer(player);
         settings.repaint();
+    }
+
+    public void updateButtonText() {
+        settings.updatePremiumButtonText();
     }
 
     public void showMenu() {

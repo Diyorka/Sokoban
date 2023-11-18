@@ -51,7 +51,7 @@ public class Model implements GeneralModel {
     public Model(Viewer viewer) {
         this.viewer = viewer;
         dbService = new DBService();
-        initPlayer("Stive");
+        player = dbService.getPlayerInfo("Stive");
         // levelList = new Levels(client);
 
         wonSound = new Music(new File("music/won.wav"));
@@ -72,6 +72,7 @@ public class Model implements GeneralModel {
         this.client = client;
         gameType = client.getGameType();
     }
+
     public Client getClient() {
         return client;
     }
@@ -83,12 +84,7 @@ public class Model implements GeneralModel {
     public void doAction(int keyMessage) {
         System.out.println("in model do Action");
         if (keyMessage == RESTART) {
-            System.out.println("------------ Map restarted ------------\n\n");
-            collectedCoins = 0;
-            map = levelList.getCurrentMap();
-            if (map != null) {
-                scanMap();
-            }
+            restart();
         } else if (keyMessage == EXIT) {
             collectedCoins = 0;
             viewer.showMenu();
@@ -177,6 +173,7 @@ public class Model implements GeneralModel {
         if(gameType.equals("alone")) {
             map = levelList.getCurrentMap();// map for current our model
         }
+        // initialize out map
         if(gameType.equals("battle")) {
             map = levelList.getLevelFromServer(String.valueOf(levelNumber));
         }
@@ -200,6 +197,13 @@ public class Model implements GeneralModel {
 
     }
 
+    public void restart() {
+        collectedCoins = 0;
+        map = levelList.getCurrentMap();
+        if (map != null) {
+            scanMap();
+        }
+    }
 
     public String getMove() {
         return move;
@@ -213,11 +217,11 @@ public class Model implements GeneralModel {
         return collectedCoins;
     }
 
-    public Player initPlayer(String nickname) {
+    public Player setPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
-        System.out.println(player.getNickname());
-        System.out.println(player.getAvailableSkins());
-        System.out.println(player.getTotalCoins());
+        viewer.updateSettings(player);
+        viewer.updateSkin();
+        viewer.updateButtonText();
         return player;
     }
 
@@ -233,8 +237,35 @@ public class Model implements GeneralModel {
         viewer.showCanvas();
     }
 
-    public void updateCurrentSkin(String skin) {
-        dbService.updateCurrentSkin(player.getNickname(), skin);
+    public void updateCurrentSkin(String skinType) {
+        dbService.updateCurrentSkin(player.getNickname(), skinType);
+        PlayerSkin skin = null;
+        switch (skinType) {
+            case "Default Skin":
+                skin = new DefaultSkin();
+                break;
+            case "Santa Skin":
+                skin = new SantaSkin();
+                break;
+            case "Premium Skin":
+                skin = new PremiumSkin();
+                break;
+        }
+        player.setCurrentSkin(skin);
+        viewer.updateSkin();
+    }
+
+    public void buyPremiumSkin(int premiumSkinCost) {
+        String nickname = player.getNickname();
+        String skinType = "Premium Skin";
+
+        dbService.updateTotalCoins(nickname, player.getTotalCoins() - premiumSkinCost);
+        dbService.addSkin(nickname, skinType);
+        updateCurrentSkin("Premium Skin");
+
+        player = dbService.getPlayerInfo(nickname);
+        viewer.updateSettings(player);
+        viewer.updateButtonText();
     }
 
     public void showEndLevelDialog() {
@@ -274,6 +305,7 @@ public class Model implements GeneralModel {
                 break;
         }
     }
+
     public void showEndGameDialog() {
         String[] options = {"Exit to Menu"};
         int result = javax.swing.JOptionPane.showOptionDialog(
@@ -291,6 +323,7 @@ public class Model implements GeneralModel {
             map = null;
         }
     }
+
     private void scanMap() {
         deleteMapValues();
 

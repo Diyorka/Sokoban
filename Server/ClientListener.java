@@ -3,10 +3,10 @@ import java.nio.channels.SocketChannel;
 public class ClientListener extends Thread {
     private SocketChannel player1Channel;
     private SocketChannel player2Channel;
-    private Service service;
+    private ServiceForTwoPlayers service;
     private String clientNumber;
 
-    public ClientListener(SocketChannel player1Channel, SocketChannel player2Channel, Service service, String clientNumber) {
+    public ClientListener(SocketChannel player1Channel, SocketChannel player2Channel, ServiceForTwoPlayers service, String clientNumber) {
         this.player1Channel = player1Channel;
         this.player2Channel = player2Channel;
         this.service = service;
@@ -19,24 +19,37 @@ public class ClientListener extends Thread {
         if(clientNumber.equals("firstClient")) {
             while(player1Channel.isOpen() && player2Channel.isOpen()) {
 
-                String infoFromPlayer1 = service.readData(player1Channel);
-                System.out.println("received info from first player  >>> " + infoFromPlayer1);
-
-                service.sendData(player2Channel, infoFromPlayer1);
-                System.out.println("sent info to second player  >>> ");
+                if(!listenClient(player1Channel, player2Channel)) {
+                    System.out.println("Something was wrong while Listening first client");
+                    break;
+                }
             }
+            System.out.println("Closing thread ClientListener >>>");
         } else if (clientNumber.equals("secondClient")) {
             while(player1Channel.isOpen() && player2Channel.isOpen()) {
 
-                String infoFromPlayer2 = service.readData(player2Channel);
-                System.out.println("received info from second player  >>> " + infoFromPlayer2);
+                if(!listenClient(player2Channel, player1Channel)) {
+                    System.out.println("Something was wrong while Listening second client");
+                    break;
+                }
 
-                service.sendData(player1Channel, infoFromPlayer2);
-                System.out.println("sent info to first player  >>> ");
             }
+            System.out.println("Closing thread ClientListener >>>");
         }
+    }
+    // return true if all operations were Successfully completed
+    private boolean listenClient(SocketChannel socketToListen, SocketChannel socketToSendData) {
+        String infoFromPlayer = service.readData(socketToListen);
+        if(infoFromPlayer != null) {
+            System.out.println("received info from  player  >>> " + infoFromPlayer);
 
-
+            service.sendData(socketToSendData, infoFromPlayer);
+            System.out.println("sent info to first player  >>> ");
+            return true;
+        }
+        return false;
 
     }
+
+
 }

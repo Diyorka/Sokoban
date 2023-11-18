@@ -9,8 +9,8 @@ public class Controller implements KeyListener, ActionListener {
     private Viewer viewer;
 
     public Controller(Viewer viewer, Model model) {
-    this.viewer = viewer;
-    this.model = model;
+        this.viewer = viewer;
+        this.model = model;
     }
 
     public Model getModel() {
@@ -40,6 +40,10 @@ public class Controller implements KeyListener, ActionListener {
             System.out.println("Exit to menu ");
             model.getClient().closeClient();
             viewer.showMenu();
+            break;
+        case "Restart":
+            model.restart();
+            viewer.showCanvas();
             break;
       }
   }

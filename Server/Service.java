@@ -26,15 +26,18 @@ public class Service implements Runnable{
         gameIsRunning = true;
     }
     public Service() {
-        
+
     }
 
     @Override
     public void run() {
         System.out.println("Game started");
         String levelNumber = "";
-        while(gameIsRunning && playerChannel.isOpen()) {
-            sendLevelToClient();
+        while(playerChannel.isOpen()) {
+            if(!sendLevelToClient()) {//if there is error or it is end of the game
+                break;
+            }
+
         }
         closeConnection();
         System.out.println("Game over");
@@ -45,7 +48,7 @@ public class Service implements Runnable{
     }
 
 
-   public static String readData(SocketChannel channel) {
+   public  String readData(SocketChannel channel) {
        try {
            ByteBuffer buffer = ByteBuffer.allocate(1024);
            int bytesRead = channel.read(buffer);
@@ -67,53 +70,54 @@ public class Service implements Runnable{
         return null;
    }
 
-   public  void sendData(SocketChannel channel, String data) {
+   public boolean sendData(SocketChannel channel, String data) {
        try {
            if (data != null) {
                ByteBuffer buffer = ByteBuffer.wrap(data.getBytes());
                channel.write(buffer);
                System.out.println("sent data to client");
+               return true;
            }
        }  catch (SocketException socketExc) {
            System.out.println("exception while sendData from client" + socketExc);
            socketExc.printStackTrace();
-           gameIsRunning = false;
+           return false;
        } catch (IOException exception) {
            System.out.println("exception while sendData from client" + exception);
            exception.printStackTrace();
-
+           return false;
        }
-
+       return false;
    }
 
-   private void sendLevelToClient() {
+   private boolean sendLevelToClient() {
        // getting level number from client
        String levelNumber = readData(playerChannel);
        if(levelNumber != null) {
-           if(levelNumber.equals(LAST_LEVEL)) {
-               gameIsRunning = false;
-           }
            System.out.println("Successfully get level from client >>> " + levelNumber);
            String levelContent = loadLevel(Integer.parseInt(levelNumber));
            if(levelContent != null) {
-                sendData(playerChannel, levelContent);
-                return;
+               boolean wasDataSendSuccessfully = sendData(playerChannel, levelContent);
+               if(levelNumber.equals(LAST_LEVEL)) {
+                   return false;
+               }
+                return wasDataSendSuccessfully;
            }
        }
-       gameIsRunning = false;
+       return false;
    }
 
     //load level from file on server with parsing
     private String loadLevel(int level) {
         if(level <= 9 && level >= 7) {
-            String levelFileName = "Levels/level" + level + ".sok";
+            String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 
             try {
                 Path filePath = Paths.get(levelFileName);
 
                 List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
-                String pattern = "[0-4]";
+                String pattern = "[0-5]";
                 Pattern compiledPattern = Pattern.compile(pattern);
                 Matcher matcher = null;
 
@@ -148,7 +152,7 @@ public class Service implements Runnable{
                 System.out.println(exc);
             }
         }
-        System.out.println(playerChannel.isOpen());
+        System.out.println("Closing connection playerChannel.isOpen() = "+ playerChannel.isOpen());
 
     }
 

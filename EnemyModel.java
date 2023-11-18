@@ -1,8 +1,8 @@
 import java.io.File;
 
 public class EnemyModel implements GeneralModel{
-    // private DBService dbService;
-    // private Player player;
+    private DBService dbService;
+    private Player player;
     private Viewer viewer;
 
     private final int SPACE = 0;
@@ -39,55 +39,50 @@ public class EnemyModel implements GeneralModel{
     ////////
     private Client client;
 
-    // private boolean isDouble;
-
-    // public Model(Viewer viewer, boolean isDouble) {
-    //     this(viewer);
-    //     this.isDouble = isDouble;
-    // }
-
     public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
-        // this.isDouble = isDouble;
-        // dbService = new DBService();
-        // initPlayer("Stive");
+        dbService = new DBService();
+        initPlayer("Stive");
         levelList = new Levels(client);
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
+        // player = new Player(); // TODO: get Player from Client
     }
 
 
-    private void initializeMap() {
-
+    public void setClient(Client client) {
+        levelList = new Levels(client);
+        this.client = client;
     }
+
     public int[][] getDesktop(){
         return map;
     }
 
-    public void doAction(int keyMessage) {
+    public void doAction(String action) {
 
         if (map == null) {
             System.out.println("NO MAP FOUND\n\n");
             return;
         }
 
-        if (keyMessage == LEFT) {
+        if (action.equals("Left")) {
             move = "Left";
             moveLeft();
-        } else if(keyMessage == RIGHT) {
+        } else if(action.equals("Right")) {
             move = "Right";
             moveRight();
-        } else if(keyMessage == UP) {
+        } else if(action.equals("Up")) {
             move = "Up";
             moveTop();
-        } else if(keyMessage == DOWN) {
+        } else if(action.equals("Down")) {
             move = "Down";
             moveBot();
         }
 
         returnCheck();
-        viewer.updateEnemyCanvas();////////---------------
+        viewer.updateEnemyCanvas();
 
         System.out.println("Moves: " + totalMoves); //debug
 
@@ -104,11 +99,11 @@ public class EnemyModel implements GeneralModel{
 
     }
 
-    public void changeLevel(String command) {
-        String stringLevelNumber = command.substring(command.length() - 1, command.length());
-        int levelNumber = Integer.parseInt(stringLevelNumber);
-        levelList.setCurrentLevel(levelNumber);
-        // map = ;/// map for enemy model
+    public void changeLevel() {
+        // initialize enemyMap
+        System.out.println("initialize enemy Map [~]");
+        map = levelList.getEnemyLevelFromServer();
+
 
         if (map != null) {
             scanMap();
@@ -123,6 +118,8 @@ public class EnemyModel implements GeneralModel{
             System.out.println();
         }
         System.out.println();
+
+        viewer.showCanvas("battle");
     }
     //
     // public void changeLevel(String command) {
@@ -153,17 +150,31 @@ public class EnemyModel implements GeneralModel{
         return collectedCoins;
     }
 
-    // public Player initPlayer(String nickname) {
-    //     player = dbService.getPlayerInfo(nickname);
-    //     System.out.println(player.getNickname());
-    //     System.out.println(player.getAvailableSkins());
-    //     System.out.println(player.getTotalCoins());
-    //     return player;
-    // }
+    public Player initPlayer(String nickname) {
+        player = dbService.getPlayerInfo(nickname);
+        return player;
+    }
 
-    // public Player getPlayer() {
-    //     return player;
-    // }
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void updateCurrentSkin(String skinType) {
+        dbService.updateCurrentSkin(player.getNickname(), skinType);
+        PlayerSkin skin = null;
+        switch (skinType) {
+            case "Default Skin":
+                skin = new DefaultSkin();
+                break;
+            case "Santa Skin":
+                skin = new SantaSkin();
+                break;
+            case "Premium Skin":
+                skin = new PremiumSkin();
+                break;
+        }
+        player.setCurrentSkin(skin);
+    }
 
     // public void getNextLevel() {
     //     map = levelList.getNextMap();
@@ -173,9 +184,6 @@ public class EnemyModel implements GeneralModel{
     //     viewer.showCanvas();
     // }
 
-    // public void updateCurrentSkin(String skin) {
-    //     dbService.updateCurrentSkin(player.getNickname(), skin);
-    // }
 
     // private void showEndLevelDialog() {
     //     Object[] options = {"Go to levels", "Next level"};
