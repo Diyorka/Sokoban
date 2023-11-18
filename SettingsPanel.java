@@ -22,6 +22,7 @@ public class SettingsPanel extends JPanel {
     private JButton defaultSkinButton;
     private JButton santaSkinButton;
     private JButton premiumSkinButton;
+    private int premiumSkinCost;
 
     public SettingsPanel(Viewer viewer, Model model) {
         this.viewer = viewer;
@@ -29,12 +30,11 @@ public class SettingsPanel extends JPanel {
         player = model.getPlayer();
         backgroundImage = new ImageIcon("images/settings-background.png").getImage();
         font = viewer.getCustomFont(Font.PLAIN, 24f);
+        premiumSkinCost = 15;
         init();
-        updateButtonStates(player.getCurrentSkin().getType());
     }
 
     public void updateButtonStates(String type) {
-        System.out.println("\nSettings Panel: " + type);
         switch (type) {
             case "Default Skin":
                 enableButtons(false, true, true);
@@ -44,8 +44,19 @@ public class SettingsPanel extends JPanel {
                 break;
             case "Premium Skin":
                 enableButtons(true, true, false);
-
         }
+    }
+
+    public void updatePremiumButtonText() {
+        premiumSkinButton.setText("Choose");
+    }
+
+    public void showNotEnoughCoinsMessage() {
+        System.out.println("Not enough coins");
+    }
+
+    public int getPremiumSkinCost() {
+        return premiumSkinCost;
     }
 
     public void paintComponent(Graphics g) {
@@ -76,10 +87,7 @@ public class SettingsPanel extends JPanel {
         JLabel musicLabel = createLabel("Music:", 80, 450, 100, 30, labelFont);
         showMusicSettings();
 
-        JLabel themeLabel = createLabel("Theme:", 80, 600, 100, 30, labelFont);
-        showThemeSettings();
-
-        JButton returnButton = createButton("Back", "Back", 40, 680, true);
+        JButton returnButton = createButton("Back", "Back", 40, 650, true);
 
         add(coinImage);
         add(nickname);
@@ -87,7 +95,6 @@ public class SettingsPanel extends JPanel {
         add(label);
         add(skinsLabel);
         add(musicLabel);
-        add(themeLabel);
         add(returnButton);
     }
 
@@ -102,11 +109,18 @@ public class SettingsPanel extends JPanel {
 
         JLabel defaultSkinPrice = createLabel("Default", 370, 320, 100, 30, font);
         JLabel santaSkinPrice = createLabel("Free", 575, 320, 100, 30, font);
-        JLabel premiumSkinPrice = createLabel("15 coins", 755, 320, 110, 30, font);
+        JLabel premiumSkinPrice = createLabel(premiumSkinCost + " coins", 755, 320, 110, 30, font);
 
-        defaultSkinButton = createButton("Choose", "Default Skin", 350, 375, false);
-        santaSkinButton = createButton("Choose", "Santa Skin", 550, 375, false);
-        premiumSkinButton = createButton("Buy", "Premium Skin", 740, 375, false);
+        defaultSkinButton = createButton("Choose", "Default_Skin", 350, 375, false);
+        santaSkinButton = createButton("Choose", "Santa_Skin", 550, 375, false);
+
+        premiumSkinButton = null;
+        if (player.isPremiumAvailable()) {
+            premiumSkinButton = createButton("Choose", "Premium_Skin", 740, 375, false);
+        } else {
+            premiumSkinButton = createButton("Buy", "Buy_Premium", 740, 375, false);
+        }
+        updateButtonStates(player.getCurrentSkin().getType());
 
         add(defaultSkinImage);
         add(santaSkinImage);
@@ -125,13 +139,10 @@ public class SettingsPanel extends JPanel {
         premiumSkinButton.setEnabled(premiumSkinEnable);
     }
 
-    private void updatePremiumButtonText() {
-        premiumSkinButton.setText("Choose");
-    }
-
     private void showMusicSettings() {
-        JRadioButton defaultMusic = createJRadioButton("Default", "Default Music", 420, 460, true);
-        JRadioButton christmasMusic = createJRadioButton("Jingle Bells", "Jingle Bells", 620, 460, false);
+        JRadioButton defaultMusic = createJRadioButton("Default", "Default_Music", 355, 460, true);
+        JRadioButton christmasMusic = createJRadioButton("Christmas music", "Christmas_Music", 515, 460, false);
+        JRadioButton noSound = createJRadioButton("Soundless", "No_Sound", 735, 460, false);
 
         ButtonGroup music = new ButtonGroup();
         music.add(defaultMusic);
@@ -149,21 +160,9 @@ public class SettingsPanel extends JPanel {
 
         add(defaultMusic);
         add(christmasMusic);
+        add(noSound);
         add(volumeLabel);
         add(volumeSlider);
-    }
-
-    private void showThemeSettings() {
-        JRadioButton defaultTheme = createJRadioButton("Default", "Default Theme", 420, 600, true);
-        JRadioButton brightTheme = createJRadioButton("Bright", "Bright Theme", 620, 600, false);
-
-
-        ButtonGroup theme = new ButtonGroup();
-        theme.add(defaultTheme);
-        theme.add(brightTheme);
-
-        add(defaultTheme);
-        add(brightTheme);
     }
 
     private JLabel createLabel(String name, int x, int y, int width, int height, Font font) {

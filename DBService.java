@@ -70,6 +70,32 @@ public class DBService {
         }
     }
 
+    public void updateTotalCoins(String nickname, int coins) {
+        StringBuilder content = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(totalCoinsPath))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+
+                if (values[0].equals(nickname)) {
+                    content.append(nickname).append(";").append(coins).append("\n");
+                } else {
+                    content.append(line).append("\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter writer = new FileWriter(totalCoinsPath)) {
+            writer.write(content.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addSkin(String nickname, String skin) {
         try {
             boolean fileExists = Files.exists(Paths.get(skinsPath));
@@ -121,6 +147,7 @@ public class DBService {
 
     public PlayerSkin readCurrentSkin(String nickname) {
         PlayerSkin playerSkin = new DefaultSkin();
+
         try (BufferedReader br = new BufferedReader(new FileReader(currentSkinPath))) {
             String line;
             boolean isFirstLine = true;
@@ -131,15 +158,10 @@ public class DBService {
                     continue;
                 }
                 String[] values = line.split(";");
-                if (values.length == 2) {
-                    String currentNickname = values[0];
-                    String currentSkin = values[1];
-                    if (currentNickname.equals(nickname)) {
-                        System.out.println("-------------------------------------");
-                        System.out.println("DB: " + currentSkin);
-                        System.out.println("-------------------------------------");
-                        playerSkin = parseToPlayerSkin(currentSkin);
-                    }
+                String currentNickname = values[0];
+                String currentSkin = values[1];
+                if (currentNickname.equals(nickname)) {
+                    playerSkin = parseToPlayerSkin(currentSkin);
                 }
             }
         } catch (IOException ioe) {

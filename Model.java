@@ -254,6 +254,14 @@ public class Model implements GeneralModel {
         player.setCurrentSkin(skin);
     }
 
+    public void buyPremiumSkin(int premiumSkinCost) {
+        String nickname = player.getNickname();
+        int remainedCoins = player.getTotalCoins() - premiumSkinCost;
+        dbService.updateTotalCoins(nickname, remainedCoins);
+        dbService.addSkin(nickname, "Premium Skin");
+        player = dbService.getPlayerInfo(nickname);
+    }
+
     public void showEndLevelDialog() {
         Object[] options = {"Go to levels", "Next level"};
         int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
