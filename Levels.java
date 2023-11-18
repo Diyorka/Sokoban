@@ -156,13 +156,19 @@ public class Levels {
   public int[][] getLevelFromServer(String level) {
       String levelContent = client.loadLevelFromServer(level);
       System.out.println(levelContent);
-      return parseData(levelContent, 'A');
+      if(levelContent != null) {
+        return parseData(levelContent, 'A');
+      }
+      return null;
   }
 
   public int[][] getEnemyLevelFromServer() {
       String levelContent = client.loadEnemyLevelFromServer();
       System.out.println(levelContent);
-      return parseData(levelContent, 'A');
+      if(levelContent != null) {
+        return parseData(levelContent, 'A');
+      }
+      return null;
   }
 
   private String loadLevel(String levelPath) {

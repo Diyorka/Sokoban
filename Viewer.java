@@ -9,6 +9,7 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.File;
 import java.awt.Component;
+import javax.swing.JOptionPane;
 
 
 public class Viewer {
@@ -150,5 +151,19 @@ public class Viewer {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    public void showErrorDialog(String errorMessage) {
+        String[] options = {"Exit to Menu"};
+        int result = JOptionPane.showOptionDialog(
+                null, errorMessage, "Error",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                null, options, options[0]
+        );
+        if (result == 0) {
+            showMenu();
+        } else {
+            showMenu();
+        }
     }
 }

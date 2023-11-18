@@ -27,21 +27,24 @@ public class MenuController implements ActionListener {
                 break;
             case "Play":
                 client = new Client(viewer, "alone");
-                model.setClient(client);
-                model.changeLevel("Level 1");
+                if(client.hasConnectionToServer()) {
+                    model.setClient(client);
+                    model.changeLevel("Level 1");
+                }
                 break;
             case "PlayWithEnemy":
                 System.out.println("play with enemy");
                 client = new Client(viewer, "battle");
-                model.setClient(client);
-                model.changeLevel("Level 7");
+                if(client.hasConnectionToServer()) {
+                    model.setClient(client);
+                    model.changeLevel("Level 7");
 
-                enemyModel.setClient(client);
-                enemyModel.changeLevel();
-
-                System.out.println("creating new Thread enemyFieldController");
-                EnemyFieldController enemyFieldController = new EnemyFieldController(client, viewer, enemyModel);
-                enemyFieldController.go();
+                    enemyModel.setClient(client);
+                    enemyModel.changeLevel();
+                    System.out.println("creating new Thread enemyFieldController");
+                    EnemyFieldController enemyFieldController = new EnemyFieldController(client, viewer, enemyModel);
+                    enemyFieldController.go();
+                }
                 break;
             case "Level":
                 viewer.showLevelChooser();

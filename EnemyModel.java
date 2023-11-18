@@ -107,19 +107,20 @@ public class EnemyModel implements GeneralModel{
 
         if (map != null) {
             scanMap();
+            System.out.println("getting enemy map >>> ");
+            for(int i = 0; i < map.length; i++) {
+                for(int j = 0; j < map[i].length; j++) {
+                    System.out.print(map[i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            viewer.showCanvas("battle");
         }
 
         totalMoves = 0;
-        System.out.println("getting enemy map >>> ");
-        for(int i = 0; i < map.length; i++) {
-            for(int j = 0; j < map[i].length; j++) {
-                System.out.print(map[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
 
-        viewer.showCanvas("battle");
+
     }
     //
     // public void changeLevel(String command) {

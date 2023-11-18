@@ -36,10 +36,21 @@ public class Client {
             String serverResponse = getDataFromServer();
             System.out.println(serverResponse);
 
+            if(gameType.equals("battle")) {
+                serverResponse = getDataFromServer();
+                System.out.println(serverResponse);
+                if(serverResponse.equals("ENEMY_WAS_NOT_FOUND")) {
+                    viewer.showErrorDialog("ENEMY NOT FOUND !");
+                    closeClient();
+                }
+            }
         } catch (IOException e) {
             System.out.println("ERROR occurred while trying to make connection");
         }
     }
+
+
+
 
     public String getGameType() {
         return gameType;
@@ -76,7 +87,7 @@ public class Client {
     }
 
     public  void sendDataToServer(String data) {
-        while(true) {
+        if(hasConnectionToServer()) {
             try {
                 buffer.clear();
                 buffer.put(data.getBytes());
@@ -85,14 +96,13 @@ public class Client {
                 socketChannel.write(buffer);
                 buffer.clear();
                 System.out.println("Successfully send data to server [~]");
-                break;
 
             } catch(IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
                 exc.printStackTrace();
                 System.out.println("has connection to server = " + hasConnectionToServer());
                 viewer.showMenu();
-                break;
+
 
             }
         }
@@ -100,7 +110,7 @@ public class Client {
 
     public  String getDataFromServer() {
         String data = null;
-        while(true) {
+        if(hasConnectionToServer()) {
             try {
                 buffer.clear();
                 int bytesRead = socketChannel.read(buffer);
@@ -110,16 +120,15 @@ public class Client {
                 }
                 buffer.clear();
                 System.out.println("Successfully get data from server [~]");
-                break;
 
             } catch(IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();
                 System.out.println("has connection to server = " + hasConnectionToServer());
                 viewer.showMenu();
-                break;
 
             }
+
         }
         return data;
     }
