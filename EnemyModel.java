@@ -38,6 +38,7 @@ public class EnemyModel implements GeneralModel{
     private int[][] coinsPos;
     ////////
     private Client client;
+    // private PLayer player;
 
     public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
@@ -45,6 +46,7 @@ public class EnemyModel implements GeneralModel{
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
+        // player = new Player(); // TODO: get Player from Client
     }
 
 
@@ -155,9 +157,26 @@ public class EnemyModel implements GeneralModel{
     //     return player;
     // }
 
-    // public Player getPlayer() {
-    //     return player;
-    // }
+    public Player getPlayer() {
+        return null;                             // TODO: return player
+    }
+
+    public void updateCurrentSkin(String skinType) {
+    //     dbService.updateCurrentSkin(player.getNickname(), skinType);
+    //     PlayerSkin skin = null;
+    //     switch (skinType) {                      TODO: update current skin
+    //         case "Default Skin":
+    //             skin = new DefaultSkin();
+    //             break;
+    //         case "Santa Skin":
+    //             skin = new SantaSkin();
+    //             break;
+    //         case "Premium Skin":
+    //             skin = new PremiumSkin();
+    //             break;
+    //     }
+    //     player.setCurrentSkin(skin);
+    }
 
     // public void getNextLevel() {
     //     map = levelList.getNextMap();
@@ -167,9 +186,6 @@ public class EnemyModel implements GeneralModel{
     //     viewer.showCanvas();
     // }
 
-    // public void updateCurrentSkin(String skin) {
-    //     dbService.updateCurrentSkin(player.getNickname(), skin);
-    // }
 
     // private void showEndLevelDialog() {
     //     Object[] options = {"Go to levels", "Next level"};

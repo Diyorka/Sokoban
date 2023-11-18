@@ -25,8 +25,9 @@ public class DBService {
         HashMap<Integer, Integer> coinsOnLevels = readCoinsData(nickname);
         ArrayList<String> availableSkins = readSkinsData(nickname);
         int totalCoins = readTotalCoinsData(nickname);
+        PlayerSkin currentSkin = readCurrentSkin(nickname);
 
-        return new Player(nickname, coinsOnLevels, availableSkins, totalCoins);
+        return new Player(nickname, coinsOnLevels, availableSkins, currentSkin, totalCoins);
     }
 
     public void writeCoins(String nickname, int level, int coins) {
@@ -115,6 +116,49 @@ public class DBService {
             writer.close();
         } catch(IOException e) {
             System.out.println(e);
+        }
+    }
+
+    public PlayerSkin readCurrentSkin(String nickname) {
+        PlayerSkin playerSkin = new DefaultSkin();
+        try (BufferedReader br = new BufferedReader(new FileReader(currentSkinPath))) {
+            String line;
+            boolean isFirstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+                String[] values = line.split(";");
+                if (values.length == 2) {
+                    String currentNickname = values[0];
+                    String currentSkin = values[1];
+                    if (currentNickname.equals(nickname)) {
+                        System.out.println("-------------------------------------");
+                        System.out.println("DB: " + currentSkin);
+                        System.out.println("-------------------------------------");
+                        playerSkin = parseToPlayerSkin(currentSkin);
+                    }
+                }
+            }
+        } catch (IOException ioe) {
+            System.out.println(ioe);
+        } finally {
+            return playerSkin;
+        }
+    }
+
+    private PlayerSkin parseToPlayerSkin(String skin) {
+        switch (skin) {
+            case "Default Skin":
+                return new DefaultSkin();
+            case "Santa Skin":
+                return new SantaSkin();
+            case "Premium Skin":
+                return new PremiumSkin();
+            default:
+                return null;
         }
     }
 

@@ -66,12 +66,20 @@ public class Viewer {
     public Viewer getViewer() {
         return this;
     }
+
     public CanvasForTwoPlayers getEnemyCanvas() {
         return enemyCanvas;
     }
+
     public void update() {
         canvas.repaint();
     }
+
+    public void updateSkin() {
+        canvas.setSkin();
+        update();
+    }
+
     public void updateEnemyCanvas() {
         enemyCanvas.repaint();
     }

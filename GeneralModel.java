@@ -1,8 +1,10 @@
 public interface GeneralModel {
-    public String getMove();
-    public int getTotalMoves();
-    public int getCollectedCoins();
-    public int[][] getDesktop();
+    String getMove();
+    Player getPlayer();
+    int getTotalMoves();
+    int getCollectedCoins();
+    int[][] getDesktop();
+    void updateCurrentSkin(String skinType);
     // public void doAction(int keyMessage);
 
 }
