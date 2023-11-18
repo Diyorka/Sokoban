@@ -1,8 +1,8 @@
 import java.io.File;
 
 public class EnemyModel implements GeneralModel{
-    // private DBService dbService;
-    // private Player player;
+    private DBService dbService;
+    private Player player;
     private Viewer viewer;
 
     private final int SPACE = 0;
@@ -38,10 +38,11 @@ public class EnemyModel implements GeneralModel{
     private int[][] coinsPos;
     ////////
     private Client client;
-    // private PLayer player;
 
     public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
+        dbService = new DBService();
+        initPlayer("Stive");
         levelList = new Levels(client);
         playerPosX = -1;
         playerPosY = -1;
@@ -149,33 +150,33 @@ public class EnemyModel implements GeneralModel{
         return collectedCoins;
     }
 
-    // public Player initPlayer(String nickname) {
-    //     player = dbService.getPlayerInfo(nickname);
-    //     System.out.println(player.getNickname());
-    //     System.out.println(player.getAvailableSkins());
-    //     System.out.println(player.getTotalCoins());
-    //     return player;
-    // }
+    public Player initPlayer(String nickname) {
+        player = dbService.getPlayerInfo(nickname);
+        System.out.println(player.getNickname());
+        System.out.println(player.getAvailableSkins());
+        System.out.println(player.getTotalCoins());
+        return player;
+    }
 
     public Player getPlayer() {
-        return null;                             // TODO: return player
+        return player;
     }
 
     public void updateCurrentSkin(String skinType) {
-    //     dbService.updateCurrentSkin(player.getNickname(), skinType);
-    //     PlayerSkin skin = null;
-    //     switch (skinType) {                      TODO: update current skin
-    //         case "Default Skin":
-    //             skin = new DefaultSkin();
-    //             break;
-    //         case "Santa Skin":
-    //             skin = new SantaSkin();
-    //             break;
-    //         case "Premium Skin":
-    //             skin = new PremiumSkin();
-    //             break;
-    //     }
-    //     player.setCurrentSkin(skin);
+        dbService.updateCurrentSkin(player.getNickname(), skinType);
+        PlayerSkin skin = null;
+        switch (skinType) {
+            case "Default Skin":
+                skin = new DefaultSkin();
+                break;
+            case "Santa Skin":
+                skin = new SantaSkin();
+                break;
+            case "Premium Skin":
+                skin = new PremiumSkin();
+                break;
+        }
+        player.setCurrentSkin(skin);
     }
 
     // public void getNextLevel() {
