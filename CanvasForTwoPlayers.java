@@ -99,17 +99,17 @@ public class CanvasForTwoPlayers extends JPanel {
       }
   }
 
-  // public void setSkin() {                                          getting skin from player
-  //     PlayerSkin skin = model.getPlayer().getCurrentSkin();
-  //     frontPlayerImage = skin.getFrontPlayerImage();
-  //     backPlayerImage = skin.getBackPlayerImage();
-  //     rightPlayerImage = skin.getRightPlayerImage();
-  //     leftPlayerImage = skin.getLeftPlayerImage();
-  //     wallImage = skin.getWallImage();
-  //     boxImage = skin.getBoxImage();
-  //     targetImage = skin.getTargetImage();
-  //     groundImage = skin.getGroundImage();
-  // }
+  public void setSkin() {                                    
+      PlayerSkin skin = model.getPlayer().getCurrentSkin();
+      frontPlayerImage = skin.getFrontPlayerImage();
+      backPlayerImage = skin.getBackPlayerImage();
+      rightPlayerImage = skin.getRightPlayerImage();
+      leftPlayerImage = skin.getLeftPlayerImage();
+      wallImage = skin.getWallImage();
+      boxImage = skin.getBoxImage();
+      targetImage = skin.getTargetImage();
+      groundImage = skin.getGroundImage();
+  }
 
   private void rotateGamer() {
       String move = model.getMove();
