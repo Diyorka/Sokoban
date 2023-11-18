@@ -10,4 +10,5 @@ public interface PlayerSkin {
     Image getBoxImage();
     Image getTargetImage();
     Image getGroundImage();
+    Image getCoinImage();
 }

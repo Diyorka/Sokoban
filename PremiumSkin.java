@@ -12,6 +12,7 @@ public class PremiumSkin implements PlayerSkin {
     private Image boxImage;
     private Image targetImage;
     private Image groundImage;
+    private Image coinImage;
 
     public PremiumSkin() {
         type = "Premium Skin";
@@ -19,10 +20,11 @@ public class PremiumSkin implements PlayerSkin {
         backPremiumImage = new ImageIcon("images/back-premium.png").getImage();
         leftPremiumImage = new ImageIcon("images/left-side-premium.png").getImage();
         rightPremiumImage = new ImageIcon("images/right-side-premium.png").getImage();
-        wallImage = new ImageIcon("images/wall.png").getImage();
-        boxImage = new ImageIcon("images/box.png").getImage();
-        targetImage = new ImageIcon("images/target1.png").getImage();
+        wallImage = new ImageIcon("images/wall1.png").getImage();
+        boxImage = new ImageIcon("images/box1.png").getImage();
+        targetImage = new ImageIcon("images/target.png").getImage();
         groundImage = new ImageIcon("images/ground.png").getImage();
+        coinImage = new ImageIcon("images/coin2.png").getImage();
     }
 
     public String getType() {
@@ -59,5 +61,9 @@ public class PremiumSkin implements PlayerSkin {
 
     public Image getGroundImage() {
         return groundImage;
+    }
+
+    public Image getCoinImage() {
+        return coinImage;
     }
 }

@@ -18,27 +18,41 @@ public class SettingsController implements ActionListener {
         String command = event.getActionCommand();
 
         switch (command) {
-            case "Default Skin":
-                model.updateCurrentSkin(command);
-                viewer.updateSkin();
-                settingsPanel.updateButtonStates(command);
+            case "Default_Skin":
+            case "Santa_Skin":
+            case "Premium_Skin":
+                String skinType = command.replace("_", " ");
+                model.updateCurrentSkin(skinType);
                 break;
-            case "Santa Skin":
-                model.updateCurrentSkin(command);
-                viewer.updateSkin();
-                settingsPanel.updateButtonStates(command);
+            case "Buy_Premium":
+                buyPremiumSkin();
                 break;
-            case "Premium Skin":
+            case "Default_Music":
                 break;
-            case "Default Music":
-                break;
-            case "Jingle Bells":
+            case "Christmas_Music":
                 break;
             case "Back":
                 viewer.showMenu();
                 break;
-
         }
+    }
+
+    private void buyPremiumSkin() {
+        if (!model.getPlayer().isPremiumAvailable()) {
+            if (isCoinsEnough()) {
+                model.buyPremiumSkin(settingsPanel.getPremiumSkinCost());
+            } else {
+                settingsPanel.showNotEnoughCoinsMessage();
+            }
+        } else {
+            model.updateCurrentSkin("Premium Skin");
+        }
+    }
+
+    private boolean isCoinsEnough() {
+        int totalCoins = model.getPlayer().getTotalCoins();
+        int premiumSkinCost = settingsPanel.getPremiumSkinCost();
+        return totalCoins >= premiumSkinCost;
     }
 
 }
