@@ -77,7 +77,8 @@ public class Viewer {
 
     public void updateSkin() {
         canvas.setSkin();
-        update();
+        canvas.repaint();
+        settings.updateButtonStates();
     }
 
     public void updateEnemyCanvas() {
@@ -88,10 +89,13 @@ public class Viewer {
         myCanvas.repaint();
     }
 
-
     public void updateSettings(Player player) {
         settings.setPlayer(player);
         settings.repaint();
+    }
+
+    public void updateButtonText() {
+        settings.updatePremiumButtonText();
     }
 
     public void showMenu() {

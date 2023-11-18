@@ -51,7 +51,7 @@ public class Model implements GeneralModel {
     public Model(Viewer viewer) {
         this.viewer = viewer;
         dbService = new DBService();
-        initPlayer("Stive");
+        player = dbService.getPlayerInfo("Stive");
         // levelList = new Levels(client);
 
         wonSound = new Music(new File("music/won.wav"));
@@ -217,11 +217,11 @@ public class Model implements GeneralModel {
         return collectedCoins;
     }
 
-    public Player initPlayer(String nickname) {
+    public Player setPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
-        System.out.println(player.getNickname());
-        System.out.println(player.getAvailableSkins());
-        System.out.println(player.getTotalCoins());
+        viewer.updateSettings(player);
+        viewer.updateSkin();
+        viewer.updateButtonText();
         return player;
     }
 
@@ -252,14 +252,20 @@ public class Model implements GeneralModel {
                 break;
         }
         player.setCurrentSkin(skin);
+        viewer.updateSkin();
     }
 
     public void buyPremiumSkin(int premiumSkinCost) {
         String nickname = player.getNickname();
-        int remainedCoins = player.getTotalCoins() - premiumSkinCost;
-        dbService.updateTotalCoins(nickname, remainedCoins);
-        dbService.addSkin(nickname, "Premium Skin");
+        String skinType = "Premium Skin";
+
+        dbService.updateTotalCoins(nickname, player.getTotalCoins() - premiumSkinCost);
+        dbService.addSkin(nickname, skinType);
+        updateCurrentSkin("Premium Skin");
+
         player = dbService.getPlayerInfo(nickname);
+        viewer.updateSettings(player);
+        viewer.updateButtonText();
     }
 
     public void showEndLevelDialog() {

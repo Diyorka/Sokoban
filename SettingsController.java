@@ -22,7 +22,7 @@ public class SettingsController implements ActionListener {
             case "Santa_Skin":
             case "Premium_Skin":
                 String skinType = command.replace("_", " ");
-                updateSkin(skinType);
+                model.updateCurrentSkin(skinType);
                 break;
             case "Buy_Premium":
                 buyPremiumSkin();
@@ -37,24 +37,15 @@ public class SettingsController implements ActionListener {
         }
     }
 
-    private void updateSkin(String skinType) {
-        model.updateCurrentSkin(skinType);
-        settingsPanel.updateButtonStates(skinType);
-        viewer.updateSkin();
-    }
-
     private void buyPremiumSkin() {
         if (!model.getPlayer().isPremiumAvailable()) {
             if (isCoinsEnough()) {
                 model.buyPremiumSkin(settingsPanel.getPremiumSkinCost());
-                viewer.updateSettings(model.getPlayer());
-                settingsPanel.updatePremiumButtonText();
-                updateSkin("Premium Skin");
             } else {
                 settingsPanel.showNotEnoughCoinsMessage();
             }
         } else {
-            updateSkin("Premium Skin");
+            model.updateCurrentSkin("Premium Skin");
         }
     }
 

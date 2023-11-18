@@ -34,21 +34,28 @@ public class SettingsPanel extends JPanel {
         init();
     }
 
-    public void updateButtonStates(String type) {
-        switch (type) {
-            case "Default Skin":
-                enableButtons(false, true, true);
-                break;
-            case "Santa Skin":
-                enableButtons(true, false, true);
-                break;
-            case "Premium Skin":
-                enableButtons(true, true, false);
+    public void updateButtonStates() {
+        String type = player.getCurrentSkin().getType();
+
+        if ("Default Skin".equals(type)) {
+            enableButtons(false, true, true);
+
+        } else if ("Santa Skin".equals(type)) {
+            enableButtons(true, false, true);
+
+        } else if ("Premium Skin".equals(type)) {
+            enableButtons(true, true, false);
         }
     }
 
     public void updatePremiumButtonText() {
-        premiumSkinButton.setText("Choose");
+        if (!player.isPremiumAvailable()) {
+            premiumSkinButton.setText("Buy");
+            premiumSkinButton.setActionCommand("Buy_Premium");
+        } else {
+            premiumSkinButton.setText("Choose");
+            premiumSkinButton.setActionCommand("Premium_Skin");
+        }
     }
 
     public void showNotEnoughCoinsMessage() {
@@ -114,13 +121,12 @@ public class SettingsPanel extends JPanel {
         defaultSkinButton = createButton("Choose", "Default_Skin", 350, 375, false);
         santaSkinButton = createButton("Choose", "Santa_Skin", 550, 375, false);
 
-        premiumSkinButton = null;
         if (player.isPremiumAvailable()) {
             premiumSkinButton = createButton("Choose", "Premium_Skin", 740, 375, false);
         } else {
             premiumSkinButton = createButton("Buy", "Buy_Premium", 740, 375, false);
         }
-        updateButtonStates(player.getCurrentSkin().getType());
+        updateButtonStates();
 
         add(defaultSkinImage);
         add(santaSkinImage);
