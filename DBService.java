@@ -135,9 +135,6 @@ public class DBService {
                     String currentNickname = values[0];
                     String currentSkin = values[1];
                     if (currentNickname.equals(nickname)) {
-                        System.out.println("-------------------------------------");
-                        System.out.println("DB: " + currentSkin);
-                        System.out.println("-------------------------------------");
                         playerSkin = parseToPlayerSkin(currentSkin);
                     }
                 }
