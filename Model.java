@@ -34,7 +34,7 @@ public class Model implements GeneralModel {
     private int playerPosY;
 
     private int[][] map;
-    private Levels levelList;
+    private Levels levels;
 
     private int playerCount;
     private int boxesCount;
@@ -52,7 +52,7 @@ public class Model implements GeneralModel {
         this.viewer = viewer;
         dbService = new DBService();
         player = dbService.getPlayerInfo("Stive");
-        // levelList = new Levels(client);
+        // levels = new Levels(client);
 
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
@@ -68,7 +68,7 @@ public class Model implements GeneralModel {
     }
 
     public void setClient(Client client) {
-        levelList = new Levels(client);
+        levels = new Levels(client);
         this.client = client;
         gameType = client.getGameType();
     }
@@ -151,15 +151,13 @@ public class Model implements GeneralModel {
             moveSnowSound.stop();
             boxInTargetSound.stop();
             wonSound.play();
-            int passedLevel = levelList.getCurrentLevel();
+            int passedLevel = levels.getCurrentLevel();
             dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
             collectedCoins = 0;
-            if (gameType.equals("alone") && levelList.getCurrentLevel() == LAST_LEVEL) {
-                showEndGameDialog();
-            } else if (gameType.equals("alone")) {
-                showEndLevelDialog();
+            if (gameType.equals("alone")) {
+                askSoloPlayerFurtherAction();
             } else if (gameType.equals("battle")){
-                showWonDialog();
+                askOnlinePlayerFurtherAction();
             }
         }
 
@@ -169,13 +167,13 @@ public class Model implements GeneralModel {
 
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
-        levelList.setCurrentLevel(levelNumber);
+        levels.setCurrentLevel(levelNumber);
         if(gameType.equals("alone")) {
-            map = levelList.getCurrentMap();// map for current our model
+            map = levels.getCurrentMap();// map for current our model
         }
         // initialize out map
         if(gameType.equals("battle")) {
-            map = levelList.getLevelFromServer(String.valueOf(levelNumber));
+            map = levels.getLevelFromServer(String.valueOf(levelNumber));
         }
 
 
@@ -199,7 +197,7 @@ public class Model implements GeneralModel {
 
     public void restart() {
         collectedCoins = 0;
-        map = levelList.getCurrentMap();
+        map = levels.getCurrentMap();
         if (map != null) {
             scanMap();
         }
@@ -230,11 +228,15 @@ public class Model implements GeneralModel {
     }
 
     public void getNextLevel() {
-        map = levelList.getNextMap();
+        map = levels.getNextMap();
         if (map != null) {
             scanMap();
         }
         viewer.showCanvas();
+    }
+
+    public int getCurrentLevelNumber() {
+        return levels.getCurrentLevel();
     }
 
     public void updateCurrentSkin(String skinType) {
@@ -268,58 +270,31 @@ public class Model implements GeneralModel {
         viewer.updateButtonText();
     }
 
-    public void showEndLevelDialog() {
-        Object[] options = {"Go to levels", "Next level"};
-        int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
-                                                                  "!\n                        Total moves: " + totalMoves, "Congratulations!",
-                                                                  javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.PLAIN_MESSAGE,
-                                                                  null, options, options[1]);
-        if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
-            map = levelList.getNextMap();
-            if (map != null) {
-                scanMap();
-            }
+    private void askSoloPlayerFurtherAction() {
+        String playerChoice = viewer.showSoloEndLevelDialog();
+        if (playerChoice.equals("Next level")) {
+            map = levels.getNextMap();
+            scanMap();
             viewer.update();
-        } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
-            viewer.showLevelChooser();
+        } else if(playerChoice.equals("Back to menu")){
             map = null;
-        } else {
+            client.closeClient();
             viewer.showMenu();
+        } else {
             map = null;
         }
     }
 
-    public void showWonDialog() {
-        String[] options = {"Wait other player", "Return"};
-        int result = javax.swing.JOptionPane.showOptionDialog(
-                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
-                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]
-        );
-        switch (result) {
-            case 0:
-                System.out.println("Wait option selected");
-                break;
-            case 1:
-                System.out.println("Return option selected");
-                break;
-        }
-    }
-
-    public void showEndGameDialog() {
-        String[] options = {"Exit to Menu"};
-        int result = javax.swing.JOptionPane.showOptionDialog(
-            null, player.getNickname() + " won! You have passed all levels ! Congratulations", "Total moves: " + totalMoves,
-            javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
-            null, options, options[0]
-            );
-        if (result == 0) {
-            System.out.println("Exit to Menu option selected");
-            client.closeClient();
+    private void askOnlinePlayerFurtherAction() {
+        String playerChoice = viewer.showOnlineEndLevelDialog();
+        if (playerChoice.equals("Wait other player")) {
+            //TODO
+        } else if(playerChoice.equals("Back to menu")){
+            //TODO
+            map = null;
             viewer.showMenu();
         } else {
-            client.closeClient();
-            viewer.showMenu();
+            //TODO
             map = null;
         }
     }
