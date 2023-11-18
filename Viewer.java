@@ -118,6 +118,46 @@ public class Viewer {
 
     }
 
+    public String showSoloEndLevelDialog() {
+        Object[] options = {"Go to levels", "Next level"};
+        int totalMoves = model.getTotalMoves();
+        int levelNumber = model.getCurrentLevelNumber();
+        if (levelNumber == 9) {
+            options[1] = "Back to menu";
+        }
+        int userChoise = javax.swing.JOptionPane.showOptionDialog(
+                null, "You completed level " + levelNumber +
+                "!\nTotal moves: " + totalMoves, "Congratulations!",
+                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[1]);
+        if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
+            return (String) options[1];
+        } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
+            showLevelChooser();
+        } else {
+            showMenu();
+        }
+        return "Not a play";
+    }
+
+    public String showOnlineEndLevelDialog() {
+        String[] options = {"Wait other player", "Back to menu"};
+        int totalMoves = model.getTotalMoves();
+        Player player = model.getPlayer();
+        int userChoise = javax.swing.JOptionPane.showOptionDialog(
+                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
+                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]
+        );
+        if (userChoise == 0) {
+            System.out.println("Wait option selected");
+            return (String) options[0];
+        } else {
+            System.out.println("Back to menu option selected");
+            return (String) options[1];
+        }
+    }
+
     private boolean hasFrameCanvas() {
         Component[] components = frame.getContentPane().getComponents();
         for (Component component : components) {
