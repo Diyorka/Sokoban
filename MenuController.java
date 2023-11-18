@@ -22,8 +22,7 @@ public class MenuController implements ActionListener {
         switch (command) {
             case "Set name":
                 String nickname = menuPanel.getNicknameText();
-                model.initPlayer(nickname);
-                viewer.updateSettings(model.getPlayer());
+                model.setPlayer(nickname);
                 break;
             case "Play":
                 client = new Client(viewer, "alone");

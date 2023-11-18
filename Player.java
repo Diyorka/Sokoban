@@ -8,10 +8,6 @@ public class Player {
     private PlayerSkin currentSkin;
     private int totalCoins;
 
-    public Player() {
-        
-    }
-
     public Player(String nickname, HashMap<Integer, Integer> coinsOnLevels, ArrayList<String> availableSkins, PlayerSkin currentSkin, int totalCoins) {
         this.nickname = nickname;
         this.coinsOnLevels = coinsOnLevels;
@@ -20,6 +16,15 @@ public class Player {
         this.totalCoins = totalCoins;
     }
 
+    public boolean isPremiumAvailable() {
+        ArrayList<String> availableSkins = getAvailableSkins();
+        for (String skin : availableSkins) {
+            if ("Premium Skin".equals(skin)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public String getNickname() {
         return nickname;
