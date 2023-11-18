@@ -237,8 +237,21 @@ public class Model implements GeneralModel {
         viewer.showCanvas();
     }
 
-    public void updateCurrentSkin(String skin) {
-        dbService.updateCurrentSkin(player.getNickname(), skin);
+    public void updateCurrentSkin(String skinType) {
+        dbService.updateCurrentSkin(player.getNickname(), skinType);
+        PlayerSkin skin = null;
+        switch (skinType) {
+            case "Default Skin":
+                skin = new DefaultSkin();
+                break;
+            case "Santa Skin":
+                skin = new SantaSkin();
+                break;
+            case "Premium Skin":
+                skin = new PremiumSkin();
+                break;
+        }
+        player.setCurrentSkin(skin);
     }
 
     public void showEndLevelDialog() {

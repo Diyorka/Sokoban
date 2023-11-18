@@ -5,12 +5,18 @@ public class Player {
     private String nickname;
     private HashMap<Integer, Integer> coinsOnLevels;
     private ArrayList<String> availableSkins;
+    private PlayerSkin currentSkin;
     private int totalCoins;
 
-    public Player(String nickname, HashMap<Integer, Integer> coinsOnLevels, ArrayList<String> availableSkins, int totalCoins) {
+    public Player() {
+        
+    }
+
+    public Player(String nickname, HashMap<Integer, Integer> coinsOnLevels, ArrayList<String> availableSkins, PlayerSkin currentSkin, int totalCoins) {
         this.nickname = nickname;
         this.coinsOnLevels = coinsOnLevels;
         this.availableSkins = availableSkins;
+        this.currentSkin = currentSkin;
         this.totalCoins = totalCoins;
     }
 
@@ -29,6 +35,14 @@ public class Player {
 
     public void setCoinsOnLevels(HashMap<Integer, Integer> coinsOnLevels) {
         this.coinsOnLevels = coinsOnLevels;
+    }
+
+    public PlayerSkin getCurrentSkin() {
+        return currentSkin;
+    }
+
+    public void setCurrentSkin(PlayerSkin currentSkin) {
+        this.currentSkin = currentSkin;
     }
 
     public ArrayList<String> getAvailableSkins() {

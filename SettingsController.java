@@ -19,16 +19,14 @@ public class SettingsController implements ActionListener {
 
         switch (command) {
             case "Default Skin":
-                model.updateCurrentSkin("Default Skin");
-                settingsPanel.setEnableDefaultSkinButton(false);
-                settingsPanel.setEnableSantaSkinButton(true);
-                settingsPanel.setEnablePremiumSkinButton(true);
+                model.updateCurrentSkin(command);
+                viewer.updateSkin();
+                settingsPanel.updateButtonStates(command);
                 break;
             case "Santa Skin":
-                model.updateCurrentSkin("Santa Skin");
-                settingsPanel.setEnableDefaultSkinButton(true);
-                settingsPanel.setEnableSantaSkinButton(false);
-                settingsPanel.setEnablePremiumSkinButton(true);
+                model.updateCurrentSkin(command);
+                viewer.updateSkin();
+                settingsPanel.updateButtonStates(command);
                 break;
             case "Premium Skin":
                 break;
