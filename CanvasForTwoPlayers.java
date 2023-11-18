@@ -18,14 +18,14 @@ import java.awt.Dimension;
 
 public class CanvasForTwoPlayers extends JPanel {
 
-  private Image gamerImage;
-  private Image frontGamerImage;
-  private Image backGamerImage;
-  private Image leftGamerImage;
-  private Image rightGamerImage;
+  private Image playerImage;
+  private Image frontPlayerImage;
+  private Image backPlayerImage;
+  private Image leftPlayerImage;
+  private Image rightPlayerImage;
   private Image wallImage;
   private Image boxImage;
-  private Image goalImage;
+  private Image targetImage;
   private Image groundImage;
   private Image coinImage;
   private Image errorImage;
@@ -42,13 +42,13 @@ public class CanvasForTwoPlayers extends JPanel {
       setLayout(null);
       setOpaque(true);
       setPreferredSize(new Dimension(400, 800));
-      frontGamerImage = new ImageIcon("images/front-player.png").getImage();
-      backGamerImage = new ImageIcon("images/back-player.png").getImage();
-      leftGamerImage = new ImageIcon("images/left-side-player.png").getImage();
-      rightGamerImage = new ImageIcon("images/right-side-player.png").getImage();
+      frontPlayerImage = new ImageIcon("images/front-player.png").getImage();
+      backPlayerImage = new ImageIcon("images/back-player.png").getImage();
+      leftPlayerImage = new ImageIcon("images/left-side-player.png").getImage();
+      rightPlayerImage = new ImageIcon("images/right-side-player.png").getImage();
       wallImage = new ImageIcon("images/wall.png").getImage();
       boxImage = new ImageIcon("images/box.png").getImage();
-      goalImage = new ImageIcon("images/target1.png").getImage();
+      targetImage = new ImageIcon("images/target1.png").getImage();
       groundImage = new ImageIcon("images/ground1.png").getImage();
       coinImage = new ImageIcon("images/coin.png").getImage();
       errorImage = new ImageIcon("images/error.png").getImage();
@@ -99,7 +99,7 @@ public class CanvasForTwoPlayers extends JPanel {
       }
   }
 
-  public void setSkin() {                                    
+  public void setSkin() {
       PlayerSkin skin = model.getPlayer().getCurrentSkin();
       frontPlayerImage = skin.getFrontPlayerImage();
       backPlayerImage = skin.getBackPlayerImage();
@@ -115,16 +115,16 @@ public class CanvasForTwoPlayers extends JPanel {
       String move = model.getMove();
       switch (move) {
           case "Left":
-              gamerImage = leftGamerImage;
+              playerImage = leftPlayerImage;
               break;
           case "Right":
-              gamerImage = rightGamerImage;
+              playerImage = rightPlayerImage;
               break;
           case "Up":
-              gamerImage = backGamerImage;
+              playerImage = backPlayerImage;
               break;
           case "Down":
-              gamerImage = frontGamerImage;
+              playerImage = frontPlayerImage;
               break;
       }
   }
@@ -149,13 +149,13 @@ public class CanvasForTwoPlayers extends JPanel {
           if (desktop[i][j] == 0) {
             g.drawImage(groundImage, x, y, null);
           } else if (desktop[i][j] == 1) {
-            g.drawImage(gamerImage, x, y, null);
+            g.drawImage(playerImage, x, y, null);
           } else if (desktop[i][j] == 2) {
             g.drawImage(wallImage, x, y, null);
           } else if (desktop[i][j] == 3) {
             g.drawImage(boxImage, x, y, null);
           } else if (desktop[i][j] == 4) {
-            g.drawImage(goalImage, x, y, null);
+            g.drawImage(targetImage, x, y, null);
           } else if (desktop[i][j] == 5) {
             g.drawImage(coinImage, x, y, null);
           }
