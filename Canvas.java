@@ -103,7 +103,7 @@ public class Canvas extends JPanel {
         replayButton.addActionListener(controller);
         add(replayButton);
     }
->>>>>>> Canvas.java
+    
   // public GeneralModel getModel() {
   //     return model;
   // }
