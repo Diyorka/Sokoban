@@ -96,117 +96,125 @@ public class Canvas extends JPanel {
         nextLevelButton.setActionCommand("Next level");
         nextLevelButton.addActionListener(controller);
         add(nextLevelButton);
+
+        ImageButton replayButton = new ImageButton("", "images/restart.png", 36, false);
+        replayButton.setBounds(1090, 130, 80, 80);
+        replayButton.setActionCommand("Restart");
+        replayButton.addActionListener(controller);
+        add(replayButton);
     }
+    
   // public GeneralModel getModel() {
   //     return model;
   // }
-  public void paintComponent(Graphics g) {
-      super.paintComponent(g);
 
-      g.drawImage(backgroundImage, 0, 0, null);
-      String collectedCoins = String.valueOf(model.getCollectedCoins());
-      String totalMoves = String.valueOf(model.getTotalMoves());
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
-      coinsLabel.setText(collectedCoins);
-      stepsLabel.setText(totalMoves);
+        g.drawImage(backgroundImage, 0, 0, null);
+        String collectedCoins = String.valueOf(model.getCollectedCoins());
+        String totalMoves = String.valueOf(model.getTotalMoves());
 
-      int[][] desktop = model.getDesktop();
-      if(desktop != null) {
-          rotateGamer();
-          drawDesktop(g, desktop);
-      } else {
-          drawErrorMessage(g);
-      }
-  }
+        coinsLabel.setText(collectedCoins);
+        stepsLabel.setText(totalMoves);
 
-  public void setSkin() {
-      PlayerSkin skin = model.getPlayer().getCurrentSkin();
-      frontPlayerImage = skin.getFrontPlayerImage();
-      backPlayerImage = skin.getBackPlayerImage();
-      rightPlayerImage = skin.getRightPlayerImage();
-      leftPlayerImage = skin.getLeftPlayerImage();
-      wallImage = skin.getWallImage();
-      boxImage = skin.getBoxImage();
-      targetImage = skin.getTargetImage();
-      groundImage = skin.getGroundImage();
-  }
-
-  private void rotateGamer() {
-      String move = model.getMove();
-      switch (move) {
-          case "Left":
-              playerImage = leftPlayerImage;
-              break;
-          case "Right":
-              playerImage = rightPlayerImage;
-              break;
-          case "Up":
-              playerImage = backPlayerImage;
-              break;
-          case "Down":
-              playerImage = frontPlayerImage;
-              break;
-      }
-  }
-
-  private void drawDesktop(Graphics g, int[][] desktop) {
-    int start = 350;
-    int y = 150;
-    int x = start;
-    int width = 50;
-    int height = 50;
-    int offset = 0;
-
-    for (int i = 0; i < desktop.length; i++) {
-      boolean isFirstWallFound = false;
-
-      for (int j = 0; j < desktop[i].length; j++) {
-        if (!isFirstWallFound && desktop[i][j] == 2) {
-          isFirstWallFound = true;
+        int[][] desktop = model.getDesktop();
+        if(desktop != null) {
+            rotateGamer();
+            drawDesktop(g, desktop);
+        } else {
+            drawErrorMessage(g);
         }
-
-        if (isFirstWallFound) {
-          if (desktop[i][j] == 0) {
-            g.drawImage(groundImage, x, y, null);
-          } else if (desktop[i][j] == 1) {
-            g.drawImage(playerImage, x, y, null);
-          } else if (desktop[i][j] == 2) {
-            g.drawImage(wallImage, x, y, null);
-          } else if (desktop[i][j] == 3) {
-            g.drawImage(boxImage, x, y, null);
-          } else if (desktop[i][j] == 4) {
-            g.drawImage(targetImage, x, y, null);
-          } else if (desktop[i][j] == 5) {
-            g.drawImage(coinImage, x, y, null);
-          }
-        }
-        x = x + width + offset;
-      }
-
-      x = start;
-      y = y + height + offset;
     }
 
-  }
+    public void setSkin() {
+        PlayerSkin skin = model.getPlayer().getCurrentSkin();
+        frontPlayerImage = skin.getFrontPlayerImage();
+        backPlayerImage = skin.getBackPlayerImage();
+        rightPlayerImage = skin.getRightPlayerImage();
+        leftPlayerImage = skin.getLeftPlayerImage();
+        wallImage = skin.getWallImage();
+        boxImage = skin.getBoxImage();
+        targetImage = skin.getTargetImage();
+        groundImage = skin.getGroundImage();
+    }
 
-  private void drawErrorMessage(Graphics g) {
-    Font font = new Font("Impact", Font.BOLD, 50);
-    g.drawImage(errorImage, 200, 200, null);
-    g.setFont(font);
-    g.setColor(Color.RED);
-    g.drawString("Initialization Error!", 250, 100);
-  }
+    private void rotateGamer() {
+        String move = model.getMove();
+        switch (move) {
+            case "Left":
+                playerImage = leftPlayerImage;
+                break;
+            case "Right":
+                playerImage = rightPlayerImage;
+                break;
+            case "Up":
+                playerImage = backPlayerImage;
+                break;
+            case "Down":
+                playerImage = frontPlayerImage;
+                break;
+        }
+    }
 
-  private Font getCustomFont(File file, int style, float size) {
-      Font customFont = null;
-      try {
-          customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
-          GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-          ge.registerFont(customFont);
-      } catch (IOException | FontFormatException e) {
-          System.out.println(e);
+    private void drawDesktop(Graphics g, int[][] desktop) {
+      int start = 350;
+      int y = 150;
+      int x = start;
+      int width = 50;
+      int height = 50;
+      int offset = 0;
+
+      for (int i = 0; i < desktop.length; i++) {
+        boolean isFirstWallFound = false;
+
+        for (int j = 0; j < desktop[i].length; j++) {
+          if (!isFirstWallFound && desktop[i][j] == 2) {
+            isFirstWallFound = true;
+          }
+
+          if (isFirstWallFound) {
+            if (desktop[i][j] == 0) {
+              g.drawImage(groundImage, x, y, null);
+            } else if (desktop[i][j] == 1) {
+              g.drawImage(playerImage, x, y, null);
+            } else if (desktop[i][j] == 2) {
+              g.drawImage(wallImage, x, y, null);
+            } else if (desktop[i][j] == 3) {
+              g.drawImage(boxImage, x, y, null);
+            } else if (desktop[i][j] == 4) {
+              g.drawImage(targetImage, x, y, null);
+            } else if (desktop[i][j] == 5) {
+              g.drawImage(coinImage, x, y, null);
+            }
+          }
+          x = x + width + offset;
+        }
+
+        x = start;
+        y = y + height + offset;
       }
-      return customFont;
-  }
+
+    }
+
+    private void drawErrorMessage(Graphics g) {
+      Font font = new Font("Impact", Font.BOLD, 50);
+      g.drawImage(errorImage, 200, 200, null);
+      g.setFont(font);
+      g.setColor(Color.RED);
+      g.drawString("Initialization Error!", 250, 100);
+    }
+
+    private Font getCustomFont(File file, int style, float size) {
+        Font customFont = null;
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.out.println(e);
+        }
+        return customFont;
+    }
 
 }

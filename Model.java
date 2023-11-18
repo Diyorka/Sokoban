@@ -84,12 +84,7 @@ public class Model implements GeneralModel {
     public void doAction(int keyMessage) {
         System.out.println("in model do Action");
         if (keyMessage == RESTART) {
-            System.out.println("------------ Map restarted ------------\n\n");
-            collectedCoins = 0;
-            map = levelList.getCurrentMap();
-            if (map != null) {
-                scanMap();
-            }
+            restart();
         } else if (keyMessage == EXIT) {
             collectedCoins = 0;
             viewer.showMenu();
@@ -202,6 +197,13 @@ public class Model implements GeneralModel {
 
     }
 
+    public void restart() {
+        collectedCoins = 0;
+        map = levelList.getCurrentMap();
+        if (map != null) {
+            scanMap();
+        }
+    }
 
     public String getMove() {
         return move;
