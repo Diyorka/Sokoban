@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.File;
 import java.awt.Component;
 import javax.swing.JOptionPane;
-
+import javax.swing.ImageIcon;
 
 public class Viewer {
 
@@ -59,6 +59,9 @@ public class Viewer {
         frame.add(settings, "settings");
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
+
+        ImageIcon gameIcon = new ImageIcon("images/game-icon.png");
+        frame.setIconImage(gameIcon.getImage());
 
         frame.setResizable(false);
         frame.setVisible(true);
