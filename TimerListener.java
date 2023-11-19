@@ -6,14 +6,21 @@ import java.awt.event.ActionListener;
 public class TimerListener implements ActionListener {
     private JLabel label;
     private Client client;
+    private CanvasForTwoPlayers canvasForTwoPlayers;
+    private String canvasType;
     private int count = 30;
-    public TimerListener(JLabel label, Client client) {
+    private Viewer viewer;
+    private Timer timer;
+    public TimerListener(JLabel label, Client client, CanvasForTwoPlayers canvasForTwoPlayers, String canvasType, Viewer viewer) {
         this.label = label;
         this.client = client;
+        this.canvasForTwoPlayers = canvasForTwoPlayers;
+        this.viewer = viewer;
+        this.canvasType = canvasType;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        Timer timer = ((Timer) e.getSource());
+        timer = ((Timer) e.getSource());
         System.out.println("Timer in action");
         System.out.println(client.hasConnectionToServer());
         if(client.hasConnectionToServer()) {
@@ -21,12 +28,21 @@ public class TimerListener implements ActionListener {
                 label.setText(count + "s");
                 count--;
             } else {
-                timer.stop();
-                label.setText("Time's up!");
+                resetTimer();
             }
         } else {
-            timer.stop();
+            resetTimer();
+
         }
 
+    }
+
+    private void resetTimer() {
+        if(canvasType.equals("enemyCanvas")) { // if we set timer on enemyCanvas (we set disable our canvas )
+            viewer.enableMyCanvas();
+        }
+        timer.stop();
+        // label.setText("Time's up!");
+        canvasForTwoPlayers.removeTimer();
     }
 }

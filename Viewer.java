@@ -32,10 +32,10 @@ public class Viewer {
         canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
 
-        myCanvas = new CanvasForTwoPlayers(model, controller);
+        myCanvas = new CanvasForTwoPlayers(model, controller, "myCanvas");
         myCanvas.addKeyListener(controller);
 
-        enemyCanvas = new CanvasForTwoPlayers(enemyModel, null);
+        enemyCanvas = new CanvasForTwoPlayers(enemyModel, null, "enemyCanvas");
         LevelChooser levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
@@ -84,6 +84,7 @@ public class Viewer {
     public void enableMyCanvas() {
         // myCanvas.setAlpha(1.0f);
         // myCanvas.setOpaque(true);
+        myCanvas.requestFocusInWindow();
         myCanvas.addKeyListener(controller);
     }
     public void update() {
