@@ -38,7 +38,7 @@ public class ServiceForTwoPlayers implements Runnable{
         // always read data from second client and send them to first  client EnemyFieldController
         ClientListener secondClientListener = new ClientListener(player1Channel, player2Channel, this, "secondClient");
         secondClientListener.start();
-        
+
         // wait other threads !!!
         try {
             firstClientListener.join();
@@ -127,7 +127,7 @@ public class ServiceForTwoPlayers implements Runnable{
     //load level from file on server with parsing
     private String loadLevel(int level) {
         if(level <= 9 && level >= 7) {
-            String levelFileName = "Levels/level" + level + ".sok";
+            String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 
             try {
