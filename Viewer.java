@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.File;
 import java.awt.Component;
 import javax.swing.JOptionPane;
-
+import javax.swing.ImageIcon;
 
 public class Viewer {
 
@@ -60,6 +60,9 @@ public class Viewer {
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
 
+        ImageIcon gameIcon = new ImageIcon("images/game-icon.png");
+        frame.setIconImage(gameIcon.getImage());
+
         frame.setResizable(false);
         frame.setVisible(true);
     }
@@ -97,11 +100,22 @@ public class Viewer {
         settings.updateButtonStates();
     }
 
+    public void updateEnemySkin() {
+        enemyCanvas.setSkin();
+        enemyCanvas.repaint();
+    }
+
+    public void updateMySkin() {
+        myCanvas.setSkin();
+        myCanvas.repaint();
+    }
+
     public void updateEnemyCanvas() {
         enemyCanvas.repaint();
     }
 
     public void updateMyCanvas() {
+        myCanvas.setSkin();
         myCanvas.repaint();
     }
 
@@ -200,6 +214,7 @@ public class Viewer {
     private void showTwoCanvas() {
         updateMyCanvas();
         updateEnemyCanvas();
+        updateMySkin();
         cardLayout.show(frame.getContentPane(), "splitPane");
         myCanvas.requestFocusInWindow();
 
