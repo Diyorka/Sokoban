@@ -36,7 +36,7 @@ public class MenuController implements ActionListener {
                 client = new Client(viewer, "battle");
                 if(client.hasConnectionToServer()) {
                     model.setClient(client);
-                    model.changeLevel("Level 7");
+                    model.changeLevel();
 
                     enemyModel.setClient(client);
                     enemyModel.changeLevel();
