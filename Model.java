@@ -53,7 +53,8 @@ public class Model implements GeneralModel {
 
     private int[][] checksPos;
     private int[][] coinsPos;
-
+    private boolean isPlayerFirstCompletedGame;
+    private boolean isPlayerCompleteGame;
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
@@ -77,6 +78,9 @@ public class Model implements GeneralModel {
         move = "Down";
     }
 
+    public boolean getIsPlayerCompleteGame() {
+        return isPlayerCompleteGame;
+    }
     public void doAction(int keyMessage) {
         System.out.println("in model do Action");
         if (keyMessage == RESTART) {
@@ -115,27 +119,67 @@ public class Model implements GeneralModel {
         viewer.updateMyCanvas();// when play with enemy
 
         System.out.println("Moves: " + totalMoves); //debug
+        System.out.println(isPlayerFirstCompletedGame); //debug
 
-        if (isWon()) {
-            moveSnowSound.stop();
-            boxInTargetSound.stop();
-            wonSound.play();
-            int passedLevel = levels.getCurrentLevel();
-            dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
-            collectedCoins = 0;
+        if(isWon()) {
+            System.out.println("YOU WON ");
+            doComplitingAction();
             if (gameType.equals("alone")) {
                 askSoloPlayerFurtherAction();
             } else if (gameType.equals("battle")){
-                askOnlinePlayerFurtherAction();
+                if(isPlayerFirstCompletedGame) {
+                    askOnlinePlayerFurtherAction();
+                } else {
+                    client.sendDataToServer("complete");// if we complete game but not first
+                    isPlayerCompleteGame = true;
+                    System.out.println("SEND DATA COMPLETE ");
+                }
+
             }
         }
 
     }
 
+        // if (isWon()) {
+        //     if(isPlayerFirstCompletedGame) {
+        //         moveSnowSound.stop();
+        //         boxInTargetSound.stop();
+        //         wonSound.play();
+        //         int passedLevel = levels.getCurrentLevel();
+        //         dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
+        //         collectedCoins = 0;
+        //         if (gameType.equals("alone")) {
+        //             askSoloPlayerFurtherAction();
+        //         } else if (gameType.equals("battle")){
+        //             askOnlinePlayerFurtherAction();
+        //         }
+        //     } else {
+        //         client.sendDataToServer("complete");// if we complete game but not first
+        //     }
+        //
+        // }
+
+    private void doComplitingAction() {
+        moveSnowSound.stop();
+        boxInTargetSound.stop();
+        wonSound.play();
+        int passedLevel = levels.getCurrentLevel();
+        dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
+        collectedCoins = 0;
+    }
+
+    public void setIsPlayerFirstCompletedGame(boolean value) {
+        isPlayerFirstCompletedGame = value;
+    }
     public void setClient(Client client) {
-        levels = new Levels(client);
         this.client = client;
         gameType = client.getGameType();
+        prepareToNewGame();
+    }
+
+    private void prepareToNewGame() {
+        isPlayerFirstCompletedGame = true;
+        levels = new Levels(client);
     }
 
     public Client getClient() {

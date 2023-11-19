@@ -71,6 +71,12 @@ public class Viewer {
         return this;
     }
 
+    public Model getModel() {
+        return model;
+    }
+    public EnemyModel getEnemyModel() {
+        return enemyModel;
+    }
     public CanvasForTwoPlayers getEnemyCanvas() {
         return enemyCanvas;
     }
@@ -211,6 +217,25 @@ public class Viewer {
             showMenu();
         }
     }
+
+    public void ResultsOnlineGameDialog(String absoluteWinner) {
+        int myTotalMoves = model.getTotalMoves();
+        int enemyTotalMoves = enemyModel.getTotalMoves();
+
+        String winner = "It's a tie!";
+        if(absoluteWinner == null) {
+            winner = (myTotalMoves < enemyTotalMoves) ? "You won !" : "You lose";
+        } else {
+            winner = absoluteWinner.equals("me") ? "You won !" : "You lose";
+        }
+
+
+       String message = String.format("Your total moves: %d\nEnemy total moves: %d\n%s",
+               myTotalMoves, enemyTotalMoves, winner);
+
+      JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
+
+    }
     private void showTwoCanvas() {
         updateMyCanvas();
         updateEnemyCanvas();
@@ -254,7 +279,4 @@ public class Viewer {
         }
     }
 
-    public Model getModel() {
-        return model;
-    }
 }
