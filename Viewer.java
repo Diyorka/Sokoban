@@ -9,6 +9,7 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.File;
 import java.awt.Component;
+import javax.swing.JOptionPane;
 
 
 public class Viewer {
@@ -48,8 +49,8 @@ public class Viewer {
 
 
         frame = new JFrame("Sokoban");
-        frame.setSize(1200, 720);
-        frame.setLocation(150, 5);
+        frame.setSize(1200, 800);
+        frame.setLocation(200, 15);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(cardLayout);
 
@@ -59,7 +60,7 @@ public class Viewer {
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
 
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 
@@ -67,9 +68,20 @@ public class Viewer {
         return this;
     }
 
+    public CanvasForTwoPlayers getEnemyCanvas() {
+        return enemyCanvas;
+    }
+
     public void update() {
         canvas.repaint();
     }
+
+    public void updateSkin() {
+        canvas.setSkin();
+        canvas.repaint();
+        settings.updateButtonStates();
+    }
+
     public void updateEnemyCanvas() {
         enemyCanvas.repaint();
     }
@@ -78,10 +90,13 @@ public class Viewer {
         myCanvas.repaint();
     }
 
-
     public void updateSettings(Player player) {
         settings.setPlayer(player);
         settings.repaint();
+    }
+
+    public void updateButtonText() {
+        settings.updatePremiumButtonText();
     }
 
     public void showMenu() {
@@ -94,14 +109,54 @@ public class Viewer {
         canvas.requestFocusInWindow();
     }
 
-    public void showCanvas(int gamersCount) {
-        System.out.println("in show canvas gamersCount = " + gamersCount);
-        if(gamersCount == 1) {
+    public void showCanvas(String gameType) {
+        System.out.println("in show canvas gameType" + gameType);
+        if(gameType.equals("alone")) {
             showCanvas();
             return;
         }
         showTwoCanvas();
 
+    }
+
+    public String showSoloEndLevelDialog() {
+        Object[] options = {"Go to levels", "Next level"};
+        int totalMoves = model.getTotalMoves();
+        int levelNumber = model.getCurrentLevelNumber();
+        if (levelNumber == 9) {
+            options[1] = "Back to menu";
+        }
+        int userChoise = javax.swing.JOptionPane.showOptionDialog(
+                null, "You completed level " + levelNumber +
+                "!\nTotal moves: " + totalMoves, "Congratulations!",
+                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[1]);
+        if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
+            return (String) options[1];
+        } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
+            showLevelChooser();
+        } else {
+            showMenu();
+        }
+        return "Not a play";
+    }
+
+    public String showOnlineEndLevelDialog() {
+        String[] options = {"Wait other player", "Back to menu"};
+        int totalMoves = model.getTotalMoves();
+        Player player = model.getPlayer();
+        int userChoise = javax.swing.JOptionPane.showOptionDialog(
+                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
+                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]
+        );
+        if (userChoise == 0) {
+            System.out.println("Wait option selected");
+            return (String) options[0];
+        } else {
+            System.out.println("Back to menu option selected");
+            return (String) options[1];
+        }
     }
 
     private boolean hasFrameCanvas() {
@@ -140,5 +195,19 @@ public class Viewer {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    public void showErrorDialog(String errorMessage) {
+        String[] options = {"Exit to Menu"};
+        int result = JOptionPane.showOptionDialog(
+                null, errorMessage, "Error",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                null, options, options[0]
+        );
+        if (result == 0) {
+            showMenu();
+        } else {
+            showMenu();
+        }
     }
 }

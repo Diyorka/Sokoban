@@ -18,29 +18,43 @@ public class SettingsController implements ActionListener {
         String command = event.getActionCommand();
 
         switch (command) {
-            case "Default Skin":
-                model.updateCurrentSkin("Default Skin");
-                settingsPanel.setEnableDefaultSkinButton(false);
-                settingsPanel.setEnableSantaSkinButton(true);
-                settingsPanel.setEnablePremiumSkinButton(true);
+            case "Default_Skin":
+            case "Santa_Skin":
+            case "Premium_Skin":
+                String skinType = command.replace("_", " ");
+                model.updateCurrentSkin(skinType);
                 break;
-            case "Santa Skin":
-                model.updateCurrentSkin("Santa Skin");
-                settingsPanel.setEnableDefaultSkinButton(true);
-                settingsPanel.setEnableSantaSkinButton(false);
-                settingsPanel.setEnablePremiumSkinButton(true);
+            case "Buy_Premium":
+                buyPremiumSkin();
                 break;
-            case "Premium Skin":
+            case "Default_Music":
                 break;
-            case "Default Music":
+            case "Christmas_Music":
                 break;
-            case "Jingle Bells":
+            case "No_Sound":
                 break;
             case "Back":
                 viewer.showMenu();
                 break;
-
         }
+    }
+
+    private void buyPremiumSkin() {
+        if (!model.getPlayer().isPremiumAvailable()) {
+            if (isCoinsEnough()) {
+                model.buyPremiumSkin(settingsPanel.getPremiumSkinCost());
+            } else {
+                settingsPanel.showNotEnoughCoinsMessage();
+            }
+        } else {
+            model.updateCurrentSkin("Premium Skin");
+        }
+    }
+
+    private boolean isCoinsEnough() {
+        int totalCoins = model.getPlayer().getTotalCoins();
+        int premiumSkinCost = settingsPanel.getPremiumSkinCost();
+        return totalCoins >= premiumSkinCost;
     }
 
 }

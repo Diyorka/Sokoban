@@ -6,6 +6,7 @@ public class MenuController implements ActionListener {
     private Viewer viewer;
     private Model model;
     private EnemyModel enemyModel;
+    private Client client;
 
     public MenuController(MenuPanel menuPanel, Viewer viewer, Model model, EnemyModel enemyModel) {
         this.viewer = viewer;
@@ -21,18 +22,28 @@ public class MenuController implements ActionListener {
         switch (command) {
             case "Set name":
                 String nickname = menuPanel.getNicknameText();
-                model.initPlayer(nickname);
-                viewer.updateSettings(model.getPlayer());
+                model.setPlayer(nickname);
                 break;
             case "Play":
-                model.changeLevel("Level 1", 1);
+                client = new Client(viewer, "alone");
+                if(client.hasConnectionToServer()) {
+                    model.setClient(client);
+                    model.changeLevel("Level 1");
+                }
                 break;
             case "PlayWithEnemy":
                 System.out.println("play with enemy");
-                model.changeLevel("Level 1", 2);
-                /////
-                enemyModel.changeLevel("Level 1");
+                client = new Client(viewer, "battle");
+                if(client.hasConnectionToServer()) {
+                    model.setClient(client);
+                    model.changeLevel("Level 7");
 
+                    enemyModel.setClient(client);
+                    enemyModel.changeLevel();
+                    System.out.println("creating new Thread enemyFieldController");
+                    EnemyFieldController enemyFieldController = new EnemyFieldController(client, viewer, enemyModel);
+                    enemyFieldController.go();
+                }
                 break;
             case "Level":
                 viewer.showLevelChooser();
@@ -41,6 +52,9 @@ public class MenuController implements ActionListener {
                 viewer.showSettings();
                 break;
             case "Exit":
+                if(client != null) {
+                    client.closeClient();
+                }
                 System.exit(0);
                 break;
         }

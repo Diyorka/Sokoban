@@ -18,25 +18,50 @@ import java.util.Scanner;
 public class Client {
     private static final String SERVER_ADDRESS = "localhost";
     private static final int  SERVER_PORT = 4444;
-    private  SocketChannel SOCKET_CHANNEL;
+    private  SocketChannel socketChannel;
     private ByteBuffer buffer;
+    private String gameType;
+    private Viewer viewer;
 
 
-    public Client() {
+    public Client(Viewer viewer, String gameType) {
+        this.viewer = viewer;
+        this.gameType = gameType;
         buffer = ByteBuffer.allocate(1024);
         try {
-            SOCKET_CHANNEL = SocketChannel.open();
-            SOCKET_CHANNEL.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
+            socketChannel = SocketChannel.open();
+            socketChannel.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
             System.out.println("Successfully connected to server ...");
+            sendDataToServer(gameType);
+            String serverResponse = getDataFromServer();
+            System.out.println(serverResponse);
+
+            if(gameType.equals("battle")) {
+                serverResponse = getDataFromServer();
+                System.out.println(serverResponse);
+                if(serverResponse.equals("ENEMY_WAS_NOT_FOUND")) {
+                    viewer.showErrorDialog("ENEMY NOT FOUND !");
+                    closeClient();
+                }
+            }
         } catch (IOException e) {
             System.out.println("ERROR occurred while trying to make connection");
         }
     }
 
+
+
+
+    public String getGameType() {
+        return gameType;
+    }
+    public boolean hasConnectionToServer() {
+        return socketChannel.isOpen();
+    }
     public void closeClient() {
-        if (SOCKET_CHANNEL != null && !SOCKET_CHANNEL.isOpen()) {
+        if (socketChannel != null && socketChannel.isOpen()) {
             try {
-                SOCKET_CHANNEL.close();
+                socketChannel.close();
                 System.out.println("Close client Socket");
             } catch (IOException exc) {
                 System.out.println(exc);
@@ -46,7 +71,7 @@ public class Client {
     }
     public  String loadLevelFromServer(String level) {
         String levelContent = null;
-        if(SOCKET_CHANNEL != null) {
+        if(socketChannel != null) {
             sendDataToServer(level);
             levelContent = getDataFromServer();
         }
@@ -55,34 +80,29 @@ public class Client {
 
     public  String loadEnemyLevelFromServer() {
         String levelContent = null;
-        if(SOCKET_CHANNEL != null) {
+        if(socketChannel != null) {
             levelContent = getDataFromServer();
         }
         return levelContent;
     }
 
     public  void sendDataToServer(String data) {
-        while(true) {
+        if(hasConnectionToServer()) {
             try {
                 buffer.clear();
                 buffer.put(data.getBytes());
                 buffer.flip();
 
-                SOCKET_CHANNEL.write(buffer);
+                socketChannel.write(buffer);
                 buffer.clear();
                 System.out.println("Successfully send data to server [~]");
-                break;
 
             } catch(IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
                 exc.printStackTrace();
-                boolean reconnected = reconnect();
+                System.out.println("has connection to server = " + hasConnectionToServer());
+                viewer.showMenu();
 
-                if (reconnected) {
-                    System.out.println("Successfully reconnected to the server.");
-                } else {
-                    break;
-                }
 
             }
         }
@@ -90,49 +110,29 @@ public class Client {
 
     public  String getDataFromServer() {
         String data = null;
-        while(true) {
+        if(hasConnectionToServer()) {
             try {
                 buffer.clear();
-                int bytesRead = SOCKET_CHANNEL.read(buffer);
+                int bytesRead = socketChannel.read(buffer);
                 if (bytesRead > 0) {
                     buffer.flip();
                      data = new String(buffer.array(), 0, bytesRead);
                 }
                 buffer.clear();
                 System.out.println("Successfully get data from server [~]");
-                break;
 
             } catch(IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();
-                boolean reconnected = reconnect();
-
-                if (reconnected) {
-                    System.out.println("Successfully reconnected to the server.");
-                } else {
-                    break;
-                }
+                System.out.println("has connection to server = " + hasConnectionToServer());
+                viewer.showMenu();
 
             }
+
         }
         return data;
     }
 
-
-    private boolean reconnect() {
-
-        try {
-            if (SOCKET_CHANNEL.isOpen()) {
-                SOCKET_CHANNEL.close();
-            }
-            SOCKET_CHANNEL = SocketChannel.open();
-            SOCKET_CHANNEL.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
-            return true;
-        } catch (IOException e) {
-            System.out.println("Failed to reconnect: " + e.getMessage());
-            return false;
-        }
-    }
 
 
 
