@@ -1,6 +1,7 @@
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
+// import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Font;
 import javax.swing.ImageIcon;
@@ -13,8 +14,9 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
+import javax.swing.Timer;
 import java.awt.Dimension;
+// import java.awt.AlphaComposite;
 
 public class CanvasForTwoPlayers extends JPanel {
 
@@ -35,8 +37,14 @@ public class CanvasForTwoPlayers extends JPanel {
     private JLabel stepsLabel;
     private final JLabel nickName;
     private GeneralModel model;
+    private JLabel TimerImageLabel;
+    private JLabel time;
+    private String canvasType;
+    // private float alpha;
 
-    public CanvasForTwoPlayers(GeneralModel model, Controller controller) {
+    public CanvasForTwoPlayers(GeneralModel model, Controller controller, String canvasType) {
+        // alpha = 1.0f;
+        this.canvasType = canvasType;
         this.model = model;
         this.controller = controller;
         backgroundImage = new ImageIcon("images/background2.jpg").getImage();
@@ -87,10 +95,27 @@ public class CanvasForTwoPlayers extends JPanel {
         exitGameButton.setActionCommand("Exit to menu");
         exitGameButton.addActionListener(controller);
         add(exitGameButton);
-    }
 
+        TimerImageLabel = new JLabel();
+        Image timer = new ImageIcon("images/timer.png").getImage();
+        Image scaledTimer = timer.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        ImageIcon timerIcon = new ImageIcon(scaledTimer);
+        TimerImageLabel.setIcon(timerIcon);
+        TimerImageLabel.setBounds(370, 20, 80, 80);
+
+        time = new JLabel("30");
+        time.setBounds(460, 30, 80, 80);
+    }
+    // public void setAlpha(float alpha) {
+    //     this.alpha = alpha;
+    //     System.out.println("alpha " + alpha);
+    //     repaint();
+    // }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        // Graphics2D g2d = (Graphics2D) g.create();
+        // AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        // g2d.setComposite(alphaComposite);
 
         g.drawImage(backgroundImage, 0, 0, null);
         String collectedCoins = String.valueOf(model.getCollectedCoins());
@@ -105,8 +130,30 @@ public class CanvasForTwoPlayers extends JPanel {
         } else {
             drawErrorMessage(g);
         }
+        // g2d.dispose();
     }
+    public void setTimer(Client client, Viewer viewer) {
+        System.out.println("SetTimer");
 
+        add(TimerImageLabel);
+        launchTimer(client, viewer);
+
+    }
+    private void launchTimer(Client client, Viewer viewer) {
+        System.out.println("launchTimer");
+        add(time);
+        int delay = 1000; // 1 second delay
+        int period = 1000; // 1 second interval
+        Timer timer = new Timer(delay, new TimerListener(time, client, this, canvasType, viewer));
+        timer.setInitialDelay(0);
+        timer.setDelay(period);
+        timer.start();
+    }
+    public void removeTimer() {
+        remove(TimerImageLabel);
+        remove(time);
+
+    }
     public void setSkin() {
         PlayerSkin skin = model.getPlayer().getCurrentSkin();
         frontPlayerImage = skin.getFrontPlayerImage();

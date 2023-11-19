@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.File;
 import java.awt.Component;
 import javax.swing.JOptionPane;
-
+import javax.swing.ImageIcon;
 
 public class Viewer {
 
@@ -32,10 +32,10 @@ public class Viewer {
         canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
 
-        myCanvas = new CanvasForTwoPlayers(model, controller);
+        myCanvas = new CanvasForTwoPlayers(model, controller, "myCanvas");
         myCanvas.addKeyListener(controller);
 
-        enemyCanvas = new CanvasForTwoPlayers(enemyModel, null);
+        enemyCanvas = new CanvasForTwoPlayers(enemyModel, null, "enemyCanvas");
         LevelChooser levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
@@ -60,6 +60,9 @@ public class Viewer {
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
 
+        ImageIcon gameIcon = new ImageIcon("images/game-icon.png");
+        frame.setIconImage(gameIcon.getImage());
+
         frame.setResizable(false);
         frame.setVisible(true);
     }
@@ -72,6 +75,21 @@ public class Viewer {
         return enemyCanvas;
     }
 
+    public CanvasForTwoPlayers getMyCanvas() {
+        return myCanvas;
+    }
+
+    public void disableMyCanvas() {
+        // myCanvas.setAlpha(0.5f);
+        // myCanvas.setOpaque(false);
+        myCanvas.removeKeyListener(controller);
+    }
+    public void enableMyCanvas() {
+        // myCanvas.setAlpha(1.0f);
+        // myCanvas.setOpaque(true);
+        myCanvas.requestFocusInWindow();
+        myCanvas.addKeyListener(controller);
+    }
     public void update() {
         canvas.repaint();
     }
@@ -153,19 +171,19 @@ public class Viewer {
     }
 
     public String showOnlineEndLevelDialog() {
-        String[] options = {"Wait other player", "Back to menu"};
+        String[] options = {"Wait results (30 sec)", "Give up"};
         int totalMoves = model.getTotalMoves();
         Player player = model.getPlayer();
         int userChoise = javax.swing.JOptionPane.showOptionDialog(
-                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
-                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, player.getNickname() + " passed game ! Congratulations", "Total moves: " + totalMoves,
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
         if (userChoise == 0) {
             System.out.println("Wait option selected");
             return (String) options[0];
         } else {
-            System.out.println("Back to menu option selected");
+            System.out.println("Give up option selected");
             return (String) options[1];
         }
     }
@@ -179,7 +197,20 @@ public class Viewer {
         }
         return false;
     }
-
+    public void showEnemyGiveUpDialog() {
+        int totalMoves = model.getTotalMoves();
+        String[] options = {"Exit to Menu"};
+        int result = JOptionPane.showOptionDialog(
+                null, "Your opponent resigned, you won ! Your total moves " + totalMoves, "Congratulations !",
+                JOptionPane.DEFAULT_OPTION,  JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]
+        );
+        if (result == 0) {
+            showMenu();
+        } else {
+            showMenu();
+        }
+    }
     private void showTwoCanvas() {
         updateMyCanvas();
         updateEnemyCanvas();

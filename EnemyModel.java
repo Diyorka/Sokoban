@@ -85,6 +85,11 @@ public class EnemyModel implements GeneralModel{
         } else if(action.equals("Down")) {
             move = "Down";
             moveBot();
+        } else if (action.equals("Given up")) {
+            viewer.showEnemyGiveUpDialog();
+        } else if (action.equals("You have 30 seconds")) {
+            viewer.getMyCanvas().setTimer(client, viewer);
+            viewer.updateMyCanvas();
         }
 
         returnCheck();
