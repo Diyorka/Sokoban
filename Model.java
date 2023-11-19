@@ -168,6 +168,11 @@ public class Model implements GeneralModel {
         return client;
     }
 
+    public String getNickName() {
+        return player.getNickname();
+    }
+
+
     public int[][] getDesktop(){
         return map;
     }
@@ -228,6 +233,7 @@ public class Model implements GeneralModel {
         // initialize out map
         if(gameType.equals("battle")) {
             map = levels.getLevelFromServer(String.valueOf(levelNumber));
+            client.sendDataToServer(player.getNickname());
         }
 
 

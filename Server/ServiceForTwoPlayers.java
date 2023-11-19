@@ -78,6 +78,20 @@ public class ServiceForTwoPlayers implements Runnable{
         sendData(player2Channel, player1LevelContent);
         System.out.println("send level of enemy " );
 
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ie) {
+            System.out.println("ServiceForTwoPlayers.java Thread sleep ex " + ie);
+        }
+
+        String player1NickName = readData(player1Channel);
+        System.out.println("read nickname " + player1NickName);
+        String player2NickName = readData(player2Channel);
+        System.out.println("read nickname " + player1NickName);
+
+        sendData(player1Channel, player2NickName);
+        sendData(player2Channel, player1NickName);
+
    }
 
    public  String readData(SocketChannel channel) {
