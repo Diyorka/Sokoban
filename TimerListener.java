@@ -5,20 +5,28 @@ import java.awt.event.ActionListener;
 
 public class TimerListener implements ActionListener {
     private JLabel label;
+    private Client client;
     private int count = 30;
-    public TimerListener(JLabel label) {
+    public TimerListener(JLabel label, Client client) {
         this.label = label;
+        this.client = client;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
+        Timer timer = ((Timer) e.getSource());
         System.out.println("Timer in action");
-
-        if (count > 0) {
-            label.setText(count + "s");
-            count--;
+        System.out.println(client.hasConnectionToServer());
+        if(client.hasConnectionToServer()) {
+            if (count > 0) {
+                label.setText(count + "s");
+                count--;
+            } else {
+                timer.stop();
+                label.setText("Time's up!");
+            }
         } else {
-            ((Timer) e.getSource()).stop();
-            label.setText("Time's up!");
+            timer.stop();
         }
+
     }
 }

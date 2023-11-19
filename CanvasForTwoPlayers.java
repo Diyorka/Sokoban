@@ -118,7 +118,7 @@ public class CanvasForTwoPlayers extends JPanel {
         }
         // g2d.dispose();
     }
-    public void setTimer() {
+    public void setTimer(Client client) {
         System.out.println("SetTimer");
         JLabel TimerImageLabel = new JLabel();
         Image timer = new ImageIcon("images/timer.png").getImage();
@@ -127,17 +127,17 @@ public class CanvasForTwoPlayers extends JPanel {
         TimerImageLabel.setIcon(timerIcon);
         TimerImageLabel.setBounds(370, 20, 80, 80);
         add(TimerImageLabel);
-        launchTimer();
+        launchTimer(client);
 
     }
-    private void launchTimer() {
+    private void launchTimer(Client client) {
         System.out.println("launchTimer");
         JLabel label = new JLabel("30");
         label.setBounds(460, 30, 80, 80);
         add(label);
         int delay = 1000; // 1 second delay
         int period = 1000; // 1 second interval
-        Timer timer = new Timer(delay, new TimerListener(label));
+        Timer timer = new Timer(delay, new TimerListener(label, client));
         timer.setInitialDelay(0);
         timer.setDelay(period);
         timer.start();
