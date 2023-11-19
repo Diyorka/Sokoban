@@ -414,19 +414,20 @@ public class Model implements GeneralModel {
             }
             if (i != 0) {
                 int differenceBetweenWalls = Math.abs(prevWallX - wallX);
-                if (prevWallX > wallX) {
-                    for (int k = prevWallX; k > prevWallX - differenceBetweenWalls; k--) {
+                if (prevWallX >= wallX) {
+                    for (int k = prevWallX - 1; k >= prevWallX - differenceBetweenWalls; k--) {
                         if (map[wallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(prevWallX>wallX)");
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(prevWallX>wallX)");
                             map = null;
                             return false;
                         }
                     }
                 }
                 if (wallX > prevWallX) {
-                    for (int k = prevWallX; k < wallX - 1; k++) {
+                    //System.out.println("isLeftWallsCorrect(): prevWallX " + prevWallX + " wallX - 1 " + wallX - 1);
+                    for (int k = prevWallX; k < wallX; k++) {
                         if (map[prevWallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(wallX>prevWallX)");
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(wallX>prevWallX)");
                             map = null;
                             return false;
                         }
