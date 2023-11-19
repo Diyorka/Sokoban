@@ -342,14 +342,20 @@ public class Model implements GeneralModel {
 
     private void askOnlinePlayerFurtherAction() {
         String playerChoice = viewer.showOnlineEndLevelDialog();
-        if (playerChoice.equals("Wait other player")) {
-            //TODO
-        } else if(playerChoice.equals("Back to menu")){
-            //TODO
+        if (playerChoice.equals("Wait results (30 sec)")) {
+            System.out.println("Send data to server : You have 30 seconds");
+            viewer.disableMyCanvas();
+            client.sendDataToServer("You have 30 seconds");
+            viewer.getEnemyCanvas().setTimer();
+            viewer.updateEnemyCanvas();
+        } else if(playerChoice.equals("Give up")){
+            // send server "given up";
+            System.out.println("Send data to server : given up");
+            client.sendDataToServer("Given up");
             map = null;
             viewer.showMenu();
         } else {
-            //TODO
+
             map = null;
         }
     }
