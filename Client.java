@@ -108,6 +108,7 @@ public class Client {
             } catch(IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
                 exc.printStackTrace();
+                closeClient();
                 System.out.println("has connection to server = " + hasConnectionToServer());
                 viewer.showMenu();
 
@@ -132,6 +133,7 @@ public class Client {
             } catch(IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();
+                closeClient();
                 System.out.println("has connection to server = " + hasConnectionToServer());
                 viewer.showMenu();
 

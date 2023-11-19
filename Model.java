@@ -346,7 +346,7 @@ public class Model implements GeneralModel {
             System.out.println("Send data to server : You have 30 seconds");
             viewer.disableMyCanvas();
             client.sendDataToServer("You have 30 seconds");
-            viewer.getEnemyCanvas().setTimer();
+            viewer.getEnemyCanvas().setTimer(client, viewer);
             viewer.updateEnemyCanvas();
         } else if(playerChoice.equals("Give up")){
             // send server "given up";
