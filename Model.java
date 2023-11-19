@@ -228,6 +228,7 @@ public class Model implements GeneralModel {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levels.setCurrentLevel(levelNumber);
+        map = levels.getCurrentMap();
         if (map != null) {
             scanMap();
 
@@ -239,7 +240,7 @@ public class Model implements GeneralModel {
 
     public void changeLevel() {
         map = levels.getRandomLevelFromServer();
-
+        client.sendDataToServer(player.getNickname());
         if (map != null) {
             scanMap();
         }
