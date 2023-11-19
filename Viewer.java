@@ -100,11 +100,22 @@ public class Viewer {
         settings.updateButtonStates();
     }
 
+    public void updateEnemySkin() {
+        enemyCanvas.setSkin();
+        enemyCanvas.repaint();
+    }
+
+    public void updateMySkin() {
+        myCanvas.setSkin();
+        myCanvas.repaint();
+    }
+
     public void updateEnemyCanvas() {
         enemyCanvas.repaint();
     }
 
     public void updateMyCanvas() {
+        myCanvas.setSkin();
         myCanvas.repaint();
     }
 
@@ -203,6 +214,7 @@ public class Viewer {
     private void showTwoCanvas() {
         updateMyCanvas();
         updateEnemyCanvas();
+        updateMySkin();
         cardLayout.show(frame.getContentPane(), "splitPane");
         myCanvas.requestFocusInWindow();
 
