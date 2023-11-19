@@ -210,4 +210,8 @@ public class Viewer {
             showMenu();
         }
     }
+
+    public Model getModel() {
+        return model;
+    }
 }

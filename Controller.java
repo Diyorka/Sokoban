@@ -30,21 +30,21 @@ public class Controller implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      String command = e.getActionCommand();
+        String command = e.getActionCommand();
 
-      switch(command) {
-        case "Next level":
-            model.getNextLevel();
-            break;
-        case "Exit to menu":
-            System.out.println("Exit to menu ");
-            model.getClient().closeClient();
-            viewer.showMenu();
-            break;
-        case "Restart":
-            model.restart();
-            viewer.showCanvas();
-            break;
-      }
-  }
+        switch(command) {
+            case "Next level":
+                model.getNextLevel();
+                break;
+            case "Exit to menu":
+                System.out.println("Exit to menu ");
+                model.getClient().closeClient();
+                viewer.showMenu();
+                break;
+            case "Restart":
+                model.restart();
+                viewer.showCanvas();
+                break;
+        }
+    }
 }

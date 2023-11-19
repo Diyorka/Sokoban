@@ -28,6 +28,12 @@ public class Model implements GeneralModel {
     private final Music moveSnowSound;
     private final Music backgroundSnowMusic;
     private final Music coinSound;
+    private final Music defaultMusic;
+    private Music currentMusic;
+
+    private boolean isMusicPlayed = false;
+    private boolean isSoundOn = true;
+
 
     private String move;
     private int playerPosX;
@@ -60,25 +66,14 @@ public class Model implements GeneralModel {
         coinSound = new Music(new File("music/coin.wav"));
 
         backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
-        // backgroundSnowMusic.play();
+        defaultMusic = new Music(new File("music/defaultMusic.wav"));
+        defaultMusic.playLoop();
+        currentMusic = defaultMusic;
+
 
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
-    }
-
-    public void setClient(Client client) {
-        levels = new Levels(client);
-        this.client = client;
-        gameType = client.getGameType();
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public int[][] getDesktop(){
-        return map;
     }
 
     public void doAction(int keyMessage) {
@@ -161,6 +156,65 @@ public class Model implements GeneralModel {
             }
         }
 
+    }
+
+    public void setClient(Client client) {
+        levels = new Levels(client);
+        this.client = client;
+        gameType = client.getGameType();
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public int[][] getDesktop(){
+        return map;
+    }
+
+    public Music getCurrentMusic() {
+        return currentMusic;
+    }
+
+    public void playDefaultMusic() {
+        if (defaultMusic != null) {
+            stopMusic();
+            defaultMusic.playLoop();
+            isMusicPlayed = true;
+            currentMusic = defaultMusic;
+        }
+    }
+
+    public void playJingleBellsMusic() {
+        stopMusic();
+        if (backgroundSnowMusic != null) {
+            backgroundSnowMusic.playLoop();
+            isMusicPlayed = true;
+            currentMusic = backgroundSnowMusic;
+        }
+    }
+
+    public void stopMusic() {
+        if (defaultMusic != null) {
+            defaultMusic.stop();
+        }
+        if (backgroundSnowMusic != null) {
+            backgroundSnowMusic.stop();
+        }
+
+        currentMusic = null;
+    }
+
+    public void stopAllSounds() {
+        defaultMusic.stop();
+        backgroundSnowMusic.stop();
+        wonSound.stop();
+        boxInTargetSound.stop();
+        moveSnowSound.stop();
+    }
+
+    public boolean isMusicPlayed() {
+        return isMusicPlayed;
     }
 
     public void changeLevel(String command) {

@@ -28,10 +28,13 @@ public class SettingsController implements ActionListener {
                 buyPremiumSkin();
                 break;
             case "Default_Music":
+                model.playDefaultMusic();
                 break;
             case "Christmas_Music":
+                model.playJingleBellsMusic();
                 break;
             case "No_Sound":
+                model.stopMusic();
                 break;
             case "Back":
                 viewer.showMenu();

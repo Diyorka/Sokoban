@@ -155,6 +155,7 @@ public class SettingsPanel extends JPanel {
         ButtonGroup music = new ButtonGroup();
         music.add(defaultMusic);
         music.add(christmasMusic);
+        music.add(noSound);
 
         JLabel volumeLabel = createLabel("Volume:", 420, 550, 100, 20, font);
 
@@ -166,7 +167,7 @@ public class SettingsPanel extends JPanel {
         volumeSlider.setPaintTicks(false);
         volumeSlider.setPaintLabels(false);
 
-        SliderChangeListener listener = new SliderChangeListener();
+        SliderChangeListener listener = new SliderChangeListener(viewer);
         volumeSlider.addChangeListener(listener);
 
         add(defaultMusic);
