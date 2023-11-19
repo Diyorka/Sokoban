@@ -17,8 +17,8 @@ import java.util.Scanner;
 
 public class Client {
     private static final String SERVER_ADDRESS = "localhost";
-    private static final int  SERVER_PORT = 4444;
-    private  SocketChannel socketChannel;
+    private static final int SERVER_PORT = 4444;
+    private SocketChannel socketChannel;
     private ByteBuffer buffer;
     private String gameType;
     private Viewer viewer;
@@ -36,10 +36,10 @@ public class Client {
             String serverResponse = getDataFromServer();
             System.out.println(serverResponse);
 
-            if(gameType.equals("battle")) {
+            if (gameType.equals("battle")) {
                 serverResponse = getDataFromServer();
                 System.out.println(serverResponse);
-                if(serverResponse.equals("ENEMY_WAS_NOT_FOUND")) {
+                if (serverResponse.equals("ENEMY_WAS_NOT_FOUND")) {
                     viewer.showErrorDialog("ENEMY NOT FOUND !");
                     closeClient();
                 }
@@ -50,14 +50,14 @@ public class Client {
     }
 
 
-
-
     public String getGameType() {
         return gameType;
     }
+
     public boolean hasConnectionToServer() {
         return socketChannel.isOpen();
     }
+
     public void closeClient() {
         if (socketChannel != null && socketChannel.isOpen()) {
             try {
@@ -69,25 +69,26 @@ public class Client {
 
         }
     }
-    public  String loadLevelFromServer(String level) {
+
+    public String loadLevelFromServer(String level) {
         String levelContent = null;
-        if(socketChannel != null) {
+        if (socketChannel != null) {
             sendDataToServer(level);
             levelContent = getDataFromServer();
         }
         return levelContent;
     }
 
-    public  String loadEnemyLevelFromServer() {
+    public String loadEnemyLevelFromServer() {
         String levelContent = null;
-        if(socketChannel != null) {
+        if (socketChannel != null) {
             levelContent = getDataFromServer();
         }
         return levelContent;
     }
 
-    public  void sendDataToServer(String data) {
-        if(hasConnectionToServer()) {
+    public void sendDataToServer(String data) {
+        if (hasConnectionToServer()) {
             try {
                 buffer.clear();
                 buffer.put(data.getBytes());
@@ -97,7 +98,7 @@ public class Client {
                 buffer.clear();
                 System.out.println("Successfully send data to server [~]");
 
-            } catch(IOException exc) {
+            } catch (IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
                 exc.printStackTrace();
                 System.out.println("has connection to server = " + hasConnectionToServer());
@@ -108,20 +109,20 @@ public class Client {
         }
     }
 
-    public  String getDataFromServer() {
+    public String getDataFromServer() {
         String data = null;
-        if(hasConnectionToServer()) {
+        if (hasConnectionToServer()) {
             try {
                 buffer.clear();
                 int bytesRead = socketChannel.read(buffer);
                 if (bytesRead > 0) {
                     buffer.flip();
-                     data = new String(buffer.array(), 0, bytesRead);
+                    data = new String(buffer.array(), 0, bytesRead);
                 }
                 buffer.clear();
                 System.out.println("Successfully get data from server [~]");
 
-            } catch(IOException exc) {
+            } catch (IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();
                 System.out.println("has connection to server = " + hasConnectionToServer());
@@ -132,8 +133,6 @@ public class Client {
         }
         return data;
     }
-
-
 
 
 }
