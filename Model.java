@@ -381,13 +381,15 @@ public class Model implements GeneralModel {
     private void scanMap() {
         deleteMapValues();
 
-        if (!(isLeftWallsCorrect() && isRightWallsCorrect())) {
+        if (!allWallSidesValid()) {
+            map = null;
             return;
         }
 
         setMapValues();
 
         if (!isMapPlayable()) {
+            map = null;
             return;
         }
 
@@ -422,6 +424,13 @@ public class Model implements GeneralModel {
         }
     }
 
+    private boolean allWallSidesValid() {
+        return isTopWallsCorrect() &&
+               isLeftWallsCorrect() &&
+               isRightWallsCorrect() &&
+               isDownWallsCorrect();
+    }
+
     private boolean isLeftWallsCorrect(){
         int wallX = -1;
         int wallY = -1;
@@ -439,20 +448,18 @@ public class Model implements GeneralModel {
             }
             if (i != 0) {
                 int differenceBetweenWalls = Math.abs(prevWallX - wallX);
-                if (prevWallX > wallX) {
-                    for (int k = prevWallX; k > prevWallX - differenceBetweenWalls; k--) {
+                if (prevWallX >= wallX) {
+                    for (int k = prevWallX - 1; k >= prevWallX - differenceBetweenWalls; k--) {
                         if (map[wallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(prevWallX>wallX)");
-                            map = null;
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(prevWallX>wallX)");
                             return false;
                         }
                     }
                 }
                 if (wallX > prevWallX) {
-                    for (int k = prevWallX; k < wallX - 1; k++) {
+                    for (int k = prevWallX; k < wallX; k++) {
                         if (map[prevWallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(wallX>prevWallX)");
-                            map = null;
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(wallX>prevWallX)");
                             return false;
                         }
                     }
@@ -477,7 +484,33 @@ public class Model implements GeneralModel {
             int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
             if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
                 System.out.println("isRightWallsCorrect(): problems with element in mapline " + (i + 1));
-                map = null;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isTopWallsCorrect() {
+        boolean wallFound = false;
+        for(int i = 0; i < map[0].length; i++) {
+            if ((map[0][i] == 2) && !wallFound) {
+                wallFound = true;
+            } else if ((map[0][i] != 2) && wallFound) {
+                System.out.println("isTopWallsCorrect(): top wall was not found in first mapline on column " + i);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isDownWallsCorrect() {
+        boolean wallFound = false;
+        int lastArrayIndex = map.length - 1;
+        for(int i = 0; i < map[lastArrayIndex].length; i++) {
+            if ((map[lastArrayIndex][i] == 2) && !wallFound) {
+                wallFound = true;
+            } else if ((map[lastArrayIndex][i] != 2) && wallFound) {
+                System.out.println("isDownWallsCorrect(): top wall was not found in last mapline on column " + i);
                 return false;
             }
         }
@@ -490,7 +523,6 @@ public class Model implements GeneralModel {
             System.out.println("players: " + playerCount + ("(should be equal to 1)"));
             System.out.println("boxes: " + boxesCount);
             System.out.println("checks: " + checksCount);
-            map = null;
             return false;
         }
         return true;
