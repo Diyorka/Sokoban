@@ -83,6 +83,7 @@ public class Model implements GeneralModel {
             restart();
         } else if (keyMessage == EXIT) {
             collectedCoins = 0;
+            client.closeClient();
             viewer.showMenu();
         }
 
@@ -94,47 +95,19 @@ public class Model implements GeneralModel {
         if (keyMessage == LEFT) {
             move = "Left";
             moveLeft();
-            System.out.println("Left");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         } else if(keyMessage == RIGHT) {
             move = "Right";
             moveRight();
-            System.out.println("Right");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         } else if(keyMessage == UP) {
             move = "Up";
             moveTop();
-            System.out.println("Up");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         } else if(keyMessage == DOWN) {
             move = "Down";
             moveBot();
-            System.out.println("Down");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         }
 
         returnCheck();

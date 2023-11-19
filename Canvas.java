@@ -103,10 +103,6 @@ public class Canvas extends JPanel {
         add(replayButton);
     }
 
-  // public GeneralModel getModel() {
-  //     return model;
-  // }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
