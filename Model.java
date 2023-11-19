@@ -240,7 +240,8 @@ public class Model implements GeneralModel {
 
     public void changeLevel() {
         map = levels.getRandomLevelFromServer();
-        client.sendDataToServer(player.getNickname());
+        String nickNameAndSkin = player.getNickname() + ";" + player.getCurrentSkin().getType();
+        client.sendDataToServer(nickNameAndSkin);
         if (map != null) {
             scanMap();
         }

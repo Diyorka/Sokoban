@@ -43,7 +43,7 @@ public class EnemyModel implements GeneralModel{
     public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
         dbService = new DBService();
-        initPlayer("Stive");
+        player = dbService.getPlayerInfo("Stive");
         levelList = new Levels(client);
         playerPosX = -1;
         playerPosY = -1;
@@ -109,9 +109,12 @@ public class EnemyModel implements GeneralModel{
         // initialize enemyMap
         System.out.println("initialize enemy Map [~]");
         map = levelList.getEnemyLevelFromServer();
-        nickName = client.getDataFromServer();
-        System.out.println("nickname enemy " + nickName);
-        initPlayer(nickName);
+        String nickNameAndSkin = client.getDataFromServer();
+        String[] arrayNameSkin = nickNameAndSkin.split(";");
+        nickName = arrayNameSkin[0];
+        String skin = arrayNameSkin[1];
+        setPlayer(nickName);
+        updateCurrentSkin(skin);
 
         if (map != null) {
             scanMap();
@@ -159,8 +162,9 @@ public class EnemyModel implements GeneralModel{
         return collectedCoins;
     }
 
-    public Player initPlayer(String nickname) {
+    public Player setPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
+        viewer.updateEnemySkin();
         return player;
     }
 
@@ -169,7 +173,7 @@ public class EnemyModel implements GeneralModel{
     }
 
     public void updateCurrentSkin(String skinType) {
-        dbService.updateCurrentSkin(player.getNickname(), skinType);
+        dbService.updateCurrentSkin(nickName, skinType);
         PlayerSkin skin = null;
         switch (skinType) {
             case "Default Skin":
