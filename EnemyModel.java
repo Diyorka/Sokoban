@@ -1,9 +1,11 @@
 import java.io.File;
 
 public class EnemyModel implements GeneralModel{
+
     private DBService dbService;
     private Player player;
     private Viewer viewer;
+    private String nickName;
 
     private final int SPACE = 0;
     private final int PLAYER = 1;
@@ -36,7 +38,6 @@ public class EnemyModel implements GeneralModel{
 
     private int[][] checksPos;
     private int[][] coinsPos;
-    ////////
     private Client client;
 
     public EnemyModel(Viewer viewer) {
@@ -60,6 +61,11 @@ public class EnemyModel implements GeneralModel{
         return map;
     }
 
+    @Override
+    public String getNickName() {
+        return nickName;
+    }
+
     public void doAction(String action) {
 
         if (map == null) {
@@ -79,6 +85,11 @@ public class EnemyModel implements GeneralModel{
         } else if(action.equals("Down")) {
             move = "Down";
             moveBot();
+        } else if (action.equals("Given up")) {
+            viewer.showEnemyGiveUpDialog();
+        } else if (action.equals("You have 30 seconds")) {
+            viewer.getMyCanvas().setTimer();
+            viewer.updateMyCanvas();
         }
 
         returnCheck();
@@ -103,7 +114,9 @@ public class EnemyModel implements GeneralModel{
         // initialize enemyMap
         System.out.println("initialize enemy Map [~]");
         map = levelList.getEnemyLevelFromServer();
-
+        nickName = client.getDataFromServer();
+        System.out.println("nickname enemy " + nickName);
+        initPlayer(nickName);
 
         if (map != null) {
             scanMap();

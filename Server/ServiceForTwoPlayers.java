@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.io.IOException;
 import java.net.SocketException;
 import java.nio.channels.SocketChannel;
+import java.util.Random;
 
 public class ServiceForTwoPlayers implements Runnable{
 
@@ -62,21 +63,32 @@ public class ServiceForTwoPlayers implements Runnable{
     public void startSession() {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
 
-        String player1Level = readData(player1Channel);
-        System.out.println("received level number from client 1 >>> " + player1Level);
-        String player1LevelContent = loadLevel(Integer.parseInt(player1Level));
-        sendData(player1Channel, player1LevelContent);
-
-        String player2Level = readData(player2Channel);
-        System.out.println("received level number from client 2 >>> " + player2Level);
-        String player2LevelContent = loadLevel(Integer.parseInt(player2Level));
-        sendData(player2Channel, player2LevelContent);
+        int generatedLevel = generateRandomLevel();
+        System.out.println("Generated level = " + generatedLevel);
+        // String levelContent = loadLevel(generatedLevel);
+        String levelContent = loadLevel(10);
+        sendData(player1Channel, levelContent);
+        sendData(player2Channel, levelContent);
 
         /// send levels of enemies
-        sendData(player1Channel, player2LevelContent);
+        sendData(player1Channel, levelContent);
         System.out.println("send level of enemy  ");
-        sendData(player2Channel, player1LevelContent);
+        sendData(player2Channel, levelContent);
         System.out.println("send level of enemy " );
+
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ie) {
+            System.out.println("ServiceForTwoPlayers.java Thread sleep ex " + ie);
+        }
+
+        String player1NickName = readData(player1Channel);
+        System.out.println("read nickname " + player1NickName);
+        String player2NickName = readData(player2Channel);
+        System.out.println("read nickname " + player1NickName);
+
+        sendData(player1Channel, player2NickName);
+        sendData(player2Channel, player1NickName);
 
    }
 
@@ -123,10 +135,14 @@ public class ServiceForTwoPlayers implements Runnable{
 
    }
 
-
+   private int generateRandomLevel() {
+       System.out.println("Generating level ...");
+       Random random = new Random();
+       return random.nextInt(5) + 10; // from 7 to 9
+   }
     //load level from file on server with parsing
     private String loadLevel(int level) {
-        if(level <= 9 && level >= 7) {
+        if(level <= 15 && level >= 10) {
             String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 

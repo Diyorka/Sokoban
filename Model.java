@@ -1,5 +1,6 @@
 import java.io.File;
 
+
 public class Model implements GeneralModel {
     private DBService dbService;
     private Player player;
@@ -58,7 +59,7 @@ public class Model implements GeneralModel {
         this.viewer = viewer;
         dbService = new DBService();
         player = dbService.getPlayerInfo("Stive");
-        // levels = new Levels(client);
+
 
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
@@ -168,6 +169,11 @@ public class Model implements GeneralModel {
         return client;
     }
 
+    public String getNickName() {
+        return player.getNickname();
+    }
+
+
     public int[][] getDesktop(){
         return map;
     }
@@ -222,32 +228,27 @@ public class Model implements GeneralModel {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levels.setCurrentLevel(levelNumber);
-        if(gameType.equals("alone")) {
-            map = levels.getCurrentMap();// map for current our model
-        }
-        // initialize out map
-        if(gameType.equals("battle")) {
-            map = levels.getLevelFromServer(String.valueOf(levelNumber));
-        }
-
-
+        map = levels.getCurrentMap();
         if (map != null) {
             scanMap();
-            System.out.println("getting our map >>>");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
+
         }
-        System.out.println();
-
-
         viewer.showCanvas(gameType);
         totalMoves = 0;
 
     }
+
+    public void changeLevel() {
+        map = levels.getRandomLevelFromServer();
+        client.sendDataToServer(player.getNickname());
+        if (map != null) {
+            scanMap();
+        }
+        viewer.showCanvas(gameType);
+        totalMoves = 0;
+
+    }
+
 
     public void restart() {
         collectedCoins = 0;
@@ -341,14 +342,20 @@ public class Model implements GeneralModel {
 
     private void askOnlinePlayerFurtherAction() {
         String playerChoice = viewer.showOnlineEndLevelDialog();
-        if (playerChoice.equals("Wait other player")) {
-            //TODO
-        } else if(playerChoice.equals("Back to menu")){
-            //TODO
+        if (playerChoice.equals("Wait results (30 sec)")) {
+            System.out.println("Send data to server : You have 30 seconds");
+            viewer.disableMyCanvas();
+            client.sendDataToServer("You have 30 seconds");
+            viewer.getEnemyCanvas().setTimer();
+            viewer.updateEnemyCanvas();
+        } else if(playerChoice.equals("Give up")){
+            // send server "given up";
+            System.out.println("Send data to server : given up");
+            client.sendDataToServer("Given up");
             map = null;
             viewer.showMenu();
         } else {
-            //TODO
+
             map = null;
         }
     }
