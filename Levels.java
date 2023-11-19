@@ -162,6 +162,15 @@ public class Levels {
       return null;
   }
 
+  public int[][] getRandomLevelFromServer() {
+      String levelContent = client.loadRandomLevelFromServer();
+      System.out.println(levelContent);
+      if(levelContent != null) {
+        return parseData(levelContent, 'A');
+      }
+      return null;
+  }
+
   public int[][] getEnemyLevelFromServer() {
       String levelContent = client.loadEnemyLevelFromServer();
       System.out.println(levelContent);

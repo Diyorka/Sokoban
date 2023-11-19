@@ -78,6 +78,14 @@ public class Client {
         return levelContent;
     }
 
+    public  String loadRandomLevelFromServer() {
+        String levelContent = null;
+        if(socketChannel != null) {
+            levelContent = getDataFromServer();
+        }
+        return levelContent;
+    }
+
     public  String loadEnemyLevelFromServer() {
         String levelContent = null;
         if(socketChannel != null) {
