@@ -82,7 +82,6 @@ public class Levels {
         {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
         {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
-      //return getLevelFromServer("7");
   }
 
   private int[][] getSecondLevel() {
@@ -97,7 +96,6 @@ public class Levels {
         {2, 0, 0, 0, 0, 0, 4, 3, 0, 2},
         {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
-       //return getLevelFromServer("7");
   }
 
   private int[][] getThirdLevel() {
@@ -114,7 +112,6 @@ public class Levels {
           {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
           {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
       };
-       //return getLevelFromServer("7");
   }
 
   private int[][] getFourthLevel() {

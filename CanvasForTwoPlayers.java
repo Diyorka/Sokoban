@@ -51,18 +51,18 @@ public class CanvasForTwoPlayers extends JPanel {
         setLayout(null);
         setOpaque(true);
         setPreferredSize(new Dimension(400, 800));
-        frontPlayerImage = new ImageIcon("images/front-player.png").getImage();
-        backPlayerImage = new ImageIcon("images/back-player.png").getImage();
-        leftPlayerImage = new ImageIcon("images/left-side-player.png").getImage();
-        rightPlayerImage = new ImageIcon("images/right-side-player.png").getImage();
-        wallImage = new ImageIcon("images/wall.png").getImage();
-        boxImage = new ImageIcon("images/box.png").getImage();
-        targetImage = new ImageIcon("images/target1.png").getImage();
-        groundImage = new ImageIcon("images/ground1.png").getImage();
-        coinImage = new ImageIcon("images/coin.png").getImage();
-        errorImage = new ImageIcon("images/error.png").getImage();
+//        frontPlayerImage = new ImageIcon("images/front-player.png").getImage();
+//        backPlayerImage = new ImageIcon("images/back-player.png").getImage();
+//        leftPlayerImage = new ImageIcon("images/left-side-player.png").getImage();
+//        rightPlayerImage = new ImageIcon("images/right-side-player.png").getImage();
+//        wallImage = new ImageIcon("images/wall.png").getImage();
+//        boxImage = new ImageIcon("images/box.png").getImage();
+//        targetImage = new ImageIcon("images/target1.png").getImage();
+//        groundImage = new ImageIcon("images/ground1.png").getImage();
+//        coinImage = new ImageIcon("images/coin.png").getImage();
+//        errorImage = new ImageIcon("images/error.png").getImage();
 
-        // setSkin();                  TODO: uncomment when logic is done
+        setSkin();                  //TODO: uncomment when logic is done
 
         JLabel stepsImageLabel = new JLabel();
         Image steps = new ImageIcon("images/steps.png").getImage();
