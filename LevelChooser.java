@@ -34,14 +34,14 @@ public class LevelChooser extends JPanel {
         add(title);
         add(backButton);
         add(createImageButton("Level 1", "Level 1", "images/level1.png", 170, 200, 200, 120, true));
-        add(createImageButton("Level 2", "Level 2", "images/level1.png", 390, 200, 200, 120, true));
-        add(createImageButton("Level 3", "Level 3", "images/level1.png", 610, 200, 200, 120, true));
-        add(createImageButton("Level 4", "Level 4", "images/level1.png", 830, 200, 200, 120, true));
-        add(createImageButton("Level 5", "Level 5", "images/level1.png", 170, 340, 200, 120, true));
-        add(createImageButton("Level 6", "Level 6", "images/level1.png", 390, 340, 200, 120, true));
-        add(createImageButton("Level 7", "Level 7", "images/level1.png", 610, 340, 200, 120, true));
-        add(createImageButton("Level 8", "Level 8", "images/level1.png", 830, 340, 200, 120, true));
-        add(createImageButton("Level 9", "Level 9", "images/level1.png", 170, 480, 200, 120, true));
+        add(createImageButton("Level 2", "Level 2", "images/level2.png", 390, 200, 200, 120, true));
+        add(createImageButton("Level 3", "Level 3", "images/level3.png", 610, 200, 200, 120, true));
+        add(createImageButton("Level 4", "Level 4", "images/level4.png", 830, 200, 200, 120, true));
+        add(createImageButton("Level 5", "Level 5", "images/level5.png", 170, 340, 200, 120, true));
+        add(createImageButton("Level 6", "Level 6", "images/level6.png", 390, 340, 200, 120, true));
+        add(createImageButton("Level 7", "Level 7", "images/level7.png", 610, 340, 200, 120, true));
+        add(createImageButton("Level 8", "Level 8", "images/level8.png", 830, 340, 200, 120, true));
+        add(createImageButton("Level 9", "Level 9", "images/level9.png", 170, 480, 200, 120, true));
     }
 
     public void paintComponent(Graphics g) {
