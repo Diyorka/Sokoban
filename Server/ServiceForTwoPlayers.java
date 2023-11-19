@@ -137,11 +137,11 @@ public class ServiceForTwoPlayers implements Runnable{
    private int generateRandomLevel() {
        System.out.println("Generating level ...");
        Random random = new Random();
-       return random.nextInt(3) + 7; // from 7 to 9
+       return random.nextInt(5) + 10; // from 7 to 9
    }
     //load level from file on server with parsing
     private String loadLevel(int level) {
-        if(level <= 9 && level >= 7) {
+        if(level <= 15 && level >= 10) {
             String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 
