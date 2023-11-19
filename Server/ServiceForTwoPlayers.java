@@ -75,6 +75,20 @@ public class ServiceForTwoPlayers implements Runnable{
         sendData(player2Channel, levelContent);
         System.out.println("send level of enemy " );
 
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ie) {
+            System.out.println("ServiceForTwoPlayers.java Thread sleep ex " + ie);
+        }
+
+        String player1NickName = readData(player1Channel);
+        System.out.println("read nickname " + player1NickName);
+        String player2NickName = readData(player2Channel);
+        System.out.println("read nickname " + player1NickName);
+
+        sendData(player1Channel, player2NickName);
+        sendData(player2Channel, player1NickName);
+
    }
 
    public  String readData(SocketChannel channel) {
@@ -128,7 +142,7 @@ public class ServiceForTwoPlayers implements Runnable{
     //load level from file on server with parsing
     private String loadLevel(int level) {
         if(level <= 9 && level >= 7) {
-            String levelFileName = "Levels/level" + level + ".sok";
+            String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 
             try {

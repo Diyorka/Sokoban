@@ -169,6 +169,11 @@ public class Model implements GeneralModel {
         return client;
     }
 
+    public String getNickName() {
+        return player.getNickname();
+    }
+
+
     public int[][] getDesktop(){
         return map;
     }
@@ -223,7 +228,6 @@ public class Model implements GeneralModel {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levels.setCurrentLevel(levelNumber);
-        map = levels.getCurrentMap();// map for current our model
         if (map != null) {
             scanMap();
 
@@ -232,7 +236,7 @@ public class Model implements GeneralModel {
         totalMoves = 0;
 
     }
-    
+
     public void changeLevel() {
         map = levels.getRandomLevelFromServer();
 
