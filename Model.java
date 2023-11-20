@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Arrays;
 
 public class Model implements GeneralModel {
     private DBService dbService;
@@ -40,6 +41,7 @@ public class Model implements GeneralModel {
     private int playerPosY;
 
     private int[][] map;
+    private int[][] map2;
     private Levels levels;
 
     private int playerCount;
@@ -56,6 +58,7 @@ public class Model implements GeneralModel {
     private boolean isPlayerCompleteGame;
 
     public Model(Viewer viewer) {
+        gameType = "alone";
         this.viewer = viewer;
         dbService = new DBService();
         player = dbService.getPlayerInfo("Stive");
@@ -85,7 +88,7 @@ public class Model implements GeneralModel {
     public void doAction(int keyMessage) {
         System.out.println("in model do Action");
 
-        if (keyMessage == RESTART) {
+        if (keyMessage == RESTART && gameType.equals("alone")) {
             restart();
         } else if (keyMessage == EXIT) {
             collectedCoins = 0;
@@ -159,6 +162,7 @@ public class Model implements GeneralModel {
     }
 
     private void prepareToNewGame() {
+        isPlayerCompleteGame = false;
         isPlayerFirstCompletedGame = true;
         levels = new Levels(client);
     }
@@ -228,7 +232,14 @@ public class Model implements GeneralModel {
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levels.setCurrentLevel(levelNumber);
         map = levels.getCurrentMap();
-
+        System.out.println("Creating duplicate");
+        map2 = new int[map.length][];
+        for(int i = 0; i < map.length; i++) {
+            map2[i] = new int[map[i].length];
+            for(int j = 0; j < map[i].length; j++) {
+                map2[i][j] = map[i][j];
+            }
+        }
         if (map != null) {
             scanMap();
 
@@ -254,8 +265,12 @@ public class Model implements GeneralModel {
 
     public void restart() {
         collectedCoins = 0;
-        map = levels.getCurrentMap();
 
+        for(int i = 0; i < map2.length; i++) {
+            for(int j = 0; j < map2[i].length; j++) {
+                map[i][j] = map2[i][j];
+            }
+        }
         if (map != null) {
             scanMap();
         }
@@ -286,8 +301,8 @@ public class Model implements GeneralModel {
     }
 
     public void getNextLevel() {
-        map = levels.getNextMap();
-
+        // map = levels.getNextMap();
+        changeLevel(String.valueOf(levels.getCurrentLevel() + 1));
         if (map != null) {
             scanMap();
         }
@@ -336,9 +351,11 @@ public class Model implements GeneralModel {
         String playerChoice = viewer.showSoloEndLevelDialog();
 
         if (playerChoice.equals("Next level")) {
-            map = levels.getNextMap();
-            scanMap();
-            viewer.update();
+            // map = levels.getNextMap();
+            // changeLevel(level.getCurrentLevel() + 1);
+            // scanMap();
+            // viewer.update();
+            getNextLevel();
         } else if(playerChoice.equals("Back to menu")){
             map = null;
             client.closeClient();
@@ -358,15 +375,19 @@ public class Model implements GeneralModel {
             viewer.getEnemyCanvas().setTimer(client, viewer);
             viewer.updateEnemyCanvas();
         } else if(playerChoice.equals("Give up")){
-            System.out.println("Send data to server : given up");
-            client.sendDataToServer("Given up");
-            map = null;
-            viewer.showMenu();
+            giveUp();
         } else {
             map = null;
         }
     }
 
+    public void giveUp() {
+        System.out.println("Send data to server : given up");
+        client.sendDataToServer("Given up");
+        client.closeClient();
+        map = null;
+        viewer.showMenu();
+    }
     private void scanMap() {
         deleteMapValues();
 
@@ -759,7 +780,7 @@ public class Model implements GeneralModel {
             System.out.println("Impossible move box to the bottom"); //debug
             return false;
         }
-        
+
         return true;
     }
 }

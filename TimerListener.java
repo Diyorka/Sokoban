@@ -32,7 +32,8 @@ public class TimerListener implements ActionListener {
         System.out.println("Timer in action");
 
         boolean isPlayerCompleteGame = canvasType.equals("enemyCanvas") ? enemyModel.getIsEnemyCompletedGame() : model.getIsPlayerCompleteGame();
-
+        System.out.println(client.hasConnectionToServer());
+        System.out.println(isPlayerCompleteGame);
         if(client.hasConnectionToServer() && !isPlayerCompleteGame) {
             if (count > 0) {
                 label.setText(count + "s");

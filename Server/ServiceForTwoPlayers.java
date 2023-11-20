@@ -62,8 +62,7 @@ public class ServiceForTwoPlayers implements Runnable{
 
         int generatedLevel = generateRandomLevel();
         System.out.println("Generated level = " + generatedLevel);
-        // String levelContent = loadLevel(generatedLevel);
-        String levelContent = loadLevel(10);
+        String levelContent = loadLevel(generatedLevel);
         sendData(player1Channel, levelContent);
         sendData(player2Channel, levelContent);
 

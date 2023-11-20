@@ -55,6 +55,7 @@ public class EnemyModel implements GeneralModel{
         return isEnemyCompletedGame;
     }
     public void setClient(Client client) {
+        isEnemyCompletedGame = false;
         levelList = new Levels(client);
         this.client = client;
     }
@@ -192,7 +193,7 @@ public class EnemyModel implements GeneralModel{
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
-        
+
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
