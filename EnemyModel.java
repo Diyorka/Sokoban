@@ -55,6 +55,7 @@ public class EnemyModel implements GeneralModel{
         return isEnemyCompletedGame;
     }
     public void setClient(Client client) {
+        isEnemyCompletedGame = false;
         levelList = new Levels(client);
         this.client = client;
     }
@@ -104,11 +105,12 @@ public class EnemyModel implements GeneralModel{
 
     public void changeLevel() {
         System.out.println("initialize enemy Map [~]");
+        String data = levelList.getEnemyDataFromServer();
+
+        String[] arrayData = data.split(";");
+        nickName = arrayData[0];
+        String skin = arrayData[1];
         map = levelList.getEnemyLevelFromServer();
-        String nickNameAndSkin = client.getDataFromServer();
-        String[] arrayNameSkin = nickNameAndSkin.split(";");
-        nickName = arrayNameSkin[0];
-        String skin = arrayNameSkin[1];
         setPlayer(nickName);
         updateCurrentSkin(skin);
 
@@ -126,6 +128,7 @@ public class EnemyModel implements GeneralModel{
         }
 
         totalMoves = 0;
+        arrayData = null;
     }
 
     public String getMove() {
@@ -192,7 +195,7 @@ public class EnemyModel implements GeneralModel{
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
-        
+
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {

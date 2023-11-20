@@ -42,6 +42,9 @@ public class Controller implements KeyListener, ActionListener {
                 model.restart();
                 viewer.showCanvas();
                 break;
+            case "GiveUp":
+                System.out.println("Give up");
+                model.giveUp();
         }
     }
 }

@@ -62,30 +62,23 @@ public class ServiceForTwoPlayers implements Runnable{
 
         int generatedLevel = generateRandomLevel();
         System.out.println("Generated level = " + generatedLevel);
-        // String levelContent = loadLevel(generatedLevel);
-        String levelContent = loadLevel(10);
+        String levelContent = loadLevel(generatedLevel);
         sendData(player1Channel, levelContent);
         sendData(player2Channel, levelContent);
 
         /// send levels of enemies
-        sendData(player1Channel, levelContent);
-        System.out.println("send level of enemy  ");
-        sendData(player2Channel, levelContent);
-        System.out.println("send level of enemy " );
+        String player1NickNameAndSkin = readData(player1Channel);
+        System.out.println("read nickname and skin " + player1NickNameAndSkin);
+        String player2NickNameAndSkin = readData(player2Channel);
+        System.out.println("read nickname and skin " + player2NickNameAndSkin);
 
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException ie) {
-            System.out.println("ServiceForTwoPlayers.java Thread sleep ex " + ie);
-        }
+        String dataForPlayer1 = player1NickNameAndSkin + levelContent;
+        String dataForPlayer2 = player2NickNameAndSkin + levelContent;
 
-        String player1NickName = readData(player1Channel);
-        System.out.println("read nickname " + player1NickName);
-        String player2NickName = readData(player2Channel);
-        System.out.println("read nickname " + player1NickName);
-
-        sendData(player1Channel, player2NickName);
-        sendData(player2Channel, player1NickName);
+        sendData(player1Channel, dataForPlayer2);
+        System.out.println("send level of enemy, nickname and skin user1 ");
+        sendData(player2Channel, dataForPlayer1);
+        System.out.println("send level of enemy, nickname and skin user2 " );
    }
 
    public  String readData(SocketChannel channel) {

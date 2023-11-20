@@ -73,13 +73,13 @@ public class CanvasForTwoPlayers extends JPanel {
         nickName.setBounds(240, 20, 300, 100);
         add(nickName);
 
-        JButton exitGameButton = new JButton("Exit to menu");
+        JButton exitGameButton = new JButton("Give Up");
         exitGameButton.setBounds(40, 700, 150, 40);
         Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
         exitGameButton.setFont(customFont);
         exitGameButton.setForeground(Color.BLACK);
         exitGameButton.setBackground(new Color(59, 89, 182));
-        exitGameButton.setActionCommand("Exit to menu");
+        exitGameButton.setActionCommand("GiveUp");
         exitGameButton.addActionListener(controller);
         add(exitGameButton);
 
