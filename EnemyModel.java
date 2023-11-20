@@ -1,7 +1,7 @@
 import java.io.File;
 
 public class EnemyModel implements GeneralModel{
-    private DBService dbService;
+    private DatabaseService dbService;
     private Player player;
     private Viewer viewer;
     private String nickName;
@@ -42,7 +42,7 @@ public class EnemyModel implements GeneralModel{
 
     public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
-        dbService = new DBService();
+        dbService = new DatabaseService();
         player = dbService.getPlayerInfo("Stive");
         levelList = new Levels(client);
         playerPosX = -1;

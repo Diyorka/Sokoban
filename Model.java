@@ -2,7 +2,7 @@ import java.io.File;
 import java.util.Arrays;
 
 public class Model implements GeneralModel {
-    private DBService dbService;
+    private DatabaseService dbService;
     private Player player;
     private Viewer viewer;
     private Client client;
@@ -60,7 +60,7 @@ public class Model implements GeneralModel {
     public Model(Viewer viewer) {
         gameType = "alone";
         this.viewer = viewer;
-        dbService = new DBService();
+        dbService = new DatabaseService();
         player = dbService.getPlayerInfo("Stive");
 
 
