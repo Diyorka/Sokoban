@@ -41,6 +41,8 @@ public class Model implements GeneralModel {
     private int playerPosY;
 
     private int[][] map;
+    private int mapMaxPixelWidth;
+    private int mapMaxPixelHeight;
     private Levels levels;
 
     private int playerCount;
@@ -74,6 +76,8 @@ public class Model implements GeneralModel {
 
         playerPosX = -1;
         playerPosY = -1;
+        mapMaxPixelWidth = -1;
+        mapMaxPixelHeight = -1;
         move = "Down";
     }
 
@@ -130,6 +134,33 @@ public class Model implements GeneralModel {
             }
         }
 
+    }
+
+    public void doMouseAction(int x, int y) {
+        int mapIndexX;
+        int mapIndexY;
+        System.out.println("got x: " + x + " and y: " + y);
+        int canvasHorizontalStart = 350;
+        int canvasHorizontalEnd = canvasHorizontalStart + mapMaxPixelWidth;
+        if (canvasHorizontalStart > x || x > canvasHorizontalEnd) {
+            mapIndexX = -1;
+        } else {
+            mapIndexX = Math.round((x - canvasHorizontalStart) / 50);     //125 - 150 - > -25/50
+        }
+        int canvasVerticalStart = 150;
+        int canvasVerticalEnd = canvasVerticalStart + mapMaxPixelHeight;
+        if (canvasVerticalStart > y || y > canvasVerticalEnd) {
+            mapIndexY = -1;
+        } else {
+            mapIndexY = Math.round((y - canvasVerticalStart) / 50);//121-150 -> -29 / 50 ->> -0.4
+        }
+        System.out.println("canvasHorizontalStart " + canvasHorizontalStart + "\ncanvasVerticalStart" + canvasVerticalStart);
+        System.out.println("Probably clicked on " + mapIndexX + " and " + mapIndexY);
+
+        if (mapIndexX == -1 || mapIndexY == -1) {
+            System.out.println("Out of map: return");
+            return;
+        }
     }
 
     public void setClient(Client client) {
@@ -247,6 +278,7 @@ public class Model implements GeneralModel {
     public Player setPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
         viewer.updateSettings(player);
+        viewer.updateLobbyStats(player);
         viewer.updateSkin();
         viewer.updateButtonText();
         return player;
@@ -343,7 +375,7 @@ public class Model implements GeneralModel {
         }
 
         setMapValues();
-
+        setMapPixelsSize();
         if (!isMapPlayable()) {
             map = null;
             return;
@@ -360,6 +392,8 @@ public class Model implements GeneralModel {
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
+        mapMaxPixelWidth = -1;
+        mapMaxPixelHeight = -1;
     }
 
     private void setMapValues() {
@@ -378,6 +412,17 @@ public class Model implements GeneralModel {
                 }
             }
         }
+    }
+
+    private void setMapPixelsSize() {
+        for (int i = 0; i < map.length; i++) {
+            if (mapMaxPixelWidth < map[i].length) {
+                mapMaxPixelWidth = map[i].length;
+            }
+        }
+        mapMaxPixelWidth *= 50;
+        mapMaxPixelHeight = map.length * 50;
+        System.out.println("width: " + mapMaxPixelWidth + "px\nheigth: " + mapMaxPixelHeight);
     }
 
     private boolean allWallSidesValid() {
