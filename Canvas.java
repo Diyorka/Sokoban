@@ -94,6 +94,15 @@ public class Canvas extends JPanel {
         nextLevelButton.addActionListener(controller);
         add(nextLevelButton);
 
+        JButton chooseLevelButton = new JButton("Choose Level");
+        chooseLevelButton.setBounds(525, 700, 150, 40);
+        chooseLevelButton.setFont(customFont);
+        chooseLevelButton.setForeground(Color.BLACK);
+        chooseLevelButton.setBackground(new Color(59, 89, 182));
+        chooseLevelButton.setActionCommand("Choose Level");
+        chooseLevelButton.addActionListener(controller);
+        add(chooseLevelButton);
+
         ImageButton replayButton = new ImageButton("", "images/restart.png", 36, false);
         replayButton.setBounds(1090, 130, 80, 80);
         replayButton.setActionCommand("Restart");

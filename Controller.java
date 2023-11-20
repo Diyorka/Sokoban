@@ -38,6 +38,9 @@ public class Controller implements KeyListener, ActionListener {
                 model.getClient().closeClient();
                 viewer.showMenu();
                 break;
+            case "Choose Level":
+                viewer.showLevelChooser();
+                break;
             case "Restart":
                 model.restart();
                 viewer.showCanvas();
