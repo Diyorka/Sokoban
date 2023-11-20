@@ -144,8 +144,10 @@ public class DatabaseService {
 
     public PlayerSkin readCurrentSkin(String nickname) {
         PlayerSkin playerSkin = new DefaultSkin();
+        BufferedReader br = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(currentSkinPath))) {
+        try {
+            br = new BufferedReader(new FileReader(currentSkinPath));
             String line;
             boolean isFirstLine = true;
 
@@ -163,11 +165,21 @@ public class DatabaseService {
                     playerSkin = parseToPlayerSkin(currentSkin);
                 }
             }
+
+            return playerSkin;
+
         } catch (IOException ioe) {
             System.out.println(ioe);
         } finally {
-            return playerSkin;
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException ioe) {
+                System.out.println(ioe);
+            }
         }
+        return playerSkin;
     }
 
     private PlayerSkin parseToPlayerSkin(String skin) {
