@@ -4,6 +4,7 @@ public class EnemyModel implements GeneralModel{
     private DBService dbService;
     private Player player;
     private Viewer viewer;
+    private String nickName;
 
     private final int SPACE = 0;
     private final int PLAYER = 1;
@@ -36,21 +37,23 @@ public class EnemyModel implements GeneralModel{
 
     private int[][] checksPos;
     private int[][] coinsPos;
-    ////////
     private Client client;
+    private boolean isEnemyCompletedGame;
 
     public EnemyModel(Viewer viewer) {
         this.viewer = viewer;
         dbService = new DBService();
-        initPlayer("Stive");
+        player = dbService.getPlayerInfo("Stive");
         levelList = new Levels(client);
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
-        // player = new Player(); // TODO: get Player from Client
+
     }
 
-
+    public boolean getIsEnemyCompletedGame() {
+        return isEnemyCompletedGame;
+    }
     public void setClient(Client client) {
         levelList = new Levels(client);
         this.client = client;
@@ -60,8 +63,12 @@ public class EnemyModel implements GeneralModel{
         return map;
     }
 
-    public void doAction(String action) {
+    @Override
+    public String getNickName() {
+        return nickName;
+    }
 
+    public void doAction(String action) {
         if (map == null) {
             System.out.println("NO MAP FOUND\n\n");
             return;
@@ -79,31 +86,31 @@ public class EnemyModel implements GeneralModel{
         } else if(action.equals("Down")) {
             move = "Down";
             moveBot();
+        } else if (action.equals("Given up")) {
+            viewer.showEnemyGiveUpDialog();
+        } else if (action.equals("You have 30 seconds")) {
+            viewer.getMyCanvas().setTimer(client, viewer);
+            viewer.updateMyCanvas();
+            viewer.getModel().setIsPlayerFirstCompletedGame(false);
+        } else if (action.equals("complete")) {
+            System.out.println("MAKE isEnemyCompletedGame TRUE");
+            isEnemyCompletedGame = true;
         }
 
         returnCheck();
         viewer.updateEnemyCanvas();
 
-        System.out.println("Moves: " + totalMoves); //debug
-
-        // if (isWon()) {
-        //     int passedLevel = levelList.getCurrentLevel();
-        //     dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
-        //     collectedCoins = 0;
-        //     if (!isDouble) {
-        //         showEndLevelDialog();
-        //     } else {
-        //         showWonDialog();
-        //     }
-        // }
-
     }
 
     public void changeLevel() {
-        // initialize enemyMap
         System.out.println("initialize enemy Map [~]");
         map = levelList.getEnemyLevelFromServer();
-
+        String nickNameAndSkin = client.getDataFromServer();
+        String[] arrayNameSkin = nickNameAndSkin.split(";");
+        nickName = arrayNameSkin[0];
+        String skin = arrayNameSkin[1];
+        setPlayer(nickName);
+        updateCurrentSkin(skin);
 
         if (map != null) {
             scanMap();
@@ -119,25 +126,7 @@ public class EnemyModel implements GeneralModel{
         }
 
         totalMoves = 0;
-
-
     }
-    //
-    // public void changeLevel(String command) {
-    //     String stringLevelNumber = command.substring(command.length() - 1, command.length());
-    //     int levelNumber = Integer.parseInt(stringLevelNumber);
-    //     levelList.setCurrentLevel(levelNumber);
-    //     ////////// ------------
-    //     map = levelList.getCurrentMap();
-    //
-    //     if (map != null) {
-    //         scanMap();
-    //     }
-    //
-    //     viewer.showCanvas();/////////// ----------------
-    //     totalMoves = 0;
-    // }
-
 
     public String getMove() {
         return move;
@@ -151,8 +140,9 @@ public class EnemyModel implements GeneralModel{
         return collectedCoins;
     }
 
-    public Player initPlayer(String nickname) {
+    public Player setPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
+        viewer.updateEnemySkin();
         return player;
     }
 
@@ -161,7 +151,7 @@ public class EnemyModel implements GeneralModel{
     }
 
     public void updateCurrentSkin(String skinType) {
-        dbService.updateCurrentSkin(player.getNickname(), skinType);
+        dbService.updateCurrentSkin(nickName, skinType);
         PlayerSkin skin = null;
         switch (skinType) {
             case "Default Skin":
@@ -177,63 +167,18 @@ public class EnemyModel implements GeneralModel{
         player.setCurrentSkin(skin);
     }
 
-    // public void getNextLevel() {
-    //     map = levelList.getNextMap();
-    //     if (map != null) {
-    //         scanMap();
-    //     }
-    //     viewer.showCanvas();
-    // }
-
-
-    // private void showEndLevelDialog() {
-    //     Object[] options = {"Go to levels", "Next level"};
-    //     int userChoise = javax.swing.JOptionPane.showOptionDialog(null, "                  You completed level " + levelList.getCurrentLevel() +
-    //                                                               "!\n                        Total moves: " + totalMoves, "Congratulations!",
-    //                                                               javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.PLAIN_MESSAGE,
-    //                                                               null, options, options[1]);
-    //     if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
-    //         map = levelList.getNextMap();
-    //         if (map != null) {
-    //             scanMap();
-    //         }
-    //         viewer.update();
-    //     } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
-    //         viewer.showLevelChooser();
-    //         map = null;
-    //     } else {
-    //         viewer.showMenu();
-    //         map = null;
-    //     }
-    // }
-
-    // private void showWonDialog() {
-    //     String[] options = {"Wait other player", "Return"};
-    //     int result = javax.swing.JOptionPane.showOptionDialog(
-    //             null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
-    //             javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
-    //             null, options, options[0]
-    //     );
-    //     switch (result) {
-    //         case 0:
-    //             System.out.println("Wait option selected");
-    //             break;
-    //         case 1:
-    //             System.out.println("Return option selected");
-    //             break;
-    //     }
-    // }
-
     private void scanMap() {
         for (int i = 0; i < map.length - 1; i++) {
             int currentMapLineLength = map[i].length;
             int nextMapLineLength = map[i + 1].length;
+
             if (nextMapLineLength <= currentMapLineLength) {
                 continue;
             }
 
             int nextMapLineLastElementOfCurrentLine = map[i + 1][map[i].length];
             int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
+
             if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
                 System.out.println("Map have invalid structure\n" + "Problem in mapline " + (i + 1));
                 map = null;
@@ -247,6 +192,7 @@ public class EnemyModel implements GeneralModel{
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
+        
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {
@@ -350,12 +296,12 @@ public class EnemyModel implements GeneralModel{
             map[playerPosY][playerPosX - 1] = SPACE;
 
             if (map[playerPosY][playerPosX - 2] == CHECK) {
-                // boxInTargetSound.play();
+
             }
             map[playerPosY][playerPosX - 2] = BOX;
         }
 
-        // moveSnowSound.play();
+
         map[playerPosY][playerPosX - 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
@@ -379,12 +325,12 @@ public class EnemyModel implements GeneralModel{
             map[playerPosY][playerPosX + 1] = SPACE;
 
             if (map[playerPosY][playerPosX + 2] == CHECK) {
-                // boxInTargetSound.play();
+
             }
             map[playerPosY][playerPosX + 2] = BOX;
         }
 
-        // moveSnowSound.play();
+
         map[playerPosY][playerPosX + 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosX += 1;
@@ -408,12 +354,12 @@ public class EnemyModel implements GeneralModel{
             map[playerPosY - 1][playerPosX] = SPACE;
 
             if (map[playerPosY - 2][playerPosX] == CHECK) {
-                // boxInTargetSound.play();
+
             }
             map[playerPosY - 2][playerPosX] = BOX;
         }
 
-        // moveSnowSound.play();
+
         map[playerPosY - 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY -= 1;
@@ -437,12 +383,12 @@ public class EnemyModel implements GeneralModel{
             map[playerPosY + 1][playerPosX] = SPACE;
 
             if (map[playerPosY + 2][playerPosX] == CHECK) {
-                // boxInTargetSound.play();
+
             }
             map[playerPosY + 2][playerPosX] = BOX;
         }
 
-        // moveSnowSound.play();
+
         map[playerPosY + 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
         playerPosY += 1;

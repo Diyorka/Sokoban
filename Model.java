@@ -28,6 +28,12 @@ public class Model implements GeneralModel {
     private final Music moveSnowSound;
     private final Music backgroundSnowMusic;
     private final Music coinSound;
+    private final Music defaultMusic;
+    private Music currentMusic;
+
+    private boolean isMusicPlayed = false;
+    private boolean isSoundOn = true;
+
 
     private String move;
     private int playerPosX;
@@ -46,13 +52,14 @@ public class Model implements GeneralModel {
 
     private int[][] checksPos;
     private int[][] coinsPos;
-
+    private boolean isPlayerFirstCompletedGame;
+    private boolean isPlayerCompleteGame;
 
     public Model(Viewer viewer) {
         this.viewer = viewer;
         dbService = new DBService();
         player = dbService.getPlayerInfo("Stive");
-        // levels = new Levels(client);
+
 
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
@@ -60,33 +67,29 @@ public class Model implements GeneralModel {
         coinSound = new Music(new File("music/coin.wav"));
 
         backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
-        // backgroundSnowMusic.play();
+        defaultMusic = new Music(new File("music/defaultMusic.wav"));
+        defaultMusic.playLoop();
+        defaultMusic.setVolume(0.75f);
+        currentMusic = defaultMusic;
+
 
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
     }
 
-    public void setClient(Client client) {
-        levels = new Levels(client);
-        this.client = client;
-        gameType = client.getGameType();
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public int[][] getDesktop(){
-        return map;
+    public boolean getIsPlayerCompleteGame() {
+        return isPlayerCompleteGame;
     }
 
     public void doAction(int keyMessage) {
         System.out.println("in model do Action");
+
         if (keyMessage == RESTART) {
             restart();
         } else if (keyMessage == EXIT) {
             collectedCoins = 0;
+            client.closeClient();
             viewer.showMenu();
         }
 
@@ -98,106 +101,161 @@ public class Model implements GeneralModel {
         if (keyMessage == LEFT) {
             move = "Left";
             moveLeft();
-            System.out.println("Left");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         } else if(keyMessage == RIGHT) {
             move = "Right";
             moveRight();
-            System.out.println("Right");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         } else if(keyMessage == UP) {
             move = "Up";
             moveTop();
-            System.out.println("Up");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         } else if(keyMessage == DOWN) {
             move = "Down";
             moveBot();
-            System.out.println("Down");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+
         }
 
         returnCheck();
         viewer.update();// when play alone
         viewer.updateMyCanvas();// when play with enemy
 
-        System.out.println("Moves: " + totalMoves); //debug
-
-        if (isWon()) {
-            moveSnowSound.stop();
-            boxInTargetSound.stop();
-            wonSound.play();
-            int passedLevel = levels.getCurrentLevel();
-            dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
-            collectedCoins = 0;
+        if(isWon()) {
+            System.out.println("YOU WON ");
+            doComplitingAction();
             if (gameType.equals("alone")) {
                 askSoloPlayerFurtherAction();
             } else if (gameType.equals("battle")){
-                askOnlinePlayerFurtherAction();
+                if(isPlayerFirstCompletedGame) {
+                    askOnlinePlayerFurtherAction();
+                } else {
+                    client.sendDataToServer("complete");// if we complete game but not first
+                    isPlayerCompleteGame = true;
+                    System.out.println("SEND DATA COMPLETE ");
+                }
+
             }
         }
 
     }
 
-    public void changeLevel(String command) {
+    private void doComplitingAction() {
+        moveSnowSound.stop();
+        boxInTargetSound.stop();
+        wonSound.play();
+        int passedLevel = levels.getCurrentLevel();
+        dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
+        collectedCoins = 0;
+    }
 
+    public void setIsPlayerFirstCompletedGame(boolean value) {
+        isPlayerFirstCompletedGame = value;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+        gameType = client.getGameType();
+        prepareToNewGame();
+    }
+
+    private void prepareToNewGame() {
+        isPlayerFirstCompletedGame = true;
+        levels = new Levels(client);
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public String getNickName() {
+        return player.getNickname();
+    }
+
+
+    public int[][] getDesktop(){
+        return map;
+    }
+
+    public Music getCurrentMusic() {
+        return currentMusic;
+    }
+
+    public void playDefaultMusic() {
+        if (defaultMusic != null) {
+            stopMusic();
+            defaultMusic.playLoop();
+            isMusicPlayed = true;
+            currentMusic = defaultMusic;
+        }
+    }
+
+    public void playJingleBellsMusic() {
+        stopMusic();
+
+        if (backgroundSnowMusic != null) {
+            backgroundSnowMusic.playLoop();
+            isMusicPlayed = true;
+            currentMusic = backgroundSnowMusic;
+        }
+    }
+
+    public void stopMusic() {
+        if (defaultMusic != null) {
+            defaultMusic.stop();
+        }
+
+        if (backgroundSnowMusic != null) {
+            backgroundSnowMusic.stop();
+        }
+
+        currentMusic = null;
+    }
+
+    public void stopAllSounds() {
+        defaultMusic.stop();
+        backgroundSnowMusic.stop();
+        wonSound.stop();
+        boxInTargetSound.stop();
+        moveSnowSound.stop();
+    }
+
+    public boolean isMusicPlayed() {
+        return isMusicPlayed;
+    }
+
+    public void changeLevel(String command) {
         String stringLevelNumber = command.substring(command.length() - 1, command.length());
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levels.setCurrentLevel(levelNumber);
-        if(gameType.equals("alone")) {
-            map = levels.getCurrentMap();// map for current our model
-        }
-        // initialize out map
-        if(gameType.equals("battle")) {
-            map = levels.getLevelFromServer(String.valueOf(levelNumber));
-        }
-
+        map = levels.getCurrentMap();
 
         if (map != null) {
             scanMap();
-            System.out.println("getting our map >>>");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-        }
-        System.out.println();
 
+        }
 
         viewer.showCanvas(gameType);
         totalMoves = 0;
 
     }
 
+    public void changeLevel() {
+        map = levels.getRandomLevelFromServer();
+        String nickNameAndSkin = player.getNickname() + ";" + player.getCurrentSkin().getType();
+        client.sendDataToServer(nickNameAndSkin);
+
+        if (map != null) {
+            scanMap();
+        }
+
+        viewer.showCanvas(gameType);
+        totalMoves = 0;
+    }
+
     public void restart() {
         collectedCoins = 0;
         map = levels.getCurrentMap();
+
         if (map != null) {
             scanMap();
         }
@@ -229,9 +287,11 @@ public class Model implements GeneralModel {
 
     public void getNextLevel() {
         map = levels.getNextMap();
+
         if (map != null) {
             scanMap();
         }
+
         viewer.showCanvas();
     }
 
@@ -242,6 +302,7 @@ public class Model implements GeneralModel {
     public void updateCurrentSkin(String skinType) {
         dbService.updateCurrentSkin(player.getNickname(), skinType);
         PlayerSkin skin = null;
+
         switch (skinType) {
             case "Default Skin":
                 skin = new DefaultSkin();
@@ -253,6 +314,7 @@ public class Model implements GeneralModel {
                 skin = new PremiumSkin();
                 break;
         }
+
         player.setCurrentSkin(skin);
         viewer.updateSkin();
     }
@@ -272,6 +334,7 @@ public class Model implements GeneralModel {
 
     private void askSoloPlayerFurtherAction() {
         String playerChoice = viewer.showSoloEndLevelDialog();
+
         if (playerChoice.equals("Next level")) {
             map = levels.getNextMap();
             scanMap();
@@ -287,14 +350,19 @@ public class Model implements GeneralModel {
 
     private void askOnlinePlayerFurtherAction() {
         String playerChoice = viewer.showOnlineEndLevelDialog();
-        if (playerChoice.equals("Wait other player")) {
-            //TODO
-        } else if(playerChoice.equals("Back to menu")){
-            //TODO
+
+        if (playerChoice.equals("Wait results (30 sec)")) {
+            System.out.println("Send data to server : You have 30 seconds");
+            viewer.disableMyCanvas();
+            client.sendDataToServer("You have 30 seconds");
+            viewer.getEnemyCanvas().setTimer(client, viewer);
+            viewer.updateEnemyCanvas();
+        } else if(playerChoice.equals("Give up")){
+            System.out.println("Send data to server : given up");
+            client.sendDataToServer("Given up");
             map = null;
             viewer.showMenu();
         } else {
-            //TODO
             map = null;
         }
     }
@@ -302,13 +370,15 @@ public class Model implements GeneralModel {
     private void scanMap() {
         deleteMapValues();
 
-        if (!(isLeftWallsCorrect() && isRightWallsCorrect())) {
+        if (!allWallSidesValid()) {
+            map = null;
             return;
         }
 
         setMapValues();
 
         if (!isMapPlayable()) {
+            map = null;
             return;
         }
 
@@ -343,6 +413,13 @@ public class Model implements GeneralModel {
         }
     }
 
+    private boolean allWallSidesValid() {
+        return isTopWallsCorrect() &&
+               isLeftWallsCorrect() &&
+               isRightWallsCorrect() &&
+               isDownWallsCorrect();
+    }
+
     private boolean isLeftWallsCorrect(){
         int wallX = -1;
         int wallY = -1;
@@ -358,22 +435,22 @@ public class Model implements GeneralModel {
                     break;
                 }
             }
+
             if (i != 0) {
                 int differenceBetweenWalls = Math.abs(prevWallX - wallX);
-                if (prevWallX > wallX) {
-                    for (int k = prevWallX; k > prevWallX - differenceBetweenWalls; k--) {
+                if (prevWallX >= wallX) {
+                    for (int k = prevWallX - 1; k >= prevWallX - differenceBetweenWalls; k--) {
                         if (map[wallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(prevWallX>wallX)");
-                            map = null;
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(prevWallX>wallX)");
                             return false;
                         }
                     }
                 }
+
                 if (wallX > prevWallX) {
-                    for (int k = prevWallX; k < wallX - 1; k++) {
+                    for (int k = prevWallX; k < wallX; k++) {
                         if (map[prevWallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + "\n(wallX>prevWallX)");
-                            map = null;
+                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(wallX>prevWallX)");
                             return false;
                         }
                     }
@@ -383,6 +460,7 @@ public class Model implements GeneralModel {
             prevWallX = wallX;
             wallFound = false;
         }
+
         return true;
     }
 
@@ -390,15 +468,45 @@ public class Model implements GeneralModel {
         for (int i = 0; i < map.length - 1; i++) {
             int currentMapLineLength = map[i].length;
             int nextMapLineLength = map[i + 1].length;
+
             if (nextMapLineLength <= currentMapLineLength) {
                 continue;
             }
 
             int nextMapLineLastElementOfCurrentLine = map[i + 1][map[i].length];
             int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
+
             if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
                 System.out.println("isRightWallsCorrect(): problems with element in mapline " + (i + 1));
-                map = null;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isTopWallsCorrect() {
+        boolean wallFound = false;
+
+        for(int i = 0; i < map[0].length; i++) {
+            if ((map[0][i] == 2) && !wallFound) {
+                wallFound = true;
+            } else if ((map[0][i] != 2) && wallFound) {
+                System.out.println("isTopWallsCorrect(): top wall was not found in first mapline on column " + i);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isDownWallsCorrect() {
+        boolean wallFound = false;
+        int lastArrayIndex = map.length - 1;
+        for(int i = 0; i < map[lastArrayIndex].length; i++) {
+            if ((map[lastArrayIndex][i] == 2) && !wallFound) {
+                wallFound = true;
+            } else if ((map[lastArrayIndex][i] != 2) && wallFound) {
+                System.out.println("isDownWallsCorrect(): top wall was not found in last mapline on column " + i);
                 return false;
             }
         }
@@ -411,7 +519,6 @@ public class Model implements GeneralModel {
             System.out.println("players: " + playerCount + ("(should be equal to 1)"));
             System.out.println("boxes: " + boxesCount);
             System.out.println("checks: " + checksCount);
-            map = null;
             return false;
         }
         return true;
@@ -537,10 +644,12 @@ public class Model implements GeneralModel {
             }
             map[playerPosY][playerPosX + 2] = BOX;
         }
+
         if(gameType.equals("battle")) {
             System.out.println("Right");
             client.sendDataToServer("Right");
         }
+
         moveSnowSound.play();
         map[playerPosY][playerPosX + 1] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
@@ -570,10 +679,12 @@ public class Model implements GeneralModel {
             }
             map[playerPosY - 2][playerPosX] = BOX;
         }
+
         if(gameType.equals("battle")) {
             System.out.println("Up");
             client.sendDataToServer("Up");
         }
+
         moveSnowSound.play();
         map[playerPosY - 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
@@ -603,10 +714,12 @@ public class Model implements GeneralModel {
             }
             map[playerPosY + 2][playerPosX] = BOX;
         }
+
         if(gameType.equals("battle")) {
             System.out.println("Down");
             client.sendDataToServer("Down");
         }
+
         moveSnowSound.play();
         map[playerPosY + 1][playerPosX] = PLAYER;
         map[playerPosY][playerPosX] = SPACE;
@@ -619,6 +732,7 @@ public class Model implements GeneralModel {
             System.out.println("Impossible move box to the left"); //debug
             return false;
         }
+
         return true;
     }
 
@@ -627,6 +741,7 @@ public class Model implements GeneralModel {
             System.out.println("Impossible move box to the right"); //debug
             return false;
         }
+
         return true;
     }
 
@@ -635,6 +750,7 @@ public class Model implements GeneralModel {
             System.out.println("Impossible move box to the top"); //debug
             return false;
         }
+
         return true;
     }
 
@@ -643,6 +759,7 @@ public class Model implements GeneralModel {
             System.out.println("Impossible move box to the bottom"); //debug
             return false;
         }
+        
         return true;
     }
 }

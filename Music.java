@@ -11,7 +11,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Music {
-
     private AudioInputStream inputStream;
     private Clip clip;
     private FloatControl volumeControl;
@@ -40,6 +39,7 @@ public class Music {
                 playing = true;
                 return;
             }
+
             clip.stop();
             clip.setFramePosition(0);
             clip.start();
@@ -49,17 +49,8 @@ public class Music {
 
     public void playLoop() {
         if (initialization) {
-            while (true) {
-                clip.stop();
-                clip.setFramePosition(0);
-                clip.start();
-                playing = true;
-                if (!isPlaying()) {
-                    clip.setFramePosition(0);
-                    clip.start();
-                    playing = true;
-                }
-            }
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            playing = true;
         }
     }
 
@@ -73,11 +64,12 @@ public class Music {
         if (clip != null)
         clip.close();
 
-        if (inputStream != null)
-        try {
-            inputStream.close();
-        } catch (IOException ioe) {
-            System.err.println(ioe);
+        if (inputStream != null){
+            try {
+                inputStream.close();
+            } catch (IOException ioe) {
+                System.err.println(ioe);
+            }
         }
     }
 
@@ -93,30 +85,22 @@ public class Music {
         return clip;
     }
 
-    // public void setVolume(float x) {
-    //     if (x < 0) x = 0;
-    //     if (x > 1) x = 1;
-    //     float min = volumeControl.getMinimum();
-    //     float max = volumeControl.getMaximum();
-    //     volumeControl.setValue((max - min) * x + min);
-    // }
-    //
-    // public float getVolume() {
-    //     float v = volumeControl.getValue();
-    //     float min = volumeControl.getMinimum();
-    //     float max = volumeControl.getMaximum();
-    //     return (v - min) / (max - min);
-    // }
+    public void setVolume(float x) {
+        if (x < 0.0f) x = 0.0f;
+        if (x > 1.0f) x = 1.0f;
+        float min = volumeControl.getMinimum();
+        float max = volumeControl.getMaximum();
+        float scaledVolume = (max - min) * x + min;
+        volumeControl.setValue(scaledVolume);
+    }
 
-    // public void join() {
-    //     if (!initialization) return;
-    //     synchronized (clip) {
-    //         try {
-    //             while (playing)
-    //             clip.wait();
-    //         } catch (InterruptedException ie) {
-    //             System.err.println(ie);
-    //         }
-    //     }
-    // }
+
+    public float getVolume() {
+        if (clip.isControlSupported(FloatControl.Type.VOLUME)) {
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.VOLUME);
+            return gainControl.getValue();
+        }
+
+        return -1; // или другое значение по умолчанию
+    }
 }

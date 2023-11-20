@@ -10,9 +10,9 @@ import java.nio.ByteBuffer;
 import java.io.IOException;
 import java.net.SocketException;
 import java.nio.channels.SocketChannel;
+import java.util.Random;
 
 public class ServiceForTwoPlayers implements Runnable{
-
     private Thread thread;
     private SocketChannel player1Channel;
     private SocketChannel player2Channel;
@@ -38,7 +38,7 @@ public class ServiceForTwoPlayers implements Runnable{
         // always read data from second client and send them to first  client EnemyFieldController
         ClientListener secondClientListener = new ClientListener(player1Channel, player2Channel, this, "secondClient");
         secondClientListener.start();
-        
+
         // wait other threads !!!
         try {
             firstClientListener.join();
@@ -46,50 +46,60 @@ public class ServiceForTwoPlayers implements Runnable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         SocketPool.removeSocketAt(player1Index);
         SocketPool.removeSocketAt(player2Index);
         System.out.println(player1Channel.isOpen() + " " + player2Channel.isOpen());
         System.out.println("Game over");
-
     }
 
     public void startService() {
         thread.start();
     }
 
-
-
     public void startSession() {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
 
-        String player1Level = readData(player1Channel);
-        System.out.println("received level number from client 1 >>> " + player1Level);
-        String player1LevelContent = loadLevel(Integer.parseInt(player1Level));
-        sendData(player1Channel, player1LevelContent);
-
-        String player2Level = readData(player2Channel);
-        System.out.println("received level number from client 2 >>> " + player2Level);
-        String player2LevelContent = loadLevel(Integer.parseInt(player2Level));
-        sendData(player2Channel, player2LevelContent);
+        int generatedLevel = generateRandomLevel();
+        System.out.println("Generated level = " + generatedLevel);
+        // String levelContent = loadLevel(generatedLevel);
+        String levelContent = loadLevel(10);
+        sendData(player1Channel, levelContent);
+        sendData(player2Channel, levelContent);
 
         /// send levels of enemies
-        sendData(player1Channel, player2LevelContent);
+        sendData(player1Channel, levelContent);
         System.out.println("send level of enemy  ");
-        sendData(player2Channel, player1LevelContent);
+        sendData(player2Channel, levelContent);
         System.out.println("send level of enemy " );
 
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ie) {
+            System.out.println("ServiceForTwoPlayers.java Thread sleep ex " + ie);
+        }
+
+        String player1NickName = readData(player1Channel);
+        System.out.println("read nickname " + player1NickName);
+        String player2NickName = readData(player2Channel);
+        System.out.println("read nickname " + player1NickName);
+
+        sendData(player1Channel, player2NickName);
+        sendData(player2Channel, player1NickName);
    }
 
    public  String readData(SocketChannel channel) {
        try {
            ByteBuffer buffer = ByteBuffer.allocate(1024);
            int bytesRead = channel.read(buffer);
+
            if (bytesRead > 0) {
                buffer.flip();
                byte[] data = new byte[buffer.remaining()];
                buffer.get(data);
                return new String(data);
            }
+
        } catch (SocketException socketExc) {
            System.out.println("exception while readData from client" + socketExc);
            socketExc.printStackTrace();
@@ -100,7 +110,8 @@ public class ServiceForTwoPlayers implements Runnable{
            exception.printStackTrace();
            return null;
        }
-        return null;
+
+       return null;
    }
 
    public void sendData(SocketChannel channel, String data) {
@@ -118,16 +129,18 @@ public class ServiceForTwoPlayers implements Runnable{
        } catch (IOException exception) {
            System.out.println("exception while readData from client" + exception);
            exception.printStackTrace();
-
        }
-
    }
 
-
+   private int generateRandomLevel() {
+       System.out.println("Generating level ...");
+       Random random = new Random();
+       return random.nextInt(5) + 10; // from 7 to 9
+   }
     //load level from file on server with parsing
     private String loadLevel(int level) {
-        if(level <= 9 && level >= 7) {
-            String levelFileName = "Levels/level" + level + ".sok";
+        if(level <= 15 && level >= 10) {
+            String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 
             try {
@@ -145,8 +158,8 @@ public class ServiceForTwoPlayers implements Runnable{
                         while(matcher.find()){
                             data.append(matcher.group());
                         }
-                    data.append('A');
-                }
+                        data.append('A');
+                    }
                 }
                 System.out.println(data.toString());
                 return data.toString();
@@ -154,7 +167,6 @@ public class ServiceForTwoPlayers implements Runnable{
             } catch (IOException ioe) {
                 System.out.println("Error " + ioe);
             }
-
 
             return data.toString();
         }
@@ -169,15 +181,14 @@ public class ServiceForTwoPlayers implements Runnable{
 
         System.out.println("Closing connection  player1Channel.isOpen() = "+ player1Channel.isOpen());
         System.out.println("player2Channel.isOpen() = "+ player2Channel.isOpen());
-
     }
+
     private void closeChannel(SocketChannel playerChannel) {
         if(playerChannel.isOpen()) {
             try {
                 playerChannel.close();
             } catch (IOException exc) {
                 System.out.println(exc);
-
             }
         }
     }

@@ -13,11 +13,9 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
 import java.awt.Dimension;
 
 public class Canvas extends JPanel {
-
     private Image playerImage;
     private Image frontPlayerImage;
     private Image backPlayerImage;
@@ -103,10 +101,6 @@ public class Canvas extends JPanel {
         add(replayButton);
     }
 
-  // public GeneralModel getModel() {
-  //     return model;
-  // }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -118,6 +112,7 @@ public class Canvas extends JPanel {
         stepsLabel.setText(totalMoves);
 
         int[][] desktop = model.getDesktop();
+
         if(desktop != null) {
             rotateGamer();
             drawDesktop(g, desktop);
@@ -141,6 +136,7 @@ public class Canvas extends JPanel {
 
     private void rotateGamer() {
         String move = model.getMove();
+
         switch (move) {
             case "Left":
                 playerImage = leftPlayerImage;
@@ -158,51 +154,51 @@ public class Canvas extends JPanel {
     }
 
     private void drawDesktop(Graphics g, int[][] desktop) {
-      int start = 350;
-      int y = 150;
-      int x = start;
-      int width = 50;
-      int height = 50;
-      int offset = 0;
+        int start = 350;
+        int y = 150;
+        int x = start;
+        int width = 50;
+        int height = 50;
+        int offset = 0;
 
-      for (int i = 0; i < desktop.length; i++) {
-        boolean isFirstWallFound = false;
+        for (int i = 0; i < desktop.length; i++) {
+          boolean isFirstWallFound = false;
 
-        for (int j = 0; j < desktop[i].length; j++) {
-          if (!isFirstWallFound && desktop[i][j] == 2) {
-            isFirstWallFound = true;
+            for (int j = 0; j < desktop[i].length; j++) {
+                if (!isFirstWallFound && desktop[i][j] == 2) {
+                    isFirstWallFound = true;
+                }
+
+                if (isFirstWallFound) {
+                    if (desktop[i][j] == 0) {
+                      g.drawImage(groundImage, x, y, null);
+                    } else if (desktop[i][j] == 1) {
+                      g.drawImage(playerImage, x, y, null);
+                    } else if (desktop[i][j] == 2) {
+                      g.drawImage(wallImage, x, y, null);
+                    } else if (desktop[i][j] == 3) {
+                      g.drawImage(boxImage, x, y, null);
+                    } else if (desktop[i][j] == 4) {
+                      g.drawImage(targetImage, x, y, null);
+                    } else if (desktop[i][j] == 5) {
+                      g.drawImage(coinImage, x, y, null);
+                    }
+                }
+                x = x + width + offset;
           }
 
-          if (isFirstWallFound) {
-            if (desktop[i][j] == 0) {
-              g.drawImage(groundImage, x, y, null);
-            } else if (desktop[i][j] == 1) {
-              g.drawImage(playerImage, x, y, null);
-            } else if (desktop[i][j] == 2) {
-              g.drawImage(wallImage, x, y, null);
-            } else if (desktop[i][j] == 3) {
-              g.drawImage(boxImage, x, y, null);
-            } else if (desktop[i][j] == 4) {
-              g.drawImage(targetImage, x, y, null);
-            } else if (desktop[i][j] == 5) {
-              g.drawImage(coinImage, x, y, null);
-            }
-          }
-          x = x + width + offset;
+          x = start;
+          y = y + height + offset;
         }
-
-        x = start;
-        y = y + height + offset;
-      }
 
     }
 
     private void drawErrorMessage(Graphics g) {
-      Font font = new Font("Impact", Font.BOLD, 50);
-      g.drawImage(errorImage, 200, 200, null);
-      g.setFont(font);
-      g.setColor(Color.RED);
-      g.drawString("Initialization Error!", 250, 100);
+        Font font = new Font("Impact", Font.BOLD, 50);
+        g.drawImage(errorImage, 200, 200, null);
+        g.setFont(font);
+        g.setColor(Color.RED);
+        g.drawString("Initialization Error!", 250, 100);
     }
 
     private Font getCustomFont(File file, int style, float size) {
@@ -216,5 +212,4 @@ public class Canvas extends JPanel {
         }
         return customFont;
     }
-
 }

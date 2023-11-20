@@ -4,7 +4,7 @@ public interface GeneralModel {
     int getTotalMoves();
     int getCollectedCoins();
     int[][] getDesktop();
-    void updateCurrentSkin(String skinType);
-    // public void doAction(int keyMessage);
 
+    String getNickName();
+    void updateCurrentSkin(String skinType);
 }

@@ -2,7 +2,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class SettingsController implements ActionListener {
-
     private Model model;
     private Viewer viewer;
     private SettingsPanel settingsPanel;
@@ -28,10 +27,13 @@ public class SettingsController implements ActionListener {
                 buyPremiumSkin();
                 break;
             case "Default_Music":
+                model.playDefaultMusic();
                 break;
             case "Christmas_Music":
+                model.playJingleBellsMusic();
                 break;
             case "No_Sound":
+                model.stopMusic();
                 break;
             case "Back":
                 viewer.showMenu();
@@ -56,5 +58,4 @@ public class SettingsController implements ActionListener {
         int premiumSkinCost = settingsPanel.getPremiumSkinCost();
         return totalCoins >= premiumSkinCost;
     }
-
 }

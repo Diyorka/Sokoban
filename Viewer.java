@@ -10,10 +10,9 @@ import java.io.IOException;
 import java.io.File;
 import java.awt.Component;
 import javax.swing.JOptionPane;
-
+import javax.swing.ImageIcon;
 
 public class Viewer {
-
     private Controller controller;
     private Canvas canvas;
     private CanvasForTwoPlayers myCanvas;
@@ -32,10 +31,10 @@ public class Viewer {
         canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
 
-        myCanvas = new CanvasForTwoPlayers(model, controller);
+        myCanvas = new CanvasForTwoPlayers(model, controller, "myCanvas");
         myCanvas.addKeyListener(controller);
 
-        enemyCanvas = new CanvasForTwoPlayers(enemyModel, null);
+        enemyCanvas = new CanvasForTwoPlayers(enemyModel, null, "enemyCanvas");
         LevelChooser levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
@@ -46,7 +45,6 @@ public class Viewer {
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, myCanvas, enemyCanvas);
         splitPane.setDividerLocation(0.5);
         splitPane.setResizeWeight(0.5);
-
 
         frame = new JFrame("Sokoban");
         frame.setSize(1200, 800);
@@ -60,6 +58,9 @@ public class Viewer {
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
 
+        ImageIcon gameIcon = new ImageIcon("images/game-icon.png");
+        frame.setIconImage(gameIcon.getImage());
+
         frame.setResizable(false);
         frame.setVisible(true);
     }
@@ -68,8 +69,29 @@ public class Viewer {
         return this;
     }
 
+    public Model getModel() {
+        return model;
+    }
+
+    public EnemyModel getEnemyModel() {
+        return enemyModel;
+    }
+
     public CanvasForTwoPlayers getEnemyCanvas() {
         return enemyCanvas;
+    }
+
+    public CanvasForTwoPlayers getMyCanvas() {
+        return myCanvas;
+    }
+
+    public void disableMyCanvas() {
+        myCanvas.removeKeyListener(controller);
+    }
+
+    public void enableMyCanvas() {
+        myCanvas.requestFocusInWindow();
+        myCanvas.addKeyListener(controller);
     }
 
     public void update() {
@@ -82,11 +104,22 @@ public class Viewer {
         settings.updateButtonStates();
     }
 
+    public void updateEnemySkin() {
+        enemyCanvas.setSkin();
+        enemyCanvas.repaint();
+    }
+
+    public void updateMySkin() {
+        myCanvas.setSkin();
+        myCanvas.repaint();
+    }
+
     public void updateEnemyCanvas() {
         enemyCanvas.repaint();
     }
 
     public void updateMyCanvas() {
+        myCanvas.setSkin();
         myCanvas.repaint();
     }
 
@@ -123,14 +156,17 @@ public class Viewer {
         Object[] options = {"Go to levels", "Next level"};
         int totalMoves = model.getTotalMoves();
         int levelNumber = model.getCurrentLevelNumber();
+
         if (levelNumber == 9) {
             options[1] = "Back to menu";
         }
+
         int userChoise = javax.swing.JOptionPane.showOptionDialog(
                 null, "You completed level " + levelNumber +
                 "!\nTotal moves: " + totalMoves, "Congratulations!",
                 javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[1]);
+
         if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
             return (String) options[1];
         } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
@@ -138,44 +174,85 @@ public class Viewer {
         } else {
             showMenu();
         }
+
         return "Not a play";
     }
 
     public String showOnlineEndLevelDialog() {
-        String[] options = {"Wait other player", "Back to menu"};
+        String[] options = {"Wait results (30 sec)", "Give up"};
         int totalMoves = model.getTotalMoves();
         Player player = model.getPlayer();
         int userChoise = javax.swing.JOptionPane.showOptionDialog(
-                null, player.getNickname() + " won! Congratulations", "Total moves: " + totalMoves,
-                javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null, player.getNickname() + " passed game ! Congratulations", "Total moves: " + totalMoves,
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
+
         if (userChoise == 0) {
             System.out.println("Wait option selected");
             return (String) options[0];
         } else {
-            System.out.println("Back to menu option selected");
+            System.out.println("Give up option selected");
             return (String) options[1];
         }
     }
 
     private boolean hasFrameCanvas() {
         Component[] components = frame.getContentPane().getComponents();
+
         for (Component component : components) {
             if (component == canvas) {
                 return true;
             }
         }
+
         return false;
+    }
+    public void showEnemyGiveUpDialog() {
+        int totalMoves = model.getTotalMoves();
+        String[] options = {"Exit to Menu"};
+        int result = JOptionPane.showOptionDialog(
+                null, "Your opponent resigned, you won ! Your total moves " + totalMoves, "Congratulations !",
+                JOptionPane.DEFAULT_OPTION,  JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]
+        );
+
+        if (result == 0) {
+            showMenu();
+        } else {
+            showMenu();
+        }
+    }
+
+    public void ResultsOnlineGameDialog(String absoluteWinner) {
+        int myTotalMoves = model.getTotalMoves();
+        int enemyTotalMoves = enemyModel.getTotalMoves();
+
+        String winner = "It's a tie!";
+
+        if(absoluteWinner == null) {
+            winner = (myTotalMoves < enemyTotalMoves) ? "You won !" : "You lose";
+        } else {
+            winner = absoluteWinner.equals("me") ? "You won !" : "You lose";
+        }
+
+
+       String message = String.format("Your total moves: %d\nEnemy total moves: %d\n%s",
+               myTotalMoves, enemyTotalMoves, winner);
+
+      JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
+
     }
 
     private void showTwoCanvas() {
         updateMyCanvas();
         updateEnemyCanvas();
+        updateMySkin();
         cardLayout.show(frame.getContentPane(), "splitPane");
         myCanvas.requestFocusInWindow();
 
     }
+
     public void showLevelChooser() {
         cardLayout.show(frame.getContentPane(), "levelChooser");
     }
@@ -204,6 +281,7 @@ public class Viewer {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                 null, options, options[0]
         );
+        
         if (result == 0) {
             showMenu();
         } else {

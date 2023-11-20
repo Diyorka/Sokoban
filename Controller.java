@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Controller implements KeyListener, ActionListener {
-
     private Model model;
     private Viewer viewer;
 
@@ -22,29 +21,27 @@ public class Controller implements KeyListener, ActionListener {
         model.doAction(key);
     }
 
-    public void keyTyped(KeyEvent event) {
-    }
+    public void keyTyped(KeyEvent event) {}
 
-    public void keyReleased(KeyEvent event) {
-    }
+    public void keyReleased(KeyEvent event) {}
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      String command = e.getActionCommand();
+        String command = e.getActionCommand();
 
-      switch(command) {
-        case "Next level":
-            model.getNextLevel();
-            break;
-        case "Exit to menu":
-            System.out.println("Exit to menu ");
-            model.getClient().closeClient();
-            viewer.showMenu();
-            break;
-        case "Restart":
-            model.restart();
-            viewer.showCanvas();
-            break;
-      }
-  }
+        switch(command) {
+            case "Next level":
+                model.getNextLevel();
+                break;
+            case "Exit to menu":
+                System.out.println("Exit to menu ");
+                model.getClient().closeClient();
+                viewer.showMenu();
+                break;
+            case "Restart":
+                model.restart();
+                viewer.showCanvas();
+                break;
+        }
+    }
 }
