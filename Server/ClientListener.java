@@ -47,9 +47,7 @@ public class ClientListener extends Thread {
             System.out.println("sent info to first player  >>> ");
             return true;
         }
+
         return false;
-
     }
-
-
 }

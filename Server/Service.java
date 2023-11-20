@@ -12,21 +12,19 @@ import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 
 public class Service implements Runnable{
-
     private Thread thread;
     private SocketChannel playerChannel;
     private int playerIndex;
     private boolean gameIsRunning;
     private static final String LAST_LEVEL = "9";
 
+    public Service() {}
+
     public Service(SocketChannel playerChannel,int playerIndex) {
         thread = new Thread(this);
         this.playerChannel = playerChannel;
         this.playerIndex = playerIndex;
         gameIsRunning = true;
-    }
-    public Service() {
-
     }
 
     @Override
@@ -37,8 +35,8 @@ public class Service implements Runnable{
             if(!sendLevelToClient()) {//if there is error or it is end of the game
                 break;
             }
-
         }
+
         closeConnection();
         System.out.println("Game over");
     }
@@ -47,11 +45,11 @@ public class Service implements Runnable{
         thread.start();
     }
 
-
    public  String readData(SocketChannel channel) {
        try {
            ByteBuffer buffer = ByteBuffer.allocate(1024);
            int bytesRead = channel.read(buffer);
+
            if (bytesRead > 0) {
                buffer.flip();
                byte[] data = new byte[buffer.remaining()];
@@ -67,7 +65,8 @@ public class Service implements Runnable{
            exception.printStackTrace();
            return null;
        }
-        return null;
+
+       return null;
    }
 
    public boolean sendData(SocketChannel channel, String data) {
@@ -87,15 +86,18 @@ public class Service implements Runnable{
            exception.printStackTrace();
            return false;
        }
+
        return false;
    }
 
    private boolean sendLevelToClient() {
        // getting level number from client
        String levelNumber = readData(playerChannel);
+
        if(levelNumber != null) {
            System.out.println("Successfully get level from client >>> " + levelNumber);
            String levelContent = loadLevel(Integer.parseInt(levelNumber));
+
            if(levelContent != null) {
                boolean wasDataSendSuccessfully = sendData(playerChannel, levelContent);
                if(levelNumber.equals(LAST_LEVEL)) {
@@ -104,6 +106,7 @@ public class Service implements Runnable{
                 return wasDataSendSuccessfully;
            }
        }
+
        return false;
    }
 
@@ -115,7 +118,6 @@ public class Service implements Runnable{
 
             try {
                 Path filePath = Paths.get(levelFileName);
-
                 List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
                 String pattern = "[0-5]";
                 Pattern compiledPattern = Pattern.compile(pattern);
@@ -128,8 +130,8 @@ public class Service implements Runnable{
                         while(matcher.find()){
                             data.append(matcher.group());
                         }
-                    data.append('A');
-                }
+                        data.append('A');
+                    }
                 }
                 System.out.println(data.toString());
                 return data.toString();
@@ -153,7 +155,6 @@ public class Service implements Runnable{
             }
         }
         System.out.println("Closing connection playerChannel.isOpen() = "+ playerChannel.isOpen());
-
     }
 
 }

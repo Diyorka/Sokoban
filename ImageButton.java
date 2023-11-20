@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.File;
 
 public class ImageButton extends JButton {
-
     private Image backgroundImage;
     private String buttonText;
     private int fontSize;
@@ -68,5 +67,4 @@ public class ImageButton extends JButton {
         }
         return customFont;
     }
-
 }

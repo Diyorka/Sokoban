@@ -1,6 +1,7 @@
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
+// import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Font;
 import javax.swing.ImageIcon;
@@ -13,11 +14,11 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
+import javax.swing.Timer;
 import java.awt.Dimension;
+// import java.awt.AlphaComposite;
 
 public class CanvasForTwoPlayers extends JPanel {
-
     private Image playerImage;
     private Image frontPlayerImage;
     private Image backPlayerImage;
@@ -35,26 +36,20 @@ public class CanvasForTwoPlayers extends JPanel {
     private JLabel stepsLabel;
     private final JLabel nickName;
     private GeneralModel model;
+    private JLabel TimerImageLabel;
+    private JLabel time;
+    private String canvasType;
 
-    public CanvasForTwoPlayers(GeneralModel model, Controller controller) {
+    public CanvasForTwoPlayers(GeneralModel model, Controller controller, String canvasType) {
+        this.canvasType = canvasType;
         this.model = model;
         this.controller = controller;
         backgroundImage = new ImageIcon("images/background2.jpg").getImage();
         setLayout(null);
         setOpaque(true);
         setPreferredSize(new Dimension(400, 800));
-        frontPlayerImage = new ImageIcon("images/front-player.png").getImage();
-        backPlayerImage = new ImageIcon("images/back-player.png").getImage();
-        leftPlayerImage = new ImageIcon("images/left-side-player.png").getImage();
-        rightPlayerImage = new ImageIcon("images/right-side-player.png").getImage();
-        wallImage = new ImageIcon("images/wall.png").getImage();
-        boxImage = new ImageIcon("images/box.png").getImage();
-        targetImage = new ImageIcon("images/target1.png").getImage();
-        groundImage = new ImageIcon("images/ground1.png").getImage();
-        coinImage = new ImageIcon("images/coin.png").getImage();
-        errorImage = new ImageIcon("images/error.png").getImage();
 
-        // setSkin();                  TODO: uncomment when logic is done
+        setSkin();
 
         JLabel stepsImageLabel = new JLabel();
         Image steps = new ImageIcon("images/steps.png").getImage();
@@ -78,15 +73,25 @@ public class CanvasForTwoPlayers extends JPanel {
         nickName.setBounds(240, 20, 300, 100);
         add(nickName);
 
-        JButton exitGameButton = new JButton("Exit to menu");
+        JButton exitGameButton = new JButton("Give Up");
         exitGameButton.setBounds(40, 700, 150, 40);
         Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
         exitGameButton.setFont(customFont);
         exitGameButton.setForeground(Color.BLACK);
         exitGameButton.setBackground(new Color(59, 89, 182));
-        exitGameButton.setActionCommand("Exit to menu");
+        exitGameButton.setActionCommand("GiveUp");
         exitGameButton.addActionListener(controller);
         add(exitGameButton);
+
+        TimerImageLabel = new JLabel();
+        Image timer = new ImageIcon("images/timer.png").getImage();
+        Image scaledTimer = timer.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        ImageIcon timerIcon = new ImageIcon(scaledTimer);
+        TimerImageLabel.setIcon(timerIcon);
+        TimerImageLabel.setBounds(370, 20, 80, 80);
+
+        time = new JLabel("30");
+        time.setBounds(460, 30, 80, 80);
     }
 
     public void paintComponent(Graphics g) {
@@ -105,6 +110,31 @@ public class CanvasForTwoPlayers extends JPanel {
         } else {
             drawErrorMessage(g);
         }
+    }
+
+    public void setTimer(Client client, Viewer viewer) {
+        System.out.println("SetTimer");
+
+        add(TimerImageLabel);
+        launchTimer(client, viewer);
+
+    }
+
+    private void launchTimer(Client client, Viewer viewer) {
+        System.out.println("launchTimer");
+        add(time);
+        int delay = 1000; // 1 second delay
+        int period = 1000; // 1 second interval
+        Timer timer = new Timer(delay, new TimerListener(time, client, this, canvasType, viewer));
+        timer.setInitialDelay(0);
+        timer.setDelay(period);
+        timer.start();
+    }
+
+    public void removeTimer() {
+        remove(TimerImageLabel);
+        remove(time);
+
     }
 
     public void setSkin() {
@@ -196,5 +226,4 @@ public class CanvasForTwoPlayers extends JPanel {
         }
         return customFont;
     }
-
 }
