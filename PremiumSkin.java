@@ -2,7 +2,6 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class PremiumSkin implements PlayerSkin {
-
     private String type;
     private Image frontPremiumImage;
     private Image backPremiumImage;

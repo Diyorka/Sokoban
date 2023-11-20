@@ -26,14 +26,13 @@ public class MenuController implements ActionListener {
                 break;
             case "Play":
                 client = new Client(viewer, "alone");
-                if(client.hasConnectionToServer()) {
-                    model.setClient(client);
-                    model.changeLevel("Level 1");
-                }
+                model.setClient(client);
+                model.changeLevel("Level 1");
                 break;
             case "PlayWithEnemy":
                 System.out.println("play with enemy");
                 client = new Client(viewer, "battle");
+
                 if(client.hasConnectionToServer()) {
                     model.setClient(client);
                     model.changeLevel();
@@ -55,6 +54,7 @@ public class MenuController implements ActionListener {
                 if(client != null) {
                     client.closeClient();
                 }
+
                 System.exit(0);
                 break;
         }

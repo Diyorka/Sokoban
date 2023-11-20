@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 
 public class Viewer {
-
     private Controller controller;
     private Canvas canvas;
     private CanvasForTwoPlayers myCanvas;
@@ -47,7 +46,6 @@ public class Viewer {
         splitPane.setDividerLocation(0.5);
         splitPane.setResizeWeight(0.5);
 
-
         frame = new JFrame("Sokoban");
         frame.setSize(1200, 800);
         frame.setLocation(200, 15);
@@ -71,6 +69,14 @@ public class Viewer {
         return this;
     }
 
+    public Model getModel() {
+        return model;
+    }
+
+    public EnemyModel getEnemyModel() {
+        return enemyModel;
+    }
+
     public CanvasForTwoPlayers getEnemyCanvas() {
         return enemyCanvas;
     }
@@ -80,16 +86,14 @@ public class Viewer {
     }
 
     public void disableMyCanvas() {
-        // myCanvas.setAlpha(0.5f);
-        // myCanvas.setOpaque(false);
         myCanvas.removeKeyListener(controller);
     }
+
     public void enableMyCanvas() {
-        // myCanvas.setAlpha(1.0f);
-        // myCanvas.setOpaque(true);
         myCanvas.requestFocusInWindow();
         myCanvas.addKeyListener(controller);
     }
+
     public void update() {
         canvas.repaint();
     }
@@ -152,14 +156,17 @@ public class Viewer {
         Object[] options = {"Go to levels", "Next level"};
         int totalMoves = model.getTotalMoves();
         int levelNumber = model.getCurrentLevelNumber();
+
         if (levelNumber == 9) {
             options[1] = "Back to menu";
         }
+
         int userChoise = javax.swing.JOptionPane.showOptionDialog(
                 null, "You completed level " + levelNumber +
                 "!\nTotal moves: " + totalMoves, "Congratulations!",
                 javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[1]);
+
         if (userChoise == javax.swing.JOptionPane.NO_OPTION) {
             return (String) options[1];
         } else if (userChoise == javax.swing.JOptionPane.YES_OPTION) {
@@ -167,6 +174,7 @@ public class Viewer {
         } else {
             showMenu();
         }
+
         return "Not a play";
     }
 
@@ -179,6 +187,7 @@ public class Viewer {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
+
         if (userChoise == 0) {
             System.out.println("Wait option selected");
             return (String) options[0];
@@ -190,11 +199,13 @@ public class Viewer {
 
     private boolean hasFrameCanvas() {
         Component[] components = frame.getContentPane().getComponents();
+
         for (Component component : components) {
             if (component == canvas) {
                 return true;
             }
         }
+
         return false;
     }
     public void showEnemyGiveUpDialog() {
@@ -205,12 +216,34 @@ public class Viewer {
                 JOptionPane.DEFAULT_OPTION,  JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
+
         if (result == 0) {
             showMenu();
         } else {
             showMenu();
         }
     }
+
+    public void ResultsOnlineGameDialog(String absoluteWinner) {
+        int myTotalMoves = model.getTotalMoves();
+        int enemyTotalMoves = enemyModel.getTotalMoves();
+
+        String winner = "It's a tie!";
+
+        if(absoluteWinner == null) {
+            winner = (myTotalMoves < enemyTotalMoves) ? "You won !" : "You lose";
+        } else {
+            winner = absoluteWinner.equals("me") ? "You won !" : "You lose";
+        }
+
+
+       String message = String.format("Your total moves: %d\nEnemy total moves: %d\n%s",
+               myTotalMoves, enemyTotalMoves, winner);
+
+      JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
     private void showTwoCanvas() {
         updateMyCanvas();
         updateEnemyCanvas();
@@ -219,6 +252,7 @@ public class Viewer {
         myCanvas.requestFocusInWindow();
 
     }
+
     public void showLevelChooser() {
         cardLayout.show(frame.getContentPane(), "levelChooser");
     }
@@ -247,14 +281,11 @@ public class Viewer {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                 null, options, options[0]
         );
+        
         if (result == 0) {
             showMenu();
         } else {
             showMenu();
         }
-    }
-
-    public Model getModel() {
-        return model;
     }
 }

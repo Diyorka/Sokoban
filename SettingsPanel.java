@@ -12,7 +12,6 @@ import javax.swing.JSlider;
 import javax.swing.JOptionPane;
 
 public class SettingsPanel extends JPanel {
-
     private Viewer viewer;
     private Player player;
     private Image backgroundImage;
@@ -150,7 +149,7 @@ public class SettingsPanel extends JPanel {
     private void showMusicSettings() {
         JRadioButton defaultMusic = createJRadioButton("Default", "Default_Music", 325, 480, true);
         JRadioButton christmasMusic = createJRadioButton("Christmas music", "Christmas_Music", 495, 480, false);
-        JRadioButton noSound = createJRadioButton("Soundless", "No_Sound", 715, 480, false);
+        JRadioButton noSound = createJRadioButton("No sound", "No_Sound", 720, 480, false);
 
         ButtonGroup music = new ButtonGroup();
         music.add(defaultMusic);
@@ -166,6 +165,7 @@ public class SettingsPanel extends JPanel {
         volumeSlider.setMinorTickSpacing(1);
         volumeSlider.setPaintTicks(false);
         volumeSlider.setPaintLabels(false);
+        volumeSlider.setValue(75);
 
         SliderChangeListener listener = new SliderChangeListener(viewer);
         volumeSlider.addChangeListener(listener);

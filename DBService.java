@@ -60,11 +60,8 @@ public class DBService {
                 writer.append(nickname + ";" + level + ";" + coins);
                 writer.newLine();
                 writer.close();
-
-
                 writeTotalCoins(nickname, coins);
             }
-
         } catch(IOException e) {
             System.out.println(e);
         }
@@ -157,9 +154,11 @@ public class DBService {
                     isFirstLine = false;
                     continue;
                 }
+
                 String[] values = line.split(";");
                 String currentNickname = values[0];
                 String currentSkin = values[1];
+                
                 if (currentNickname.equals(nickname)) {
                     playerSkin = parseToPlayerSkin(currentSkin);
                 }
