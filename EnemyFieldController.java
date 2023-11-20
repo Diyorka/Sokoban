@@ -12,7 +12,7 @@ public class EnemyFieldController implements Runnable {
         this.enemyModel = enemyModel;
         canvas = viewer.getEnemyCanvas();
     }
-    
+
     @Override
     public void run() {
         System.out.println("in EnemyFieldController thread");
@@ -20,11 +20,12 @@ public class EnemyFieldController implements Runnable {
             // getting information about enemies actions
             String enemyAction = client.getDataFromServer();
             System.out.println(enemyAction);
+            
             if(enemyAction == null) {
                 break;
             }
-            handleServerResponse(enemyAction);
 
+            handleServerResponse(enemyAction);
         }
     }
 
