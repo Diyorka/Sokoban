@@ -10,10 +10,12 @@ import java.util.regex.Pattern;
 public class Levels {
     private int currentLevel;
     private Client client;
+    private String levelContent;
 
     public Levels(Client client) {
         currentLevel = 1;
         this.client = client;
+        levelContent = "";
     }
 
     public int getCurrentLevel() {
@@ -172,13 +174,23 @@ public class Levels {
   }
 
   public int[][] getEnemyLevelFromServer() {
-      String levelContent = client.loadEnemyLevelFromServer();
-      System.out.println(levelContent);
       if(levelContent != null) {
         return parseData(levelContent, 'A');
       }
       return null;
   }
+
+    public String getEnemyDataFromServer() {
+        String levelData = client.loadEnemyLevelFromServer();
+        String[] array = levelData.split(";");
+        levelContent = array[2];
+        System.out.println(levelData);
+        if(levelData != null) {
+            return levelData;
+        }
+        array = null;
+        return null;
+    }
 
   private String loadLevel(String levelPath) {
       StringBuilder data = new StringBuilder();

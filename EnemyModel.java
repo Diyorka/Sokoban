@@ -113,11 +113,12 @@ public class EnemyModel implements GeneralModel{
     public void changeLevel() {
         // initialize enemyMap
         System.out.println("initialize enemy Map [~]");
+        String data = levelList.getEnemyDataFromServer();
+
+        String[] arrayData = data.split(";");
+        nickName = arrayData[0];
+        String skin = arrayData[1];
         map = levelList.getEnemyLevelFromServer();
-        String nickNameAndSkin = client.getDataFromServer();
-        String[] arrayNameSkin = nickNameAndSkin.split(";");
-        nickName = arrayNameSkin[0];
-        String skin = arrayNameSkin[1];
         setPlayer(nickName);
         updateCurrentSkin(skin);
 
@@ -135,6 +136,7 @@ public class EnemyModel implements GeneralModel{
         }
 
         totalMoves = 0;
+        arrayData = null;
 
 
     }
