@@ -11,13 +11,13 @@ import java.nio.file.StandardOpenOption;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-public class DBService {
+public class DatabaseService {
     private final String coinsPath = "db/passed_levels.csv";
     private final String skinsPath = "db/available_skins.csv";
     private final String totalCoinsPath = "db/total_coins.csv";
     private final String currentSkinPath = "db/current_skin.csv";
 
-    public DBService() {}
+    public DatabaseService() {}
 
     public Player getPlayerInfo(String nickname) {
         createMissingFiles();
@@ -158,7 +158,7 @@ public class DBService {
                 String[] values = line.split(";");
                 String currentNickname = values[0];
                 String currentSkin = values[1];
-                
+
                 if (currentNickname.equals(nickname)) {
                     playerSkin = parseToPlayerSkin(currentSkin);
                 }
