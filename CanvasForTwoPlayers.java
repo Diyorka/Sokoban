@@ -19,7 +19,6 @@ import java.awt.Dimension;
 // import java.awt.AlphaComposite;
 
 public class CanvasForTwoPlayers extends JPanel {
-
     private Image playerImage;
     private Image frontPlayerImage;
     private Image backPlayerImage;
@@ -40,10 +39,8 @@ public class CanvasForTwoPlayers extends JPanel {
     private JLabel TimerImageLabel;
     private JLabel time;
     private String canvasType;
-    // private float alpha;
 
     public CanvasForTwoPlayers(GeneralModel model, Controller controller, String canvasType) {
-        // alpha = 1.0f;
         this.canvasType = canvasType;
         this.model = model;
         this.controller = controller;
@@ -51,18 +48,8 @@ public class CanvasForTwoPlayers extends JPanel {
         setLayout(null);
         setOpaque(true);
         setPreferredSize(new Dimension(400, 800));
-//        frontPlayerImage = new ImageIcon("images/front-player.png").getImage();
-//        backPlayerImage = new ImageIcon("images/back-player.png").getImage();
-//        leftPlayerImage = new ImageIcon("images/left-side-player.png").getImage();
-//        rightPlayerImage = new ImageIcon("images/right-side-player.png").getImage();
-//        wallImage = new ImageIcon("images/wall.png").getImage();
-//        boxImage = new ImageIcon("images/box.png").getImage();
-//        targetImage = new ImageIcon("images/target1.png").getImage();
-//        groundImage = new ImageIcon("images/ground1.png").getImage();
-//        coinImage = new ImageIcon("images/coin.png").getImage();
-//        errorImage = new ImageIcon("images/error.png").getImage();
 
-        setSkin();                  //TODO: uncomment when logic is done
+        setSkin();
 
         JLabel stepsImageLabel = new JLabel();
         Image steps = new ImageIcon("images/steps.png").getImage();
@@ -106,16 +93,9 @@ public class CanvasForTwoPlayers extends JPanel {
         time = new JLabel("30");
         time.setBounds(460, 30, 80, 80);
     }
-    // public void setAlpha(float alpha) {
-    //     this.alpha = alpha;
-    //     System.out.println("alpha " + alpha);
-    //     repaint();
-    // }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Graphics2D g2d = (Graphics2D) g.create();
-        // AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-        // g2d.setComposite(alphaComposite);
 
         g.drawImage(backgroundImage, 0, 0, null);
         String collectedCoins = String.valueOf(model.getCollectedCoins());
@@ -130,8 +110,8 @@ public class CanvasForTwoPlayers extends JPanel {
         } else {
             drawErrorMessage(g);
         }
-        // g2d.dispose();
     }
+
     public void setTimer(Client client, Viewer viewer) {
         System.out.println("SetTimer");
 
@@ -139,6 +119,7 @@ public class CanvasForTwoPlayers extends JPanel {
         launchTimer(client, viewer);
 
     }
+
     private void launchTimer(Client client, Viewer viewer) {
         System.out.println("launchTimer");
         add(time);
@@ -149,11 +130,13 @@ public class CanvasForTwoPlayers extends JPanel {
         timer.setDelay(period);
         timer.start();
     }
+
     public void removeTimer() {
         remove(TimerImageLabel);
         remove(time);
 
     }
+
     public void setSkin() {
         PlayerSkin skin = model.getPlayer().getCurrentSkin();
         frontPlayerImage = skin.getFrontPlayerImage();
@@ -243,5 +226,4 @@ public class CanvasForTwoPlayers extends JPanel {
         }
         return customFont;
     }
-
 }

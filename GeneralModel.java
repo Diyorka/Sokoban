@@ -7,6 +7,4 @@ public interface GeneralModel {
 
     String getNickName();
     void updateCurrentSkin(String skinType);
-    // public void doAction(int keyMessage);
-
 }

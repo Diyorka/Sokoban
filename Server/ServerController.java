@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ExecutionException;
 
-
-
 public class ServerController {
     private Service service;
     private ServerSocketChannel serverSocketChannel;
@@ -38,7 +36,6 @@ public class ServerController {
     }
 
     public void launchServer() {
-
         while (true) {
             try {
                 //  client acception
@@ -118,6 +115,4 @@ public class ServerController {
             e.printStackTrace();
         }
     }
-
-
 }

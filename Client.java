@@ -23,11 +23,11 @@ public class Client {
     private String gameType;
     private Viewer viewer;
 
-
     public Client(Viewer viewer, String gameType) {
         this.viewer = viewer;
         this.gameType = gameType;
         buffer = ByteBuffer.allocate(1024);
+
         try {
             socketChannel = SocketChannel.open();
             socketChannel.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
@@ -48,7 +48,6 @@ public class Client {
             System.out.println("ERROR occurred while trying to make connection");
         }
     }
-
 
     public String getGameType() {
         return gameType;
@@ -112,14 +111,13 @@ public class Client {
                 closeClient();
                 System.out.println("has connection to server = " + hasConnectionToServer());
                 viewer.showMenu();
-
-
             }
         }
     }
 
     public String getDataFromServer() {
         String data = null;
+
         if (hasConnectionToServer()) {
             try {
                 buffer.clear();
@@ -139,10 +137,8 @@ public class Client {
                 viewer.showMenu();
 
             }
-
         }
+
         return data;
     }
-
-
 }

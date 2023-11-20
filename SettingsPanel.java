@@ -12,7 +12,6 @@ import javax.swing.JSlider;
 import javax.swing.JOptionPane;
 
 public class SettingsPanel extends JPanel {
-
     private Viewer viewer;
     private Player player;
     private Image backgroundImage;

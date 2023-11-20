@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Controller implements KeyListener, ActionListener {
-
     private Model model;
     private Viewer viewer;
 
@@ -22,11 +21,9 @@ public class Controller implements KeyListener, ActionListener {
         model.doAction(key);
     }
 
-    public void keyTyped(KeyEvent event) {
-    }
+    public void keyTyped(KeyEvent event) {}
 
-    public void keyReleased(KeyEvent event) {
-    }
+    public void keyReleased(KeyEvent event) {}
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -9,7 +9,6 @@ import javax.swing.ImageIcon;
 import java.awt.Graphics;
 
 public class MenuPanel extends JPanel {
-
     private Viewer viewer;
     private MenuController menuController;
     private JTextField nickname;

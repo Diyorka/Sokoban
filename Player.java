@@ -18,11 +18,13 @@ public class Player {
 
     public boolean isPremiumAvailable() {
         ArrayList<String> availableSkins = getAvailableSkins();
+
         for (String skin : availableSkins) {
             if ("Premium Skin".equals(skin)) {
                 return true;
             }
         }
+        
         return false;
     }
 

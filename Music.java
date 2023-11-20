@@ -11,7 +11,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Music {
-
     private AudioInputStream inputStream;
     private Clip clip;
     private FloatControl volumeControl;
@@ -40,6 +39,7 @@ public class Music {
                 playing = true;
                 return;
             }
+
             clip.stop();
             clip.setFramePosition(0);
             clip.start();
@@ -64,11 +64,12 @@ public class Music {
         if (clip != null)
         clip.close();
 
-        if (inputStream != null)
-        try {
-            inputStream.close();
-        } catch (IOException ioe) {
-            System.err.println(ioe);
+        if (inputStream != null){
+            try {
+                inputStream.close();
+            } catch (IOException ioe) {
+                System.err.println(ioe);
+            }
         }
     }
 
@@ -99,19 +100,7 @@ public class Music {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.VOLUME);
             return gainControl.getValue();
         }
+
         return -1; // или другое значение по умолчанию
     }
-
-
-    // public void join() {
-    //     if (!initialization) return;
-    //     synchronized (clip) {
-    //         try {
-    //             while (playing)
-    //             clip.wait();
-    //         } catch (InterruptedException ie) {
-    //             System.err.println(ie);
-    //         }
-    //     }
-    // }
 }

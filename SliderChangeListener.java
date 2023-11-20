@@ -3,7 +3,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.JSlider;
 
 public class SliderChangeListener implements ChangeListener {
-
     private int lastValue = 0;
     private Viewer viewer;
 

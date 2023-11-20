@@ -11,8 +11,8 @@ public class EnemyFieldController implements Runnable {
         this.viewer = viewer;
         this.enemyModel = enemyModel;
         canvas = viewer.getEnemyCanvas();
-        // enemyModel = canvas.getModel();
     }
+    
     @Override
     public void run() {
         System.out.println("in EnemyFieldController thread");

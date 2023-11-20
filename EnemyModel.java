@@ -1,7 +1,6 @@
 import java.io.File;
 
 public class EnemyModel implements GeneralModel{
-
     private DBService dbService;
     private Player player;
     private Viewer viewer;
@@ -49,7 +48,7 @@ public class EnemyModel implements GeneralModel{
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
-        
+
     }
 
     public boolean getIsEnemyCompletedGame() {
@@ -70,7 +69,6 @@ public class EnemyModel implements GeneralModel{
     }
 
     public void doAction(String action) {
-
         if (map == null) {
             System.out.println("NO MAP FOUND\n\n");
             return;
@@ -102,12 +100,9 @@ public class EnemyModel implements GeneralModel{
         returnCheck();
         viewer.updateEnemyCanvas();
 
-        System.out.println("Moves: " + totalMoves); //debug
-
     }
 
     public void changeLevel() {
-        // initialize enemyMap
         System.out.println("initialize enemy Map [~]");
         map = levelList.getEnemyLevelFromServer();
         String nickNameAndSkin = client.getDataFromServer();
@@ -131,8 +126,6 @@ public class EnemyModel implements GeneralModel{
         }
 
         totalMoves = 0;
-
-
     }
 
     public String getMove() {
@@ -178,12 +171,14 @@ public class EnemyModel implements GeneralModel{
         for (int i = 0; i < map.length - 1; i++) {
             int currentMapLineLength = map[i].length;
             int nextMapLineLength = map[i + 1].length;
+
             if (nextMapLineLength <= currentMapLineLength) {
                 continue;
             }
 
             int nextMapLineLastElementOfCurrentLine = map[i + 1][map[i].length];
             int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
+
             if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
                 System.out.println("Map have invalid structure\n" + "Problem in mapline " + (i + 1));
                 map = null;
@@ -197,6 +192,7 @@ public class EnemyModel implements GeneralModel{
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
+        
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == PLAYER) {

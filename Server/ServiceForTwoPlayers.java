@@ -13,7 +13,6 @@ import java.nio.channels.SocketChannel;
 import java.util.Random;
 
 public class ServiceForTwoPlayers implements Runnable{
-
     private Thread thread;
     private SocketChannel player1Channel;
     private SocketChannel player2Channel;
@@ -47,18 +46,16 @@ public class ServiceForTwoPlayers implements Runnable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         SocketPool.removeSocketAt(player1Index);
         SocketPool.removeSocketAt(player2Index);
         System.out.println(player1Channel.isOpen() + " " + player2Channel.isOpen());
         System.out.println("Game over");
-
     }
 
     public void startService() {
         thread.start();
     }
-
-
 
     public void startSession() {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -89,19 +86,20 @@ public class ServiceForTwoPlayers implements Runnable{
 
         sendData(player1Channel, player2NickName);
         sendData(player2Channel, player1NickName);
-
    }
 
    public  String readData(SocketChannel channel) {
        try {
            ByteBuffer buffer = ByteBuffer.allocate(1024);
            int bytesRead = channel.read(buffer);
+
            if (bytesRead > 0) {
                buffer.flip();
                byte[] data = new byte[buffer.remaining()];
                buffer.get(data);
                return new String(data);
            }
+
        } catch (SocketException socketExc) {
            System.out.println("exception while readData from client" + socketExc);
            socketExc.printStackTrace();
@@ -112,7 +110,8 @@ public class ServiceForTwoPlayers implements Runnable{
            exception.printStackTrace();
            return null;
        }
-        return null;
+
+       return null;
    }
 
    public void sendData(SocketChannel channel, String data) {
@@ -130,9 +129,7 @@ public class ServiceForTwoPlayers implements Runnable{
        } catch (IOException exception) {
            System.out.println("exception while readData from client" + exception);
            exception.printStackTrace();
-
        }
-
    }
 
    private int generateRandomLevel() {
@@ -161,8 +158,8 @@ public class ServiceForTwoPlayers implements Runnable{
                         while(matcher.find()){
                             data.append(matcher.group());
                         }
-                    data.append('A');
-                }
+                        data.append('A');
+                    }
                 }
                 System.out.println(data.toString());
                 return data.toString();
@@ -170,7 +167,6 @@ public class ServiceForTwoPlayers implements Runnable{
             } catch (IOException ioe) {
                 System.out.println("Error " + ioe);
             }
-
 
             return data.toString();
         }
@@ -185,15 +181,14 @@ public class ServiceForTwoPlayers implements Runnable{
 
         System.out.println("Closing connection  player1Channel.isOpen() = "+ player1Channel.isOpen());
         System.out.println("player2Channel.isOpen() = "+ player2Channel.isOpen());
-
     }
+
     private void closeChannel(SocketChannel playerChannel) {
         if(playerChannel.isOpen()) {
             try {
                 playerChannel.close();
             } catch (IOException exc) {
                 System.out.println(exc);
-
             }
         }
     }

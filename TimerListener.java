@@ -25,6 +25,7 @@ public class TimerListener implements ActionListener {
         this.canvasType = canvasType;
         absoluteWinner = canvasType.equals("enemyCanvas") ? "me" : "enemy";
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         timer = ((Timer) e.getSource());
@@ -41,6 +42,7 @@ public class TimerListener implements ActionListener {
                 resetTimer();
                 finishGame(absoluteWinner);
             }
+
         } else {
             absoluteWinner = null; // both players ended game
             resetTimer();
@@ -50,13 +52,14 @@ public class TimerListener implements ActionListener {
     }
 
     private void resetTimer() {
-
         timer.stop();
         canvasForTwoPlayers.removeTimer();
+
         if(canvasType.equals("enemyCanvas")) { // if we set timer on enemyCanvas (we set disable our canvas )
             viewer.enableMyCanvas();
             viewer.updateEnemyCanvas();
         }
+
         viewer.updateMyCanvas();
     }
 
