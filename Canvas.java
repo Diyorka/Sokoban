@@ -94,6 +94,24 @@ public class Canvas extends JPanel {
         nextLevelButton.addActionListener(controller);
         add(nextLevelButton);
 
+        JLabel soundOffButton = new JLabel();
+        Image soundOff = new ImageIcon("images/mute.png").getImage();
+        Image scaledSoundOff = soundOff.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        ImageIcon soundOffIcon = new ImageIcon(scaledSoundOff);
+        soundOffButton.setIcon(soundOffIcon);
+        soundOffButton.setBounds(30, 130, 80, 80);
+        soundOffButton.addMouseListener(controller);
+        add(soundOffButton);
+
+        JButton chooseLevelButton = new JButton("Choose Level");
+        chooseLevelButton.setBounds(525, 700, 150, 40);
+        chooseLevelButton.setFont(customFont);
+        chooseLevelButton.setForeground(Color.BLACK);
+        chooseLevelButton.setBackground(new Color(59, 89, 182));
+        chooseLevelButton.setActionCommand("Choose Level");
+        chooseLevelButton.addActionListener(controller);
+        add(chooseLevelButton);
+
         ImageButton replayButton = new ImageButton("", "images/restart.png", 36, false);
         replayButton.setBounds(1090, 130, 80, 80);
         replayButton.setActionCommand("Restart");
