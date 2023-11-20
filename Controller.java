@@ -2,8 +2,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Controller implements KeyListener, ActionListener {
+public class Controller implements KeyListener, ActionListener, MouseListener {
     private Model model;
     private Viewer viewer;
 
@@ -41,6 +43,8 @@ public class Controller implements KeyListener, ActionListener {
             case "Choose Level":
                 viewer.showLevelChooser();
                 break;
+            case "Sound Off":
+
             case "Restart":
                 model.restart();
                 viewer.showCanvas();
@@ -50,4 +54,33 @@ public class Controller implements KeyListener, ActionListener {
                 model.giveUp();
         }
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+      String command = "Sound Off";
+      if(command.equals("Sound Off")) {
+        model.stopMusic();
+      }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
 }
