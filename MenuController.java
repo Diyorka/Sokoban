@@ -32,7 +32,13 @@ public class MenuController implements ActionListener {
                 }
                 break;
             case "PlayWithEnemy":
+                viewer.showBattleLobby();
                 System.out.println("play with enemy");
+                try {
+                  Thread.sleep(3000);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
                 client = new Client(viewer, "battle");
                 if(client.hasConnectionToServer()) {
                     model.setClient(client);
