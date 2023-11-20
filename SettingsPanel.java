@@ -166,6 +166,7 @@ public class SettingsPanel extends JPanel {
         volumeSlider.setMinorTickSpacing(1);
         volumeSlider.setPaintTicks(false);
         volumeSlider.setPaintLabels(false);
+        volumeSlider.setValue(75);
 
         SliderChangeListener listener = new SliderChangeListener(viewer);
         volumeSlider.addChangeListener(listener);
