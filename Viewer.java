@@ -190,10 +190,10 @@ public class Viewer {
 
         if (userChoise == 0) {
             System.out.println("Wait option selected");
-            return (String) options[0];
+            return options[0];
         } else {
             System.out.println("Give up option selected");
-            return (String) options[1];
+            return options[1];
         }
     }
 
@@ -281,7 +281,7 @@ public class Viewer {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                 null, options, options[0]
         );
-        
+
         if (result == 0) {
             showMenu();
         } else {
