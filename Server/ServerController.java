@@ -95,7 +95,7 @@ public class ServerController {
     private void setTimerForClientDisconnect(SocketChannel clientChannel, int clientChannelIndex) {
         //  timer for 15 seconds
         System.out.println("Client Disconnect Timer launch");
-        timerExecutor.schedule(new ClientDisconnectTask(clientChannel, clientChannelIndex, this, service), 5 , TimeUnit.MINUTES);
+        timerExecutor.schedule(new ClientDisconnectTask(clientChannel, clientChannelIndex, this, service), 20, TimeUnit.SECONDS);
     }
 
     private void resetTimer() {
