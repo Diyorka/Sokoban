@@ -70,6 +70,7 @@ public class Model implements GeneralModel {
         backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
         defaultMusic = new Music(new File("music/defaultMusic.wav"));
         defaultMusic.playLoop();
+        defaultMusic.setVolume(0.7f);
         currentMusic = defaultMusic;
 
 

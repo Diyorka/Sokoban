@@ -85,16 +85,12 @@ public class Music {
     }
 
     public void setVolume(float x) {
-        if (x < 0) x = 0;
-        if (x > 1) x = 1;
+        if (x < 0.0f) x = 0.0f;
+        if (x > 1.0f) x = 1.0f;
         float min = volumeControl.getMinimum();
         float max = volumeControl.getMaximum();
         float scaledVolume = (max - min) * x + min;
-
-        if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(scaledVolume);
-            }
+        volumeControl.setValue(scaledVolume);
     }
 
 

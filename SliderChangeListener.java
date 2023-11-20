@@ -18,12 +18,8 @@ public class SliderChangeListener implements ChangeListener {
             int value = slider.getValue();
 
             if (value != lastValue) {
-                System.out.println(value);
-                float maxVolume = 6.0206f;
-                float scaledVolume = Math.min(maxVolume, Math.max(0, maxVolume * (value / 100.0f)));
-
                 Music currentMusic = viewer.getModel().getCurrentMusic();
-                currentMusic.setVolume(scaledVolume);
+                currentMusic.setVolume(value/100.0f);
 
                 lastValue = value;
             }
