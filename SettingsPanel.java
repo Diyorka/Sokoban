@@ -12,7 +12,6 @@ import javax.swing.JSlider;
 import javax.swing.JOptionPane;
 
 public class SettingsPanel extends JPanel {
-
     private Viewer viewer;
     private Player player;
     private Image backgroundImage;
@@ -166,6 +165,7 @@ public class SettingsPanel extends JPanel {
         volumeSlider.setMinorTickSpacing(1);
         volumeSlider.setPaintTicks(false);
         volumeSlider.setPaintLabels(false);
+        volumeSlider.setValue(75);
 
         SliderChangeListener listener = new SliderChangeListener(viewer);
         volumeSlider.addChangeListener(listener);

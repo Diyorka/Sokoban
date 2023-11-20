@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ExecutionException;
 
-
-
 public class ServerController {
     private Service service;
     private ServerSocketChannel serverSocketChannel;
@@ -38,7 +36,6 @@ public class ServerController {
     }
 
     public void launchServer() {
-
         while (true) {
             try {
                 //  client acception
@@ -98,7 +95,7 @@ public class ServerController {
     private void setTimerForClientDisconnect(SocketChannel clientChannel, int clientChannelIndex) {
         //  timer for 15 seconds
         System.out.println("Client Disconnect Timer launch");
-        timerExecutor.schedule(new ClientDisconnectTask(clientChannel, clientChannelIndex, this, service), 15 , TimeUnit.SECONDS);
+        timerExecutor.schedule(new ClientDisconnectTask(clientChannel, clientChannelIndex, this, service), 20, TimeUnit.SECONDS);
     }
 
     private void resetTimer() {
@@ -118,6 +115,4 @@ public class ServerController {
             e.printStackTrace();
         }
     }
-
-
 }

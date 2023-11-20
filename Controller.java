@@ -24,11 +24,9 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
         model.doAction(key);
     }
 
-    public void keyTyped(KeyEvent event) {
-    }
+    public void keyTyped(KeyEvent event) {}
 
-    public void keyReleased(KeyEvent event) {
-    }
+    public void keyReleased(KeyEvent event) {}
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
@@ -41,10 +39,19 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
                 model.getClient().closeClient();
                 viewer.showMenu();
                 break;
+            case "Choose Level":
+                viewer.showLevelChooser();
+                break;
+            case "Sound Off":
+                model.stopMusic();
+                break;
             case "Restart":
                 model.restart();
                 viewer.showCanvas();
                 break;
+            case "GiveUp":
+                System.out.println("Give up");
+                model.giveUp();
         }
     }
 
@@ -64,7 +71,6 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
     public void mouseEntered(MouseEvent e) {
     }
 
-    @Override
     public void mouseExited(MouseEvent e) {
     }
 }

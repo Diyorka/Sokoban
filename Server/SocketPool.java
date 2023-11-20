@@ -23,6 +23,4 @@ public class SocketPool {
         SOCKET_POOL[socketIndex] = null;
         return 0;
     }
-
-
 }

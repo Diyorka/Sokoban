@@ -2,7 +2,6 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class DefaultSkin implements PlayerSkin {
-
     private String type;
     private Image frontDefaultImage;
     private Image backDefalutImage;

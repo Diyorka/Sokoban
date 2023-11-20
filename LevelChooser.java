@@ -46,7 +46,6 @@ public class LevelChooser extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Image backgroundImage = new ImageIcon("images/background.jpg").getImage();
         g.drawImage(backgroundImage, 0, 0, null);
     }

@@ -11,13 +11,13 @@ import java.nio.file.StandardOpenOption;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-public class DBService {
+public class DatabaseService {
     private final String coinsPath = "db/passed_levels.csv";
     private final String skinsPath = "db/available_skins.csv";
     private final String totalCoinsPath = "db/total_coins.csv";
     private final String currentSkinPath = "db/current_skin.csv";
 
-    public DBService() {}
+    public DatabaseService() {}
 
     public Player getPlayerInfo(String nickname) {
         createMissingFiles();
@@ -60,11 +60,8 @@ public class DBService {
                 writer.append(nickname + ";" + level + ";" + coins);
                 writer.newLine();
                 writer.close();
-
-
                 writeTotalCoins(nickname, coins);
             }
-
         } catch(IOException e) {
             System.out.println(e);
         }
@@ -147,8 +144,10 @@ public class DBService {
 
     public PlayerSkin readCurrentSkin(String nickname) {
         PlayerSkin playerSkin = new DefaultSkin();
+        BufferedReader br = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(currentSkinPath))) {
+        try {
+            br = new BufferedReader(new FileReader(currentSkinPath));
             String line;
             boolean isFirstLine = true;
 
@@ -157,18 +156,30 @@ public class DBService {
                     isFirstLine = false;
                     continue;
                 }
+
                 String[] values = line.split(";");
                 String currentNickname = values[0];
                 String currentSkin = values[1];
+
                 if (currentNickname.equals(nickname)) {
                     playerSkin = parseToPlayerSkin(currentSkin);
                 }
             }
+
+            return playerSkin;
+
         } catch (IOException ioe) {
             System.out.println(ioe);
         } finally {
-            return playerSkin;
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException ioe) {
+                System.out.println(ioe);
+            }
         }
+        return playerSkin;
     }
 
     private PlayerSkin parseToPlayerSkin(String skin) {

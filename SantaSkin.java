@@ -2,7 +2,6 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class SantaSkin implements PlayerSkin {
-
     private String type;
     private Image frontSantaImage;
     private Image backSantaImage;
