@@ -41,7 +41,9 @@ public class Model implements GeneralModel {
 
     private int[][] map;
     private int[][] map2;
+    private int[][] lastMoveMap;
     private Levels levels;
+
 
     private int playerCount;
     private int boxesCount;
@@ -79,6 +81,7 @@ public class Model implements GeneralModel {
         playerPosX = -1;
         playerPosY = -1;
         move = "Down";
+
     }
 
     public boolean getIsPlayerCompleteGame() {
@@ -90,6 +93,7 @@ public class Model implements GeneralModel {
 
         if (keyMessage == RESTART && gameType.equals("alone")) {
             restart();
+
         } else if (keyMessage == EXIT) {
             collectedCoins = 0;
             client.closeClient();
@@ -298,6 +302,37 @@ public class Model implements GeneralModel {
         }
     }
 
+    public void moveBack() {
+        map = lastMoveMap;
+        int move = totalMoves;
+        int coins = coinsCount;
+
+        if (map != null) {
+
+            scanMapBackMove();
+            totalMoves = move - 1;
+            if (move == 0) {
+                totalMoves = 0;
+            }
+            coinsCount = coins;
+            returnCheck();
+        }
+
+
+    }
+
+    private void saveLastMove() {
+        lastMoveMap = new int[map.length][];
+
+        for (int i = 0; i < map.length; i++) {
+            lastMoveMap[i] = new int[map[i].length];
+            for (int j = 0; j < map[i].length; j++) {
+                lastMoveMap[i][j] = map[i][j];
+            }
+        }
+
+    }
+
     public String getMove() {
         return move;
     }
@@ -429,6 +464,16 @@ public class Model implements GeneralModel {
         saveChecksPos();
         saveCoinsPos();
     }
+
+    private void scanMapBackMove() {
+
+        if (!allWallSidesValid()) {
+            map = null;
+            return;
+        }
+        setMapValues();
+    }
+
 
     private void deleteMapValues() {
         playerCount = 0;
@@ -641,6 +686,7 @@ public class Model implements GeneralModel {
         if (map[playerPosY][playerPosX - 1] == BOX && !canMoveBoxToLeft()) {
             return;
         }
+        saveLastMove();
 
         if (map[playerPosY][playerPosX - 1] == BOX) {
             if (map[playerPosY][playerPosX - 2] == COIN) {
@@ -675,6 +721,7 @@ public class Model implements GeneralModel {
         if (map[playerPosY][playerPosX + 1] == BOX && !canMoveBoxToRight()) {
             return;
         }
+        saveLastMove();
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
             if (map[playerPosY][playerPosX + 2] == COIN) {
@@ -710,6 +757,7 @@ public class Model implements GeneralModel {
         if (map[playerPosY - 1][playerPosX] == BOX && !canMoveBoxToTop()) {
             return;
         }
+        saveLastMove();
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
             if (map[playerPosY - 2][playerPosX] == COIN) {
@@ -745,6 +793,7 @@ public class Model implements GeneralModel {
         if (map[playerPosY + 1][playerPosX] == BOX && !canMoveBoxToBot()) {
             return;
         }
+        saveLastMove();
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
             if (map[playerPosY + 2][playerPosX] == COIN) {
@@ -806,4 +855,5 @@ public class Model implements GeneralModel {
 
         return true;
     }
+
 }

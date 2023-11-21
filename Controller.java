@@ -49,6 +49,10 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
             case "Choose Level":
                 viewer.showLevelChooser();
                 break;
+            case "MoveBack":
+                model.moveBack();
+                viewer.showCanvas();
+                break;
             case "Restart":
                 model.restart();
                 viewer.showCanvas();
@@ -80,6 +84,12 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
         label.setIcon(scaledIcon);
         label.setSize(width, height);
     }
+
+
+
+
+
+
 
     @Override
     public void mouseEntered(MouseEvent e) {

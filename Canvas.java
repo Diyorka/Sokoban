@@ -115,6 +115,14 @@ public class Canvas extends JPanel {
         replayButton.setActionCommand("Restart");
         replayButton.addActionListener(controller);
         add(replayButton);
+
+        ImageButton moveBackButton = new ImageButton("", "images/moveBack.png", 36, false);
+        moveBackButton.setBounds(30, 230, 70, 70);
+        moveBackButton.setActionCommand("MoveBack");
+        moveBackButton.addActionListener(controller);
+        add(moveBackButton);
+
+
     }
 
     public void paintComponent(Graphics g) {
