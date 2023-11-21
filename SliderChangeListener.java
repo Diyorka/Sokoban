@@ -18,7 +18,7 @@ public class SliderChangeListener implements ChangeListener {
 
             if (value != lastValue) {
                 Music currentMusic = viewer.getModel().getCurrentMusic();
-                currentMusic.setVolume(value/100.0f);
+                currentMusic.setVolume(value / 100.0f);
 
                 lastValue = value;
             }

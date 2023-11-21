@@ -147,8 +147,8 @@ public class SettingsPanel extends JPanel {
     }
 
     private void showMusicSettings() {
-        JRadioButton defaultMusic = createJRadioButton("Default", "Default_Music", 325, 480, true);
-        JRadioButton christmasMusic = createJRadioButton("Christmas music", "Christmas_Music", 495, 480, false);
+        JRadioButton defaultMusic = createJRadioButton("Default", "Default_Music", 325, 480, false);
+        JRadioButton christmasMusic = createJRadioButton("Christmas music", "Christmas_Music", 495, 480, true);
         JRadioButton noSound = createJRadioButton("No sound", "No_Sound", 720, 480, false);
 
         ButtonGroup music = new ButtonGroup();

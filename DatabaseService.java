@@ -17,7 +17,8 @@ public class DatabaseService {
     private final String totalCoinsPath = "db/total_coins.csv";
     private final String currentSkinPath = "db/current_skin.csv";
 
-    public DatabaseService() {}
+    public DatabaseService() {
+    }
 
     public Player getPlayerInfo(String nickname) {
         createMissingFiles();
@@ -35,7 +36,7 @@ public class DatabaseService {
             boolean fileExists = Files.exists(Paths.get(coinsPath));
             BufferedWriter writer = new BufferedWriter(new FileWriter(coinsPath, true));
 
-            if(!fileExists) {
+            if (!fileExists) {
                 writer.append("Nickname;Level;Coins");
                 writer.newLine();
             }
@@ -62,7 +63,7 @@ public class DatabaseService {
                 writer.close();
                 writeTotalCoins(nickname, coins);
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -98,7 +99,7 @@ public class DatabaseService {
             boolean fileExists = Files.exists(Paths.get(skinsPath));
             BufferedWriter writer = new BufferedWriter(new FileWriter(skinsPath, true));
 
-            if(!fileExists) {
+            if (!fileExists) {
                 writer.append("Nickname;Skin");
                 writer.newLine();
             }
@@ -107,7 +108,7 @@ public class DatabaseService {
             writer.newLine();
             writer.close();
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -124,10 +125,10 @@ public class DatabaseService {
 
             String fileContent = new String(Files.readAllBytes(Paths.get(currentSkinPath)));
 
-            Pattern pattern = Pattern.compile(nickname +  ";(.+)");
+            Pattern pattern = Pattern.compile(nickname + ";(.+)");
             Matcher matcher = pattern.matcher(fileContent);
 
-            if(matcher.find()) {
+            if (matcher.find()) {
                 String currentSkin = matcher.group(1);
                 fileContent = fileContent.replaceAll(nickname + ";.+", nickname + ";" + skin);
                 Files.write(Paths.get(currentSkinPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
@@ -137,7 +138,7 @@ public class DatabaseService {
             }
 
             writer.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -207,10 +208,10 @@ public class DatabaseService {
 
             String fileContent = new String(Files.readAllBytes(Paths.get(totalCoinsPath)));
 
-            Pattern pattern = Pattern.compile(nickname +  ";(\\d+)");
+            Pattern pattern = Pattern.compile(nickname + ";(\\d+)");
             Matcher matcher = pattern.matcher(fileContent);
 
-            if(matcher.find()) {
+            if (matcher.find()) {
                 int currentCoins = Integer.parseInt(matcher.group(1));
                 fileContent = fileContent.replaceAll(nickname + ";\\d+", nickname + ";" + (value + currentCoins));
                 Files.write(Paths.get(totalCoinsPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
@@ -220,7 +221,7 @@ public class DatabaseService {
                 writer.close();
             }
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -296,26 +297,26 @@ public class DatabaseService {
     }
 
     private int readTotalCoinsData(String nickname) {
-      int totalCoins = 0;
+        int totalCoins = 0;
 
-      try (BufferedReader reader = new BufferedReader(new FileReader(totalCoinsPath))) {
-          reader.readLine();
-          String line;
+        try (BufferedReader reader = new BufferedReader(new FileReader(totalCoinsPath))) {
+            reader.readLine();
+            String line;
 
-          while ((line = reader.readLine()) != null) {
-              String[] data = line.split(";");
-              String nicknameFromDB = data[0];
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(";");
+                String nicknameFromDB = data[0];
 
-              if (nickname.equals(nicknameFromDB)) {
-                  totalCoins = Integer.parseInt(data[1]);
-                  break;
-              }
-          }
+                if (nickname.equals(nicknameFromDB)) {
+                    totalCoins = Integer.parseInt(data[1]);
+                    break;
+                }
+            }
 
-      } catch (IOException e) {
-          System.out.println(e);
-      }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
 
-      return totalCoins;
+        return totalCoins;
     }
 }

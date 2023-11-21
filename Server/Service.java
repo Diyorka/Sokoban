@@ -11,16 +11,17 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 
-public class Service implements Runnable{
+public class Service implements Runnable {
     private Thread thread;
     private SocketChannel playerChannel;
     private int playerIndex;
     private boolean gameIsRunning;
     private static final String LAST_LEVEL = "9";
 
-    public Service() {}
+    public Service() {
+    }
 
-    public Service(SocketChannel playerChannel,int playerIndex) {
+    public Service(SocketChannel playerChannel, int playerIndex) {
         thread = new Thread(this);
         this.playerChannel = playerChannel;
         this.playerIndex = playerIndex;
@@ -31,8 +32,8 @@ public class Service implements Runnable{
     public void run() {
         System.out.println("Game started");
         String levelNumber = "";
-        while(playerChannel.isOpen()) {
-            if(!sendLevelToClient()) {//if there is error or it is end of the game
+        while (playerChannel.isOpen()) {
+            if (!sendLevelToClient()) {//if there is error or it is end of the game
                 break;
             }
         }
@@ -45,74 +46,74 @@ public class Service implements Runnable{
         thread.start();
     }
 
-   public  String readData(SocketChannel channel) {
-       try {
-           ByteBuffer buffer = ByteBuffer.allocate(1024);
-           int bytesRead = channel.read(buffer);
+    public String readData(SocketChannel channel) {
+        try {
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            int bytesRead = channel.read(buffer);
 
-           if (bytesRead > 0) {
-               buffer.flip();
-               byte[] data = new byte[buffer.remaining()];
-               buffer.get(data);
-               return new String(data);
-           }
-       } catch (SocketException socketExc) {
-           System.out.println("exception while readData from client" + socketExc);
-           socketExc.printStackTrace();
-           return null;
-       } catch (IOException exception) {
-           System.out.println("exception while readData from client" + exception);
-           exception.printStackTrace();
-           return null;
-       }
+            if (bytesRead > 0) {
+                buffer.flip();
+                byte[] data = new byte[buffer.remaining()];
+                buffer.get(data);
+                return new String(data);
+            }
+        } catch (SocketException socketExc) {
+            System.out.println("exception while readData from client" + socketExc);
+            socketExc.printStackTrace();
+            return null;
+        } catch (IOException exception) {
+            System.out.println("exception while readData from client" + exception);
+            exception.printStackTrace();
+            return null;
+        }
 
-       return null;
-   }
+        return null;
+    }
 
-   public boolean sendData(SocketChannel channel, String data) {
-       try {
-           if (data != null) {
-               ByteBuffer buffer = ByteBuffer.wrap(data.getBytes());
-               channel.write(buffer);
-               System.out.println("sent data to client");
-               return true;
-           }
-       }  catch (SocketException socketExc) {
-           System.out.println("exception while sendData from client" + socketExc);
-           socketExc.printStackTrace();
-           return false;
-       } catch (IOException exception) {
-           System.out.println("exception while sendData from client" + exception);
-           exception.printStackTrace();
-           return false;
-       }
+    public boolean sendData(SocketChannel channel, String data) {
+        try {
+            if (data != null) {
+                ByteBuffer buffer = ByteBuffer.wrap(data.getBytes());
+                channel.write(buffer);
+                System.out.println("sent data to client");
+                return true;
+            }
+        } catch (SocketException socketExc) {
+            System.out.println("exception while sendData from client" + socketExc);
+            socketExc.printStackTrace();
+            return false;
+        } catch (IOException exception) {
+            System.out.println("exception while sendData from client" + exception);
+            exception.printStackTrace();
+            return false;
+        }
 
-       return false;
-   }
+        return false;
+    }
 
-   private boolean sendLevelToClient() {
-       // getting level number from client
-       String levelNumber = readData(playerChannel);
+    private boolean sendLevelToClient() {
+        // getting level number from client
+        String levelNumber = readData(playerChannel);
 
-       if(levelNumber != null) {
-           System.out.println("Successfully get level from client >>> " + levelNumber);
-           String levelContent = loadLevel(Integer.parseInt(levelNumber));
+        if (levelNumber != null) {
+            System.out.println("Successfully get level from client >>> " + levelNumber);
+            String levelContent = loadLevel(Integer.parseInt(levelNumber));
 
-           if(levelContent != null) {
-               boolean wasDataSendSuccessfully = sendData(playerChannel, levelContent);
-               if(levelNumber.equals(LAST_LEVEL)) {
-                   return false;
-               }
+            if (levelContent != null) {
+                boolean wasDataSendSuccessfully = sendData(playerChannel, levelContent);
+                if (levelNumber.equals(LAST_LEVEL)) {
+                    return false;
+                }
                 return wasDataSendSuccessfully;
-           }
-       }
+            }
+        }
 
-       return false;
-   }
+        return false;
+    }
 
     //load level from file on server with parsing
     private String loadLevel(int level) {
-        if(level <= 9 && level >= 7) {
+        if (level <= 9 && level >= 7) {
             String levelFileName = "Levels/Level" + level + ".sok";
             StringBuilder data = new StringBuilder();
 
@@ -125,9 +126,9 @@ public class Service implements Runnable{
 
                 for (String line : lines) {
                     matcher = compiledPattern.matcher(line);
-                    if(matcher.find()) {
+                    if (matcher.find()) {
                         data.append(matcher.group());
-                        while(matcher.find()){
+                        while (matcher.find()) {
                             data.append(matcher.group());
                         }
                         data.append('A');
@@ -147,14 +148,14 @@ public class Service implements Runnable{
 
     private void closeConnection() {
         SocketPool.removeSocketAt(playerIndex);
-        if(playerChannel.isOpen()) {
+        if (playerChannel.isOpen()) {
             try {
                 playerChannel.close();
             } catch (IOException exc) {
                 System.out.println(exc);
             }
         }
-        System.out.println("Closing connection playerChannel.isOpen() = "+ playerChannel.isOpen());
+        System.out.println("Closing connection playerChannel.isOpen() = " + playerChannel.isOpen());
     }
 
 }
