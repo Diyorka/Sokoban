@@ -16,12 +16,12 @@ public class EnemyFieldController implements Runnable {
     @Override
     public void run() {
         System.out.println("in EnemyFieldController thread");
-        while(client.hasConnectionToServer()) {
+        while (client.hasConnectionToServer()) {
             // getting information about enemies actions
             String enemyAction = client.getDataFromServer();
             System.out.println(enemyAction);
-            
-            if(enemyAction == null) {
+
+            if (enemyAction == null) {
                 break;
             }
 
@@ -32,11 +32,12 @@ public class EnemyFieldController implements Runnable {
     public void go() {
         thread.start();
     }
+
     // checking if the enemyAction string contains only one command if not split it on several commands and invoke method
     // move on model one by one
     private void handleServerResponse(String enemyAction) {// it will be more productive to use StringBuilder
-        for(int i = 1; i < enemyAction.length(); i++) {
-            if(Character.isUpperCase(enemyAction.charAt(i))) {
+        for (int i = 1; i < enemyAction.length(); i++) {
+            if (Character.isUpperCase(enemyAction.charAt(i))) {
                 String singleAction = enemyAction.substring(0, i);
                 enemyAction = enemyAction.substring(i);
                 i = 0;

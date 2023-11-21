@@ -16,19 +16,19 @@ public class ClientListener extends Thread {
     public void run() {
         System.out.println("in ClientListener for client " + clientNumber);
 
-        if(clientNumber.equals("firstClient")) {
-            while(player1Channel.isOpen() && player2Channel.isOpen()) {
+        if (clientNumber.equals("firstClient")) {
+            while (player1Channel.isOpen() && player2Channel.isOpen()) {
 
-                if(!listenClient(player1Channel, player2Channel)) {
+                if (!listenClient(player1Channel, player2Channel)) {
                     System.out.println("Something was wrong while Listening first client");
                     break;
                 }
             }
             System.out.println("Closing thread ClientListener >>>");
         } else if (clientNumber.equals("secondClient")) {
-            while(player1Channel.isOpen() && player2Channel.isOpen()) {
+            while (player1Channel.isOpen() && player2Channel.isOpen()) {
 
-                if(!listenClient(player2Channel, player1Channel)) {
+                if (!listenClient(player2Channel, player1Channel)) {
                     System.out.println("Something was wrong while Listening second client");
                     break;
                 }
@@ -37,10 +37,11 @@ public class ClientListener extends Thread {
             System.out.println("Closing thread ClientListener >>>");
         }
     }
+
     // return true if all operations were Successfully completed
     private boolean listenClient(SocketChannel socketToListen, SocketChannel socketToSendData) {
         String infoFromPlayer = service.readData(socketToListen);
-        if(infoFromPlayer != null) {
+        if (infoFromPlayer != null) {
             System.out.println("received info from  player  >>> " + infoFromPlayer);
 
             service.sendData(socketToSendData, infoFromPlayer);
