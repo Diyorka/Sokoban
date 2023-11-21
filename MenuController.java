@@ -28,7 +28,7 @@ public class MenuController implements ActionListener {
             case "Play":
                 client = new Client(viewer, "alone");
                 model.setClient(client);
-                model.changeLevel("Level 1");
+                model.startNotPassedLevel();
                 break;
             case "PlayWithEnemy":
                 System.out.println("play with enemy");

@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.HashMap;
 
 public class Model implements GeneralModel {
     private DatabaseService dbService;
@@ -231,6 +232,20 @@ public class Model implements GeneralModel {
 
     public boolean isMusicPlayed() {
         return isMusicPlayed;
+    }
+
+    public void startNotPassedLevel() {
+        HashMap<Integer, Integer> passedLevels = player.getCoinsOnLevels();
+        int level = 1;
+
+        for(int i = 1; i < 10; i++){
+            if(!passedLevels.containsKey(i)) {
+                level = i;
+                break;
+            }
+        }
+
+        changeLevel("Level " + level);
     }
 
     public void changeLevel(String command) {
