@@ -95,7 +95,7 @@ public class Canvas extends JPanel {
         add(nextLevelButton);
 
         JLabel soundOffButton = new JLabel();
-        Image soundOff = new ImageIcon("images/mute.png").getImage();
+        Image soundOff = new ImageIcon("images/sound-off.png").getImage();
         Image scaledSoundOff = soundOff.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
         ImageIcon soundOffIcon = new ImageIcon(scaledSoundOff);
         soundOffButton.setIcon(soundOffIcon);
