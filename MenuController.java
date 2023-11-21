@@ -30,13 +30,8 @@ public class MenuController implements ActionListener {
                 model.changeLevel("Level 1");
                 break;
             case "PlayWithEnemy":
-                viewer.showBattleLobby();
+                //viewer.showBattleLobby(); //currently not working and full interface not done yet
                 System.out.println("play with enemy");
-                try {
-                  Thread.sleep(3000);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
                 client = new Client(viewer, "battle");
 
                 if(client.hasConnectionToServer()) {

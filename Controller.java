@@ -59,7 +59,6 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
         int x = e.getPoint().x;
         int y = e.getPoint().y;
         model.doMouseAction(x, y);
-        System.out.println("Clicked at x: " + x + ", y: " + y);
     }
 
     public void mousePressed(MouseEvent e) {

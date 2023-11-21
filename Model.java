@@ -43,7 +43,7 @@ public class Model implements GeneralModel {
     private int[][] map;
     private int[][] map2;
     private Levels levels;
-    
+
     private int mapMaxPixelWidth;
     private int mapMaxPixelHeight;
 
@@ -150,29 +150,55 @@ public class Model implements GeneralModel {
     public void doMouseAction(int x, int y) {
         int mapIndexX;
         int mapIndexY;
-        System.out.println("got x: " + x + " and y: " + y);
         int canvasHorizontalStart = 350;
         int canvasHorizontalEnd = canvasHorizontalStart + mapMaxPixelWidth;
         if (canvasHorizontalStart > x || x > canvasHorizontalEnd) {
             mapIndexX = -1;
         } else {
-            mapIndexX = Math.round((x - canvasHorizontalStart) / 50);     //125 - 150 - > -25/50
+            mapIndexX = Math.round((x - canvasHorizontalStart) / 50);
         }
         int canvasVerticalStart = 150;
         int canvasVerticalEnd = canvasVerticalStart + mapMaxPixelHeight;
         if (canvasVerticalStart > y || y > canvasVerticalEnd) {
             mapIndexY = -1;
         } else {
-            mapIndexY = Math.round((y - canvasVerticalStart) / 50);//121-150 -> -29 / 50 ->> -0.4
+            mapIndexY = Math.round((y - canvasVerticalStart) / 50);
         }
-        System.out.println("canvasHorizontalStart " + canvasHorizontalStart + "\ncanvasVerticalStart" + canvasVerticalStart);
-        System.out.println("Probably clicked on " + mapIndexX + " and " + mapIndexY);
+        System.out.println("doMouseAction(): clicked on {" + mapIndexX + ", " + mapIndexY + "}");
 
         if (mapIndexX == -1 || mapIndexY == -1) {
-            System.out.println("Out of map: return");
+            System.out.println("doMouseAction(): click out of map -> return");
             return;
         }
-      }
+
+        PathPair playerPosition = new PathPair(playerPosY, playerPosX);
+        PathPair desiredPoint = new PathPair(mapIndexY, mapIndexX);
+
+        PathFinder pathFinder = new PathFinder();
+        pathFinder.aStarSearch(map, map.length , map[0].length, playerPosition, desiredPoint);
+
+        int newPlayerPosY = pathFinder.getNewY();
+        int newPlayerPosX = pathFinder.getNewX();
+        int extraMoves = pathFinder.getMoves();
+
+        if (newPlayerPosY == -1 || newPlayerPosX == -1) {
+            return;
+        }
+
+        changePlayerPosition(newPlayerPosY, newPlayerPosX);
+        totalMoves += extraMoves;
+        move = "Down";
+        returnCheck();
+        viewer.update();
+    }
+
+    private void changePlayerPosition(int y, int x) {
+        map[playerPosY][playerPosX] = 0;
+        playerPosY = y;
+        playerPosX = x;
+        map[playerPosY][playerPosX] = 1;
+    }
+
 
     private void doComplitingAction() {
         moveSnowSound.stop();
@@ -279,7 +305,6 @@ public class Model implements GeneralModel {
 
         viewer.showCanvas(gameType);
         totalMoves = 0;
-
     }
 
     public void changeLevel() {
@@ -821,12 +846,14 @@ public class Model implements GeneralModel {
         return true;
     }
 
-    private boolean canMoveBoxToBot() {
+    private boolean canMoveBoxToBot() { //true && 7 < map[1].length()
         if (((map[playerPosY + 2][playerPosX] == WALL) || (map[playerPosY + 2][playerPosX] == BOX)) && (playerPosY + 2 < map[playerPosX].length)) {
             System.out.println("Impossible move box to the bottom"); //debug
             return false;
         }
-
+        System.out.println("box moved to " + map[playerPosY + 2][playerPosX]);
+        //7 1 == 2
+        // y = 5 6 7 x = 1
         return true;
     }
 }
