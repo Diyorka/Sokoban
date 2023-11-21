@@ -48,6 +48,8 @@ public class Model implements GeneralModel {
     private int[][] lastMoveMap;
     private Levels levels;
 
+    private int mapMaxPixelWidth;
+    private int mapMaxPixelHeight;
 
     private int playerCount;
     private int boxesCount;
@@ -86,6 +88,8 @@ public class Model implements GeneralModel {
 
         playerPosX = -1;
         playerPosY = -1;
+        mapMaxPixelWidth = -1;
+        mapMaxPixelHeight = -1;
         move = "Down";
 
     }
@@ -151,6 +155,59 @@ public class Model implements GeneralModel {
         }
 
     }
+
+    public void doMouseAction(int x, int y) {
+        int mapIndexX;
+        int mapIndexY;
+        int canvasHorizontalStart = 350;
+        int canvasHorizontalEnd = canvasHorizontalStart + mapMaxPixelWidth;
+        if (canvasHorizontalStart > x || x > canvasHorizontalEnd) {
+            mapIndexX = -1;
+        } else {
+            mapIndexX = Math.round((x - canvasHorizontalStart) / 50);
+        }
+        int canvasVerticalStart = 150;
+        int canvasVerticalEnd = canvasVerticalStart + mapMaxPixelHeight;
+        if (canvasVerticalStart > y || y > canvasVerticalEnd) {
+            mapIndexY = -1;
+        } else {
+            mapIndexY = Math.round((y - canvasVerticalStart) / 50);
+        }
+        System.out.println("doMouseAction(): clicked on {" + mapIndexX + ", " + mapIndexY + "}");
+
+        if (mapIndexX == -1 || mapIndexY == -1) {
+            System.out.println("doMouseAction(): click out of map -> return");
+            return;
+        }
+
+        PathPair playerPosition = new PathPair(playerPosY, playerPosX);
+        PathPair desiredPoint = new PathPair(mapIndexY, mapIndexX);
+
+        PathFinder pathFinder = new PathFinder();
+        pathFinder.aStarSearch(map, map.length , map[0].length, playerPosition, desiredPoint);
+
+        int newPlayerPosY = pathFinder.getNewY();
+        int newPlayerPosX = pathFinder.getNewX();
+        int extraMoves = pathFinder.getMoves();
+
+        if (newPlayerPosY == -1 || newPlayerPosX == -1) {
+            return;
+        }
+
+        changePlayerPosition(newPlayerPosY, newPlayerPosX);
+        totalMoves += extraMoves;
+        move = "Down";
+        returnCheck();
+        viewer.update();
+    }
+
+    private void changePlayerPosition(int y, int x) {
+        map[playerPosY][playerPosX] = 0;
+        playerPosY = y;
+        playerPosX = x;
+        map[playerPosY][playerPosX] = 1;
+    }
+
 
     private void doComplitingAction() {
         moveSnowSound.stop();
@@ -279,7 +336,6 @@ public class Model implements GeneralModel {
 
         viewer.showCanvas(gameType);
         totalMoves = 0;
-
     }
 
     public void changeLevel() {
@@ -327,7 +383,7 @@ public class Model implements GeneralModel {
         }
 
         returnCheck();
-        
+
     }
 
     private void saveLastMove() {
@@ -357,6 +413,7 @@ public class Model implements GeneralModel {
     public Player setPlayer(String nickname) {
         player = dbService.getPlayerInfo(nickname);
         viewer.updateSettings(player);
+        viewer.updateLobbyStats(player);
         viewer.updateSkin();
         viewer.updateButtonText();
         return player;
@@ -464,7 +521,7 @@ public class Model implements GeneralModel {
         }
 
         setMapValues();
-
+        setMapPixelsSize();
         if (!isMapPlayable()) {
             map = null;
             return;
@@ -489,6 +546,8 @@ public class Model implements GeneralModel {
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
+        mapMaxPixelWidth = -1;
+        mapMaxPixelHeight = -1;
         lastMoveMap = null;
     }
 
@@ -508,6 +567,17 @@ public class Model implements GeneralModel {
                 }
             }
         }
+    }
+
+    private void setMapPixelsSize() {
+        for (int i = 0; i < map.length; i++) {
+            if (mapMaxPixelWidth < map[i].length) {
+                mapMaxPixelWidth = map[i].length;
+            }
+        }
+        mapMaxPixelWidth *= 50;
+        mapMaxPixelHeight = map.length * 50;
+        System.out.println("width: " + mapMaxPixelWidth + "px\nheigth: " + mapMaxPixelHeight);
     }
 
     private boolean allWallSidesValid() {
@@ -868,12 +938,14 @@ public class Model implements GeneralModel {
         return true;
     }
 
-    private boolean canMoveBoxToBot() {
+    private boolean canMoveBoxToBot() { //true && 7 < map[1].length()
         if (((map[playerPosY + 2][playerPosX] == WALL) || (map[playerPosY + 2][playerPosX] == BOX)) && (playerPosY + 2 < map[playerPosX].length)) {
             System.out.println("Impossible move box to the bottom"); //debug
             return false;
         }
-
+        System.out.println("box moved to " + map[playerPosY + 2][playerPosX]);
+        //7 1 == 2
+        // y = 5 6 7 x = 1
         return true;
     }
 

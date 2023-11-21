@@ -17,7 +17,11 @@ public class Viewer {
     private CanvasForTwoPlayers enemyCanvas;
     private JSplitPane splitPane;
     private SettingsPanel settings;
+<<<<<<< HEAD
+    private BattleLobbyPanel lobby;
+=======
     private LevelChooser levelChooser;
+>>>>>>> 86c4471ce24b89e4aded3ad6f1982fd05d99dd58
     private JFrame frame;
     private CardLayout cardLayout;
     private Model model;
@@ -29,6 +33,7 @@ public class Viewer {
         controller = new Controller(this, model);
         canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
+        canvas.addMouseListener(controller);
 
         myCanvas = new CanvasForTwoPlayers(model, controller, "myCanvas");
         myCanvas.addKeyListener(controller);
@@ -37,6 +42,7 @@ public class Viewer {
         levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
+        lobby = new BattleLobbyPanel(this, model);
 
         cardLayout = new CardLayout();
 
@@ -56,6 +62,7 @@ public class Viewer {
         frame.add(settings, "settings");
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
+        frame.add(lobby, "lobby");
 
         ImageIcon gameIcon = new ImageIcon("images/game-icon.png");
         frame.setIconImage(gameIcon.getImage());
@@ -135,6 +142,11 @@ public class Viewer {
         settings.updatePremiumButtonText();
     }
 
+    public void updateLobbyStats(Player player) {
+        lobby.setPlayer(player);
+        lobby.repaint();
+    }
+
     public void showMenu() {
         cardLayout.show(frame.getContentPane(), "menu");
     }
@@ -153,6 +165,11 @@ public class Viewer {
         }
         showTwoCanvas();
 
+    }
+
+    public void showBattleLobby() {
+              System.out.println("In lobby");
+        cardLayout.show(frame.getContentPane(), "lobby");
     }
 
     public String showSoloEndLevelDialog() {
