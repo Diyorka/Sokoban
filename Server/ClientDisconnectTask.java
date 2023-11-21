@@ -1,8 +1,6 @@
-import java.io.IOException;
 import java.nio.channels.SocketChannel;
-import java.util.concurrent.TimeUnit;
 
-public class ClientDisconnectTask extends Thread{
+public class ClientDisconnectTask extends Thread {
     private final SocketChannel CLIENT_CHANNEL;
     private final int CLIENT_CHANNEL_INDEX;
     private ServerController controller;

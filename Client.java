@@ -1,19 +1,7 @@
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.io.IOException;
-
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.io.InputStreamReader;
-
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-
-import java.util.Scanner;
 
 public class Client {
     private static final String SERVER_ADDRESS = "localhost";
@@ -78,15 +66,15 @@ public class Client {
         return levelContent;
     }
 
-    public  String loadRandomLevelFromServer() {
+    public String loadRandomLevelFromServer() {
         String levelContent = null;
-        if(socketChannel != null) {
+        if (socketChannel != null) {
             levelContent = getDataFromServer();
         }
         return levelContent;
     }
 
-    public  String loadEnemyLevelFromServer() {
+    public String loadEnemyLevelFromServer() {
         String levelContent = null;
         if (socketChannel != null) {
             levelContent = getDataFromServer();

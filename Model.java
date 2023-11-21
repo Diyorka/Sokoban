@@ -1,5 +1,5 @@
 import java.io.File;
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class Model implements GeneralModel {
     private DatabaseService dbService;
@@ -32,9 +32,8 @@ public class Model implements GeneralModel {
     private final Music defaultMusic;
     private Music currentMusic;
 
-    private boolean isMusicPlayed = false;
+    private boolean isMusicPlayed;
     private boolean isSoundOn = true;
-
 
     private String move;
     private int playerPosX;
@@ -65,6 +64,7 @@ public class Model implements GeneralModel {
         dbService = new DatabaseService();
         player = dbService.getPlayerInfo("Stive");
 
+        isMusicPlayed = false;
 
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
@@ -73,9 +73,9 @@ public class Model implements GeneralModel {
 
         backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
         defaultMusic = new Music(new File("music/defaultMusic.wav"));
-        defaultMusic.playLoop();
-        defaultMusic.setVolume(0.10f);
-        currentMusic = defaultMusic;
+        backgroundSnowMusic.playLoop();
+        backgroundSnowMusic.setVolume(0.75f);
+        currentMusic = backgroundSnowMusic;
 
 
         playerPosX = -1;
@@ -152,6 +152,8 @@ public class Model implements GeneralModel {
         wonSound.play();
         int passedLevel = levels.getCurrentLevel();
         dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
+        viewer.getLevelChooser().updateCoins(passedLevel, collectedCoins);
+        player.getCoinsOnLevels().put(passedLevel, collectedCoins);
         collectedCoins = 0;
     }
 
@@ -179,13 +181,20 @@ public class Model implements GeneralModel {
         return player.getNickname();
     }
 
-
     public int[][] getDesktop() {
         return map;
     }
 
     public Music getCurrentMusic() {
         return currentMusic;
+    }
+
+    public void playCurrentMusic() {
+        if (currentMusic != null) {
+            stopMusic();
+            currentMusic.playLoop();
+            isMusicPlayed = true;
+        }
     }
 
     public void playDefaultMusic() {
@@ -215,8 +224,7 @@ public class Model implements GeneralModel {
         if (backgroundSnowMusic != null) {
             backgroundSnowMusic.stop();
         }
-
-        currentMusic = null;
+        isMusicPlayed = false;
     }
 
     public void stopAllSounds() {
@@ -229,6 +237,20 @@ public class Model implements GeneralModel {
 
     public boolean isMusicPlayed() {
         return isMusicPlayed;
+    }
+
+    public void startNotPassedLevel() {
+        HashMap<Integer, Integer> passedLevels = player.getCoinsOnLevels();
+        int level = 1;
+
+        for(int i = 1; i < 10; i++){
+            if(!passedLevels.containsKey(i)) {
+                level = i;
+                break;
+            }
+        }
+
+        changeLevel("Level " + level);
     }
 
     public void changeLevel(String command) {

@@ -1,8 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
-import javax.swing.JPanel;
 import java.awt.CardLayout;
-import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
@@ -19,6 +17,7 @@ public class Viewer {
     private CanvasForTwoPlayers enemyCanvas;
     private JSplitPane splitPane;
     private SettingsPanel settings;
+    private LevelChooser levelChooser;
     private JFrame frame;
     private CardLayout cardLayout;
     private Model model;
@@ -35,7 +34,7 @@ public class Viewer {
         myCanvas.addKeyListener(controller);
 
         enemyCanvas = new CanvasForTwoPlayers(enemyModel, null, "enemyCanvas");
-        LevelChooser levelChooser = new LevelChooser(this, model);
+        levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
 
@@ -71,6 +70,10 @@ public class Viewer {
 
     public Model getModel() {
         return model;
+    }
+
+    public LevelChooser getLevelChooser() {
+        return levelChooser;
     }
 
     public EnemyModel getEnemyModel() {
@@ -144,7 +147,7 @@ public class Viewer {
 
     public void showCanvas(String gameType) {
         System.out.println("in show canvas gameType" + gameType);
-        if(gameType.equals("alone")) {
+        if (gameType.equals("alone")) {
             showCanvas();
             return;
         }
@@ -163,7 +166,7 @@ public class Viewer {
 
         int userChoise = javax.swing.JOptionPane.showOptionDialog(
                 null, "You completed level " + levelNumber +
-                "!\nTotal moves: " + totalMoves, "Congratulations!",
+                        "!\nTotal moves: " + totalMoves, "Congratulations!",
                 javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[1]);
 
@@ -208,12 +211,13 @@ public class Viewer {
 
         return false;
     }
+
     public void showEnemyGiveUpDialog() {
         int totalMoves = model.getTotalMoves();
         String[] options = {"Exit to Menu"};
         int result = JOptionPane.showOptionDialog(
                 null, "Your opponent resigned, you won ! Your total moves " + totalMoves, "Congratulations !",
-                JOptionPane.DEFAULT_OPTION,  JOptionPane.INFORMATION_MESSAGE,
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
 
@@ -230,17 +234,17 @@ public class Viewer {
 
         String winner = "It's a tie!";
 
-        if(absoluteWinner == null) {
+        if (absoluteWinner == null) {
             winner = (myTotalMoves < enemyTotalMoves) ? "You won !" : "You lose";
         } else {
             winner = absoluteWinner.equals("me") ? "You won !" : "You lose";
         }
 
 
-       String message = String.format("Your total moves: %d\nEnemy total moves: %d\n%s",
-               myTotalMoves, enemyTotalMoves, winner);
+        String message = String.format("Your total moves: %d\nEnemy total moves: %d\n%s",
+                myTotalMoves, enemyTotalMoves, winner);
 
-      JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
