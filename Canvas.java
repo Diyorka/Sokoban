@@ -5,8 +5,6 @@ import java.awt.Image;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.awt.FontFormatException;
@@ -131,7 +129,7 @@ public class Canvas extends JPanel {
 
         int[][] desktop = model.getDesktop();
 
-        if(desktop != null) {
+        if (desktop != null) {
             rotateGamer();
             drawDesktop(g, desktop);
         } else {
@@ -180,7 +178,7 @@ public class Canvas extends JPanel {
         int offset = 0;
 
         for (int i = 0; i < desktop.length; i++) {
-          boolean isFirstWallFound = false;
+            boolean isFirstWallFound = false;
 
             for (int j = 0; j < desktop[i].length; j++) {
                 if (!isFirstWallFound && desktop[i][j] == 2) {
@@ -189,24 +187,24 @@ public class Canvas extends JPanel {
 
                 if (isFirstWallFound) {
                     if (desktop[i][j] == 0) {
-                      g.drawImage(groundImage, x, y, null);
+                        g.drawImage(groundImage, x, y, null);
                     } else if (desktop[i][j] == 1) {
-                      g.drawImage(playerImage, x, y, null);
+                        g.drawImage(playerImage, x, y, null);
                     } else if (desktop[i][j] == 2) {
-                      g.drawImage(wallImage, x, y, null);
+                        g.drawImage(wallImage, x, y, null);
                     } else if (desktop[i][j] == 3) {
-                      g.drawImage(boxImage, x, y, null);
+                        g.drawImage(boxImage, x, y, null);
                     } else if (desktop[i][j] == 4) {
-                      g.drawImage(targetImage, x, y, null);
+                        g.drawImage(targetImage, x, y, null);
                     } else if (desktop[i][j] == 5) {
-                      g.drawImage(coinImage, x, y, null);
+                        g.drawImage(coinImage, x, y, null);
                     }
                 }
                 x = x + width + offset;
-          }
+            }
 
-          x = start;
-          y = y + height + offset;
+            x = start;
+            y = y + height + offset;
         }
 
     }

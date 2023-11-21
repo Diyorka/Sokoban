@@ -34,7 +34,7 @@ public class TimerListener implements ActionListener {
         boolean isPlayerCompleteGame = canvasType.equals("enemyCanvas") ? enemyModel.getIsEnemyCompletedGame() : model.getIsPlayerCompleteGame();
         System.out.println(client.hasConnectionToServer());
         System.out.println(isPlayerCompleteGame);
-        if(client.hasConnectionToServer() && !isPlayerCompleteGame) {
+        if (client.hasConnectionToServer() && !isPlayerCompleteGame) {
             if (count > 0) {
                 label.setText(count + "s");
                 count--;
@@ -56,7 +56,7 @@ public class TimerListener implements ActionListener {
         timer.stop();
         canvasForTwoPlayers.removeTimer();
 
-        if(canvasType.equals("enemyCanvas")) { // if we set timer on enemyCanvas (we set disable our canvas )
+        if (canvasType.equals("enemyCanvas")) { // if we set timer on enemyCanvas (we set disable our canvas )
             viewer.enableMyCanvas();
             viewer.updateEnemyCanvas();
         }

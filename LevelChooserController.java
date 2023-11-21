@@ -13,7 +13,7 @@ public class LevelChooserController implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
 
-        switch(command) {
+        switch (command) {
             case "Level 1":
             case "Level 2":
             case "Level 3":

@@ -1,4 +1,3 @@
-// import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
 public class SocketPool {
@@ -6,8 +5,8 @@ public class SocketPool {
     private static final SocketChannel[] SOCKET_POOL = new SocketChannel[POOL_SIZE];
 
     public static int addSocketChannel(SocketChannel socketChannel) {
-        for(int i = 0; i < POOL_SIZE; i++) {
-            if(SOCKET_POOL[i] == null) {
+        for (int i = 0; i < POOL_SIZE; i++) {
+            if (SOCKET_POOL[i] == null) {
                 SOCKET_POOL[i] = socketChannel;
                 return i;
             }
@@ -17,7 +16,7 @@ public class SocketPool {
     }
 
     public static int removeSocketAt(int socketIndex) {
-        if(socketIndex >= POOL_SIZE || socketIndex < 0) {
+        if (socketIndex >= POOL_SIZE || socketIndex < 0) {
             return -1;
         }
         SOCKET_POOL[socketIndex] = null;

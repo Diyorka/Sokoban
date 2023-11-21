@@ -32,11 +32,11 @@ public class LevelChooser extends JPanel {
         int y = 375;
         font = getCustomFont(Font.PLAIN, 48);
 
-        for(int i = 0; i < collectedCoinsLabels.length; i++) {
+        for (int i = 0; i < collectedCoinsLabels.length; i++) {
             collectedCoinsLabels[i] = createLabel("0/2", x, y, 65, 50, font, Color.BLACK);
             collectedCoinsLabels[i].setHorizontalAlignment(SwingConstants.RIGHT);
             add(collectedCoinsLabels[i]);
-            if(i == 4) {
+            if (i == 4) {
                 y = 625;
                 x = 220;
             } else {
@@ -82,14 +82,14 @@ public class LevelChooser extends JPanel {
     public void initCoins() {
         HashMap<Integer, Integer> coinsPerLevels = model.getPlayer().getCoinsOnLevels();
 
-        for(int i = 0; i < collectedCoinsLabels.length; i++) {
-            int coins = coinsPerLevels.getOrDefault(i+1, 0);
+        for (int i = 0; i < collectedCoinsLabels.length; i++) {
+            int coins = coinsPerLevels.getOrDefault(i + 1, 0);
             collectedCoinsLabels[i].setText(coins + "/2");
         }
     }
 
     public void updateCoins(int level, int coins) {
-        if(level > 0 && level < 10) {
+        if (level > 0 && level < 10) {
             collectedCoinsLabels[level - 1].setText(coins + "/2");
         }
     }

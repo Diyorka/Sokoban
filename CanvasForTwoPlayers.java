@@ -1,22 +1,17 @@
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
-// import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import java.awt.Dimension;
-// import java.awt.AlphaComposite;
 
 public class CanvasForTwoPlayers extends JPanel {
     private Image playerImage;

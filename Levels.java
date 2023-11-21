@@ -32,35 +32,35 @@ public class Levels {
 
         switch (currentLevel) {
             case 1:
-            map = getFirstLevel();
-            break;
+                map = getFirstLevel();
+                break;
             case 2:
-            map = getSecondLevel();
-            break;
+                map = getSecondLevel();
+                break;
             case 3:
-            map = getThirdLevel();
-            break;
+                map = getThirdLevel();
+                break;
             case 4:
-            map = getFourthLevel();
-            break;
+                map = getFourthLevel();
+                break;
             case 5:
-            map = getFifthLevel();
-            break;
+                map = getFifthLevel();
+                break;
             case 6:
-            map = getSixthLevel();
-            break;
+                map = getSixthLevel();
+                break;
             case 7:
-            map = getSeventhLevel();
-            break;
+                map = getSeventhLevel();
+                break;
             case 8:
-            map = getEighthLevel();
-            break;
+                map = getEighthLevel();
+                break;
             case 9:
-            map = getNinthLevel();
-            break;
+                map = getNinthLevel();
+                break;
             default:
-            map = getFirstLevel();
-            currentLevel = 1;
+                map = getFirstLevel();
+                currentLevel = 1;
         }
 
         return map;
@@ -72,46 +72,46 @@ public class Levels {
 
     private int[][] getFirstLevel() {
         return new int[][]
-        {
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 1, 3, 0, 5, 4, 0, 2},
-            {2, 0, 0, 0, 3, 0, 5, 4, 0, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-        };
+                {
+                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 1, 3, 0, 5, 4, 0, 2},
+                        {2, 0, 0, 0, 3, 0, 5, 4, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+                };
     }
 
     private int[][] getSecondLevel() {
         return new int[][]
-        {
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-            {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
-            {2, 4, 3, 5, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 1, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 0, 0, 5, 3, 4, 2},
-            {2, 0, 0, 0, 0, 0, 4, 3, 0, 2},
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-        };
+                {
+                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                        {2, 0, 3, 4, 0, 0, 0, 0, 0, 2},
+                        {2, 4, 3, 5, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 1, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 5, 3, 4, 2},
+                        {2, 0, 0, 0, 0, 0, 4, 3, 0, 2},
+                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+                };
     }
 
     private int[][] getThirdLevel() {
         return new int[][]
-        {
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 1, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 0, 5, 2, 0, 0, 2},
-            {2, 0, 2, 4, 3, 4, 0, 2, 0, 2},
-            {2, 0, 0, 5, 3, 2, 0, 2, 0, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-        };
+                {
+                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 1, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 0, 5, 2, 0, 0, 2},
+                        {2, 0, 2, 4, 3, 4, 0, 2, 0, 2},
+                        {2, 0, 0, 5, 3, 2, 0, 2, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 0, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+                };
     }
 
     private int[][] getFourthLevel() {
@@ -151,7 +151,7 @@ public class Levels {
         String levelContent = client.loadLevelFromServer(level);
         System.out.println(levelContent);
 
-        if(levelContent != null) {
+        if (levelContent != null) {
             return parseData(levelContent, 'A');
         }
 
@@ -159,7 +159,7 @@ public class Levels {
     }
 
     public int[][] getEnemyLevelFromServer() {
-        if(levelContent != null) {
+        if (levelContent != null) {
             return parseData(levelContent, 'A');
         }
         return null;
@@ -170,7 +170,7 @@ public class Levels {
         String[] array = levelData.split(";");
         levelContent = array[2];
         System.out.println(levelData);
-        if(levelData != null) {
+        if (levelData != null) {
             return levelData;
         }
         array = null;
@@ -181,7 +181,7 @@ public class Levels {
         String levelContent = client.loadRandomLevelFromServer();
         System.out.println(levelContent);
 
-        if(levelContent != null) {
+        if (levelContent != null) {
             return parseData(levelContent, 'A');
         }
 
@@ -202,9 +202,9 @@ public class Levels {
             for (String line : lines) {
                 matcher = compiledPattern.matcher(line);
 
-                if(matcher.find()) {
+                if (matcher.find()) {
                     data.append(matcher.group());
-                    while(matcher.find()){
+                    while (matcher.find()) {
                         data.append(matcher.group());
                     }
                     data.append('\n');

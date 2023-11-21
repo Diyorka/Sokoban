@@ -1,5 +1,4 @@
 import java.io.File;
-import java.util.Arrays;
 
 public class Model implements GeneralModel {
     private DatabaseService dbService;
@@ -15,10 +14,10 @@ public class Model implements GeneralModel {
     private final int CHECK = 4;
     private final int COIN = 5;
 
-    private final int LEFT =  37; //arrow left keycode
+    private final int LEFT = 37; //arrow left keycode
     private final int RIGHT = 39; //arrow right keycode
     private final int UP = 38; //arrow up keycode
-    private final int DOWN =  40; //arrow down keycode
+    private final int DOWN = 40; //arrow down keycode
     private final int RESTART = 82; //'r' button keycode
     private final int EXIT = 27; //'esc' button keycode
 
@@ -34,7 +33,6 @@ public class Model implements GeneralModel {
 
     private boolean isMusicPlayed;
     private boolean isSoundOn = true;
-
 
     private String move;
     private int playerPosX;
@@ -106,15 +104,15 @@ public class Model implements GeneralModel {
             move = "Left";
             moveLeft();
 
-        } else if(keyMessage == RIGHT) {
+        } else if (keyMessage == RIGHT) {
             move = "Right";
             moveRight();
 
-        } else if(keyMessage == UP) {
+        } else if (keyMessage == UP) {
             move = "Up";
             moveTop();
 
-        } else if(keyMessage == DOWN) {
+        } else if (keyMessage == DOWN) {
             move = "Down";
             moveBot();
 
@@ -124,13 +122,13 @@ public class Model implements GeneralModel {
         viewer.update();// when play alone
         viewer.updateMyCanvas();// when play with enemy
 
-        if(isWon()) {
+        if (isWon()) {
             System.out.println("YOU WON ");
             doComplitingAction();
             if (gameType.equals("alone")) {
                 askSoloPlayerFurtherAction();
-            } else if (gameType.equals("battle")){
-                if(isPlayerFirstCompletedGame) {
+            } else if (gameType.equals("battle")) {
+                if (isPlayerFirstCompletedGame) {
                     askOnlinePlayerFurtherAction();
                 } else {
                     client.sendDataToServer("complete");// if we complete game but not first
@@ -177,7 +175,7 @@ public class Model implements GeneralModel {
         return player.getNickname();
     }
 
-    public int[][] getDesktop(){
+    public int[][] getDesktop() {
         return map;
     }
 
@@ -186,11 +184,11 @@ public class Model implements GeneralModel {
     }
 
     public void playCurrentMusic() {
-    if (currentMusic != null) {
-        stopMusic();
-        currentMusic.playLoop();
-        isMusicPlayed = true;
-      }
+        if (currentMusic != null) {
+            stopMusic();
+            currentMusic.playLoop();
+            isMusicPlayed = true;
+        }
     }
 
     public void playDefaultMusic() {
@@ -242,9 +240,9 @@ public class Model implements GeneralModel {
         map = levels.getCurrentMap();
         System.out.println("Creating duplicate");
         map2 = new int[map.length][];
-        for(int i = 0; i < map.length; i++) {
+        for (int i = 0; i < map.length; i++) {
             map2[i] = new int[map[i].length];
-            for(int j = 0; j < map[i].length; j++) {
+            for (int j = 0; j < map[i].length; j++) {
                 map2[i][j] = map[i][j];
             }
         }
@@ -274,8 +272,8 @@ public class Model implements GeneralModel {
     public void restart() {
         collectedCoins = 0;
 
-        for(int i = 0; i < map2.length; i++) {
-            for(int j = 0; j < map2[i].length; j++) {
+        for (int i = 0; i < map2.length; i++) {
+            for (int j = 0; j < map2[i].length; j++) {
                 map[i][j] = map2[i][j];
             }
         }
@@ -364,7 +362,7 @@ public class Model implements GeneralModel {
             // scanMap();
             // viewer.update();
             getNextLevel();
-        } else if(playerChoice.equals("Back to menu")){
+        } else if (playerChoice.equals("Back to menu")) {
             map = null;
             client.closeClient();
             viewer.showMenu();
@@ -382,7 +380,7 @@ public class Model implements GeneralModel {
             client.sendDataToServer("You have 30 seconds");
             viewer.getEnemyCanvas().setTimer(client, viewer);
             viewer.updateEnemyCanvas();
-        } else if(playerChoice.equals("Give up")){
+        } else if (playerChoice.equals("Give up")) {
             giveUp();
         } else {
             map = null;
@@ -396,6 +394,7 @@ public class Model implements GeneralModel {
         map = null;
         viewer.showMenu();
     }
+
     private void scanMap() {
         deleteMapValues();
 
@@ -444,17 +443,17 @@ public class Model implements GeneralModel {
 
     private boolean allWallSidesValid() {
         return isTopWallsCorrect() &&
-               isLeftWallsCorrect() &&
-               isRightWallsCorrect() &&
-               isDownWallsCorrect();
+                isLeftWallsCorrect() &&
+                isRightWallsCorrect() &&
+                isDownWallsCorrect();
     }
 
-    private boolean isLeftWallsCorrect(){
+    private boolean isLeftWallsCorrect() {
         int wallX = -1;
         int wallY = -1;
         int prevWallX = -1;
         int prevWallY = -1;
-        for(int i = 0; i < map.length; i++) {
+        for (int i = 0; i < map.length; i++) {
             boolean wallFound = false;
             for (int j = 0; j < map[i].length; j++) {
                 if (map[i][j] == 2) {
@@ -516,7 +515,7 @@ public class Model implements GeneralModel {
     private boolean isTopWallsCorrect() {
         boolean wallFound = false;
 
-        for(int i = 0; i < map[0].length; i++) {
+        for (int i = 0; i < map[0].length; i++) {
             if ((map[0][i] == 2) && !wallFound) {
                 wallFound = true;
             } else if ((map[0][i] != 2) && wallFound) {
@@ -531,7 +530,7 @@ public class Model implements GeneralModel {
     private boolean isDownWallsCorrect() {
         boolean wallFound = false;
         int lastArrayIndex = map.length - 1;
-        for(int i = 0; i < map[lastArrayIndex].length; i++) {
+        for (int i = 0; i < map[lastArrayIndex].length; i++) {
             if ((map[lastArrayIndex][i] == 2) && !wallFound) {
                 wallFound = true;
             } else if ((map[lastArrayIndex][i] != 2) && wallFound) {
@@ -593,29 +592,29 @@ public class Model implements GeneralModel {
     }
 
     private void returnCheck() {
-       for (int i = 0; i < checksPos.length; i++) {
-           int checkPosY = checksPos[i][0];
-           int checkPosX = checksPos[i][1];
-           if (map[checkPosY][checkPosX] == SPACE) {
-               map[checkPosY][checkPosX] = CHECK;
-               break;
-           }
-       }
+        for (int i = 0; i < checksPos.length; i++) {
+            int checkPosY = checksPos[i][0];
+            int checkPosX = checksPos[i][1];
+            if (map[checkPosY][checkPosX] == SPACE) {
+                map[checkPosY][checkPosX] = CHECK;
+                break;
+            }
+        }
 
-       for (int i = 0; i < coinsPos.length; i++) {
-           int coinsPosY = coinsPos[i][0];
-           int coinsPosX = coinsPos[i][1];
-           boolean coinsValid = coinsPosY != -1 && coinsPosX != -1;
+        for (int i = 0; i < coinsPos.length; i++) {
+            int coinsPosY = coinsPos[i][0];
+            int coinsPosX = coinsPos[i][1];
+            boolean coinsValid = coinsPosY != -1 && coinsPosX != -1;
 
-           if (coinsValid && map[coinsPosY][coinsPosX] == SPACE) {
-               map[coinsPosY][coinsPosX] = COIN;
-               break;
-           } else if (coinsValid && map[coinsPosY][coinsPosX] == BOX) {
-              coinsPos[i][0] = -1;
-              coinsPos[i][1] = -1;
-           }
-       }
-   }
+            if (coinsValid && map[coinsPosY][coinsPosX] == SPACE) {
+                map[coinsPosY][coinsPosX] = COIN;
+                break;
+            } else if (coinsValid && map[coinsPosY][coinsPosX] == BOX) {
+                coinsPos[i][0] = -1;
+                coinsPos[i][1] = -1;
+            }
+        }
+    }
 
     private void moveLeft() {
         if ((map[playerPosY][playerPosX - 1] == WALL)) {
@@ -628,7 +627,7 @@ public class Model implements GeneralModel {
         }
 
         if (map[playerPosY][playerPosX - 1] == BOX) {
-            if(map[playerPosY][playerPosX - 2] == COIN) {
+            if (map[playerPosY][playerPosX - 2] == COIN) {
                 coinSound.play();
                 collectedCoins++;
             }
@@ -640,7 +639,7 @@ public class Model implements GeneralModel {
             map[playerPosY][playerPosX - 2] = BOX;
         }
 
-        if(gameType.equals("battle")) {
+        if (gameType.equals("battle")) {
             System.out.println("Left");
             client.sendDataToServer("Left");
         }
@@ -662,7 +661,7 @@ public class Model implements GeneralModel {
         }
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
-            if(map[playerPosY][playerPosX + 2] == COIN) {
+            if (map[playerPosY][playerPosX + 2] == COIN) {
                 coinSound.play();
                 collectedCoins++;
             }
@@ -674,7 +673,7 @@ public class Model implements GeneralModel {
             map[playerPosY][playerPosX + 2] = BOX;
         }
 
-        if(gameType.equals("battle")) {
+        if (gameType.equals("battle")) {
             System.out.println("Right");
             client.sendDataToServer("Right");
         }
@@ -697,7 +696,7 @@ public class Model implements GeneralModel {
         }
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
-            if(map[playerPosY - 2][playerPosX] == COIN) {
+            if (map[playerPosY - 2][playerPosX] == COIN) {
                 coinSound.play();
                 collectedCoins++;
             }
@@ -709,7 +708,7 @@ public class Model implements GeneralModel {
             map[playerPosY - 2][playerPosX] = BOX;
         }
 
-        if(gameType.equals("battle")) {
+        if (gameType.equals("battle")) {
             System.out.println("Up");
             client.sendDataToServer("Up");
         }
@@ -732,7 +731,7 @@ public class Model implements GeneralModel {
         }
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
-            if(map[playerPosY + 2][playerPosX] == COIN) {
+            if (map[playerPosY + 2][playerPosX] == COIN) {
                 coinSound.play();
                 collectedCoins++;
             }
@@ -744,7 +743,7 @@ public class Model implements GeneralModel {
             map[playerPosY + 2][playerPosX] = BOX;
         }
 
-        if(gameType.equals("battle")) {
+        if (gameType.equals("battle")) {
             System.out.println("Down");
             client.sendDataToServer("Down");
         }

@@ -6,8 +6,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import java.io.File;
-import java.io.IOException;
 import java.awt.Image;
 
 public class Controller implements KeyListener, ActionListener, MouseListener {
@@ -29,15 +27,17 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
         model.doAction(key);
     }
 
-    public void keyTyped(KeyEvent event) {}
+    public void keyTyped(KeyEvent event) {
+    }
 
-    public void keyReleased(KeyEvent event) {}
+    public void keyReleased(KeyEvent event) {
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        switch(command) {
+        switch (command) {
             case "Next level":
                 model.getNextLevel();
                 break;
@@ -49,8 +49,6 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
             case "Choose Level":
                 viewer.showLevelChooser();
                 break;
-            case "Sound Off":
-
             case "Restart":
                 model.restart();
                 viewer.showCanvas();
@@ -67,16 +65,16 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
         if (isSoundOn) {
             model.stopMusic();
             isSoundOn = false;
-            setIconAndResize(label, "/images/sound-off.png", 80, 80);
+            setIconAndResize(label, "images/sound-off.png", 80, 80);
         } else {
             isSoundOn = true;
             model.playCurrentMusic();
-            setIconAndResize(label, "/images/sound-on.png", 80, 80);
+            setIconAndResize(label, "images/sound-on.png", 80, 80);
         }
     }
 
     private void setIconAndResize(JLabel label, String imagePath, int width, int height) {
-        ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
+        ImageIcon icon = new ImageIcon(imagePath);
         Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         label.setIcon(scaledIcon);

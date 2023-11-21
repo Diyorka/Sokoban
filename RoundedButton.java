@@ -1,5 +1,14 @@
 import javax.swing.JButton;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.BasicStroke;
+import java.awt.GraphicsEnvironment;
+import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
 
@@ -10,7 +19,6 @@ public class RoundedButton extends JButton {
         this.buttonText = buttonText;
 
         setBackground(new Color(200, 130, 90));
-//        setBackground(new Color(76, 0, 153));
         setFocusable(false);
 
         Dimension size = getPreferredSize();

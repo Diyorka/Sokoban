@@ -34,7 +34,7 @@ public class MenuController implements ActionListener {
                 System.out.println("play with enemy");
                 client = new Client(viewer, "battle");
 
-                if(client.hasConnectionToServer()) {
+                if (client.hasConnectionToServer()) {
                     model.setClient(client);
                     model.changeLevel();
 
@@ -52,7 +52,7 @@ public class MenuController implements ActionListener {
                 viewer.showSettings();
                 break;
             case "Exit":
-                if(client != null) {
+                if (client != null) {
                     client.closeClient();
                 }
 

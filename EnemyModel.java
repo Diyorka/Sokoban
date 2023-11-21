@@ -1,6 +1,4 @@
-import java.io.File;
-
-public class EnemyModel implements GeneralModel{
+public class EnemyModel implements GeneralModel {
     private DatabaseService dbService;
     private Player player;
     private Viewer viewer;
@@ -13,10 +11,10 @@ public class EnemyModel implements GeneralModel{
     private final int CHECK = 4;
     private final int COIN = 5;
 
-    private final int LEFT =  37; //arrow left keycode
+    private final int LEFT = 37; //arrow left keycode
     private final int RIGHT = 39; //arrow right keycode
     private final int UP = 38; //arrow up keycode
-    private final int DOWN =  40; //arrow down keycode
+    private final int DOWN = 40; //arrow down keycode
     private final int RESTART = 82; //'r' button keycode
     private final int EXIT = 27; //'esc' button keycode
 
@@ -54,13 +52,14 @@ public class EnemyModel implements GeneralModel{
     public boolean getIsEnemyCompletedGame() {
         return isEnemyCompletedGame;
     }
+
     public void setClient(Client client) {
         isEnemyCompletedGame = false;
         levelList = new Levels(client);
         this.client = client;
     }
 
-    public int[][] getDesktop(){
+    public int[][] getDesktop() {
         return map;
     }
 
@@ -78,13 +77,13 @@ public class EnemyModel implements GeneralModel{
         if (action.equals("Left")) {
             move = "Left";
             moveLeft();
-        } else if(action.equals("Right")) {
+        } else if (action.equals("Right")) {
             move = "Right";
             moveRight();
-        } else if(action.equals("Up")) {
+        } else if (action.equals("Up")) {
             move = "Up";
             moveTop();
-        } else if(action.equals("Down")) {
+        } else if (action.equals("Down")) {
             move = "Down";
             moveBot();
         } else if (action.equals("Given up")) {
@@ -117,8 +116,8 @@ public class EnemyModel implements GeneralModel{
         if (map != null) {
             scanMap();
             System.out.println("getting enemy map >>> ");
-            for(int i = 0; i < map.length; i++) {
-                for(int j = 0; j < map[i].length; j++) {
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[i].length; j++) {
                     System.out.print(map[i][j] + " ");
                 }
                 System.out.println();
@@ -258,29 +257,29 @@ public class EnemyModel implements GeneralModel{
     }
 
     private void returnCheck() {
-       for (int i = 0; i < checksPos.length; i++) {
-           int checkPosY = checksPos[i][0];
-           int checkPosX = checksPos[i][1];
-           if (map[checkPosY][checkPosX] == SPACE) {
-               map[checkPosY][checkPosX] = CHECK;
-               break;
-           }
-       }
+        for (int i = 0; i < checksPos.length; i++) {
+            int checkPosY = checksPos[i][0];
+            int checkPosX = checksPos[i][1];
+            if (map[checkPosY][checkPosX] == SPACE) {
+                map[checkPosY][checkPosX] = CHECK;
+                break;
+            }
+        }
 
-       for (int i = 0; i < coinsPos.length; i++) {
-           int coinsPosY = coinsPos[i][0];
-           int coinsPosX = coinsPos[i][1];
-           boolean coinsValid = coinsPosY != -1 && coinsPosX != -1;
+        for (int i = 0; i < coinsPos.length; i++) {
+            int coinsPosY = coinsPos[i][0];
+            int coinsPosX = coinsPos[i][1];
+            boolean coinsValid = coinsPosY != -1 && coinsPosX != -1;
 
-           if (coinsValid && map[coinsPosY][coinsPosX] == SPACE) {
-               map[coinsPosY][coinsPosX] = COIN;
-               break;
-           } else if (coinsValid && map[coinsPosY][coinsPosX] == BOX) {
-              coinsPos[i][0] = -1;
-              coinsPos[i][1] = -1;
-           }
-       }
-   }
+            if (coinsValid && map[coinsPosY][coinsPosX] == SPACE) {
+                map[coinsPosY][coinsPosX] = COIN;
+                break;
+            } else if (coinsValid && map[coinsPosY][coinsPosX] == BOX) {
+                coinsPos[i][0] = -1;
+                coinsPos[i][1] = -1;
+            }
+        }
+    }
 
     private void moveLeft() {
         if ((map[playerPosY][playerPosX - 1] == WALL)) {
@@ -293,7 +292,7 @@ public class EnemyModel implements GeneralModel{
         }
 
         if (map[playerPosY][playerPosX - 1] == BOX) {
-            if(map[playerPosY][playerPosX - 2] == COIN) {
+            if (map[playerPosY][playerPosX - 2] == COIN) {
                 collectedCoins++;
             }
             map[playerPosY][playerPosX - 1] = SPACE;
@@ -322,7 +321,7 @@ public class EnemyModel implements GeneralModel{
         }
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
-            if(map[playerPosY][playerPosX + 2] == COIN) {
+            if (map[playerPosY][playerPosX + 2] == COIN) {
                 collectedCoins++;
             }
             map[playerPosY][playerPosX + 1] = SPACE;
@@ -351,7 +350,7 @@ public class EnemyModel implements GeneralModel{
         }
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
-            if(map[playerPosY - 2][playerPosX] == COIN) {
+            if (map[playerPosY - 2][playerPosX] == COIN) {
                 collectedCoins++;
             }
             map[playerPosY - 1][playerPosX] = SPACE;
@@ -380,7 +379,7 @@ public class EnemyModel implements GeneralModel{
         }
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
-            if(map[playerPosY + 2][playerPosX] == COIN) {
+            if (map[playerPosY + 2][playerPosX] == COIN) {
                 collectedCoins++;
             }
             map[playerPosY + 1][playerPosX] = SPACE;
