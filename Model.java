@@ -72,9 +72,9 @@ public class Model implements GeneralModel {
 
         backgroundSnowMusic = new Music(new File("music/backgroundSnowMusic.wav"));
         defaultMusic = new Music(new File("music/defaultMusic.wav"));
-        defaultMusic.playLoop();
-        defaultMusic.setVolume(0.75f);
-        currentMusic = defaultMusic;
+        backgroundSnowMusic.playLoop();
+        backgroundSnowMusic.setVolume(0.75f);
+        currentMusic = backgroundSnowMusic;
 
 
         playerPosX = -1;
@@ -149,6 +149,7 @@ public class Model implements GeneralModel {
         wonSound.play();
         int passedLevel = levels.getCurrentLevel();
         dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
+        viewer.getLevelChooser().updateCoins(passedLevel, collectedCoins);
         collectedCoins = 0;
     }
 
@@ -175,7 +176,6 @@ public class Model implements GeneralModel {
     public String getNickName() {
         return player.getNickname();
     }
-
 
     public int[][] getDesktop(){
         return map;
