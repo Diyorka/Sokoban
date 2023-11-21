@@ -35,6 +35,8 @@ public class Model implements GeneralModel {
     private boolean isMusicPlayed;
     private boolean isSoundOn = true;
 
+    private boolean isMoveBack;
+
     private String move;
     private int playerPosX;
     private int playerPosY;
@@ -65,6 +67,7 @@ public class Model implements GeneralModel {
         player = dbService.getPlayerInfo("Stive");
 
         isMusicPlayed = false;
+        isMoveBack = false;
 
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
@@ -243,8 +246,8 @@ public class Model implements GeneralModel {
         HashMap<Integer, Integer> passedLevels = player.getCoinsOnLevels();
         int level = 1;
 
-        for(int i = 1; i < 10; i++){
-            if(!passedLevels.containsKey(i)) {
+        for (int i = 1; i < 10; i++) {
+            if (!passedLevels.containsKey(i)) {
                 level = i;
                 break;
             }
@@ -304,16 +307,20 @@ public class Model implements GeneralModel {
 
     public void moveBack() {
         map = lastMoveMap;
-        int move = totalMoves;
+
         int coins = coinsCount;
 
         if (map != null) {
 
             scanMapBackMove();
-            totalMoves = move - 1;
-            if (move == 0) {
-                totalMoves = 0;
+
+            if (isMoveBack) {
+                totalMoves--;
+                isMoveBack = false;
+            } else {
+
             }
+
             coinsCount = coins;
             returnCheck();
         }
@@ -710,10 +717,12 @@ public class Model implements GeneralModel {
         map[playerPosY][playerPosX] = SPACE;
         playerPosX -= 1;
         totalMoves++;
+        isMoveBack = true;
     }
 
     private void moveRight() {
         if ((map[playerPosY][playerPosX + 1] == WALL)) {
+
             System.out.println("Impossible move to the right"); //debug
             return;
         }
@@ -746,6 +755,7 @@ public class Model implements GeneralModel {
         map[playerPosY][playerPosX] = SPACE;
         playerPosX += 1;
         totalMoves++;
+        isMoveBack = true;
     }
 
     private void moveTop() {
@@ -782,6 +792,7 @@ public class Model implements GeneralModel {
         map[playerPosY][playerPosX] = SPACE;
         playerPosY -= 1;
         totalMoves++;
+        isMoveBack = true;
     }
 
     private void moveBot() {
@@ -818,6 +829,8 @@ public class Model implements GeneralModel {
         map[playerPosY][playerPosX] = SPACE;
         playerPosY += 1;
         totalMoves++;
+        isMoveBack = true;
+
     }
 
     private boolean canMoveBoxToLeft() {
