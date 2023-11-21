@@ -19,6 +19,7 @@ public class Viewer {
     private CanvasForTwoPlayers enemyCanvas;
     private JSplitPane splitPane;
     private SettingsPanel settings;
+    private LevelChooser levelChooser;
     private JFrame frame;
     private CardLayout cardLayout;
     private Model model;
@@ -35,7 +36,7 @@ public class Viewer {
         myCanvas.addKeyListener(controller);
 
         enemyCanvas = new CanvasForTwoPlayers(enemyModel, null, "enemyCanvas");
-        LevelChooser levelChooser = new LevelChooser(this, model);
+        levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
 
@@ -71,6 +72,10 @@ public class Viewer {
 
     public Model getModel() {
         return model;
+    }
+
+    public LevelChooser getLevelChooser() {
+        return levelChooser;
     }
 
     public EnemyModel getEnemyModel() {
