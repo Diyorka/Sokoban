@@ -149,6 +149,7 @@ public class Model implements GeneralModel {
         int passedLevel = levels.getCurrentLevel();
         dbService.writeCoins(player.getNickname(), passedLevel, collectedCoins);
         viewer.getLevelChooser().updateCoins(passedLevel, collectedCoins);
+        player.getCoinsOnLevels().put(passedLevel, collectedCoins);
         collectedCoins = 0;
     }
 
