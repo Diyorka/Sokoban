@@ -17,11 +17,8 @@ public class Viewer {
     private CanvasForTwoPlayers enemyCanvas;
     private JSplitPane splitPane;
     private SettingsPanel settings;
-<<<<<<< HEAD
     private BattleLobbyPanel lobby;
-=======
     private LevelChooser levelChooser;
->>>>>>> 86c4471ce24b89e4aded3ad6f1982fd05d99dd58
     private JFrame frame;
     private CardLayout cardLayout;
     private Model model;
