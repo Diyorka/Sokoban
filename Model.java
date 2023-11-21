@@ -37,6 +37,8 @@ public class Model implements GeneralModel {
 
     private boolean isMoveBack;
 
+    private boolean isCoinBackOfCollected;
+
     private String move;
     private int playerPosX;
     private int playerPosY;
@@ -68,6 +70,7 @@ public class Model implements GeneralModel {
 
         isMusicPlayed = false;
         isMoveBack = false;
+        isCoinBackOfCollected = false;
 
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
@@ -306,26 +309,25 @@ public class Model implements GeneralModel {
     }
 
     public void moveBack() {
-        map = lastMoveMap;
 
-        int coins = coinsCount;
-
-        if (map != null) {
-
-            scanMapBackMove();
-
-            if (isMoveBack) {
-                totalMoves--;
-                isMoveBack = false;
-            } else {
-
-            }
-
-            coinsCount = coins;
-            returnCheck();
+        if (map == null || lastMoveMap == null) {
+            return;
         }
 
+        map = lastMoveMap;
+        scanMapBackMove();
 
+        if (isMoveBack) {
+            totalMoves--;
+            isMoveBack = false;
+        }
+        if (isCoinBackOfCollected) {
+            collectedCoins--;
+            isCoinBackOfCollected = false;
+        }
+
+        returnCheck();
+        
     }
 
     private void saveLastMove() {
@@ -473,9 +475,7 @@ public class Model implements GeneralModel {
     }
 
     private void scanMapBackMove() {
-
-        if (!allWallSidesValid()) {
-            map = null;
+        if (lastMoveMap == null) {
             return;
         }
         setMapValues();
@@ -489,6 +489,7 @@ public class Model implements GeneralModel {
         totalMoves = 0;
         coinsCount = 0;
         collectedCoins = 0;
+        lastMoveMap = null;
     }
 
     private void setMapValues() {
@@ -694,11 +695,12 @@ public class Model implements GeneralModel {
             return;
         }
         saveLastMove();
-
+        isCoinBackOfCollected = false;
         if (map[playerPosY][playerPosX - 1] == BOX) {
             if (map[playerPosY][playerPosX - 2] == COIN) {
                 coinSound.play();
                 collectedCoins++;
+                isCoinBackOfCollected = true;
             }
             map[playerPosY][playerPosX - 1] = SPACE;
 
@@ -731,11 +733,13 @@ public class Model implements GeneralModel {
             return;
         }
         saveLastMove();
+        isCoinBackOfCollected = false;
 
         if (map[playerPosY][playerPosX + 1] == BOX) {
             if (map[playerPosY][playerPosX + 2] == COIN) {
                 coinSound.play();
                 collectedCoins++;
+                isCoinBackOfCollected = true;
             }
             map[playerPosY][playerPosX + 1] = SPACE;
 
@@ -768,11 +772,13 @@ public class Model implements GeneralModel {
             return;
         }
         saveLastMove();
+        isCoinBackOfCollected = false;
 
         if (map[playerPosY - 1][playerPosX] == BOX) {
             if (map[playerPosY - 2][playerPosX] == COIN) {
                 coinSound.play();
                 collectedCoins++;
+                isCoinBackOfCollected = true;
             }
             map[playerPosY - 1][playerPosX] = SPACE;
 
@@ -805,11 +811,13 @@ public class Model implements GeneralModel {
             return;
         }
         saveLastMove();
+        isCoinBackOfCollected = false;
 
         if (map[playerPosY + 1][playerPosX] == BOX) {
             if (map[playerPosY + 2][playerPosX] == COIN) {
                 coinSound.play();
                 collectedCoins++;
+                isCoinBackOfCollected = true;
             }
             map[playerPosY + 1][playerPosX] = SPACE;
 
