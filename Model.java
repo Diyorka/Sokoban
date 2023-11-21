@@ -32,7 +32,7 @@ public class Model implements GeneralModel {
     private final Music defaultMusic;
     private Music currentMusic;
 
-    private boolean isMusicPlayed = false;
+    private boolean isMusicPlayed;
     private boolean isSoundOn = true;
 
 
@@ -63,6 +63,7 @@ public class Model implements GeneralModel {
         dbService = new DatabaseService();
         player = dbService.getPlayerInfo("Stive");
 
+        isMusicPlayed = false;
 
         wonSound = new Music(new File("music/won.wav"));
         boxInTargetSound = new Music(new File("music/target.wav"));
@@ -184,6 +185,14 @@ public class Model implements GeneralModel {
         return currentMusic;
     }
 
+    public void playCurrentMusic() {
+    if (currentMusic != null) {
+        stopMusic();
+        currentMusic.playLoop();
+        isMusicPlayed = true;
+      }
+    }
+
     public void playDefaultMusic() {
         if (defaultMusic != null) {
             stopMusic();
@@ -211,8 +220,7 @@ public class Model implements GeneralModel {
         if (backgroundSnowMusic != null) {
             backgroundSnowMusic.stop();
         }
-
-        currentMusic = null;
+        isMusicPlayed = false;
     }
 
     public void stopAllSounds() {
