@@ -4,10 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
- //TODO: Move to viewer
-// import javax.swing.ImageIcon;
-// import javax.swing.JLabel;
-// import java.awt.Image;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.JButton;
 
 public class Controller implements KeyListener, ActionListener, MouseListener {
 
@@ -50,7 +49,16 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
                 viewer.showLevelChooser();
                 break;
             case "Sound Off":
-                model.stopMusic();
+                JButton button = (JButton) e.getSource();
+                if (isSoundOn) {
+                    model.stopMusic();
+                    isSoundOn = false;
+                    setIconAndResize(button, "images/sound-off.png", 80, 80);
+                } else {
+                    isSoundOn = true;
+                    model.playCurrentMusic();
+                    setIconAndResize(button, "images/sound-on.png", 80, 80);
+                }
             case "MoveBack":
                 model.moveBack();
                 viewer.showCanvas();
@@ -69,26 +77,15 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
         int x = e.getPoint().x;
         int y = e.getPoint().y;
         model.doMouseAction(x, y);
-        //TODO: Move to viewer
-        // JLabel label = (JLabel) e.getSource();
-        // if (isSoundOn) {
-        //     model.stopMusic();
-        //     isSoundOn = false;
-        //     setIconAndResize(label, "images/sound-off.png", 80, 80);
-        // } else {
-        //     isSoundOn = true;
-        //     model.playCurrentMusic();
-        //     setIconAndResize(label, "images/sound-on.png", 80, 80);
-        // }
     }
-    //TODO: Move to viewer
-    // private void setIconAndResize(JLabel label, String imagePath, int width, int height) {
-    //     ImageIcon icon = new ImageIcon(imagePath);
-    //     Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-    //     ImageIcon scaledIcon = new ImageIcon(scaledImage);
-    //     label.setIcon(scaledIcon);
-    //     label.setSize(width, height);
-    // }
+
+     private void setIconAndResize(JButton button, String imagePath, int width, int height) {
+         ImageIcon icon = new ImageIcon(imagePath);
+         Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+         ImageIcon scaledIcon = new ImageIcon(scaledImage);
+         button.setIcon(scaledIcon);
+         button.setSize(width, height);
+     }
 
     public void mousePressed(MouseEvent e) {
     }

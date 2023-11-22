@@ -99,7 +99,6 @@ public class EnemyModel implements GeneralModel {
 
         returnCheck();
         viewer.updateEnemyCanvas();
-
     }
 
     public void changeLevel() {

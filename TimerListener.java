@@ -65,7 +65,7 @@ public class TimerListener implements ActionListener {
     }
 
     private void finishGame(String absoluteWinner) {
-        viewer.ResultsOnlineGameDialog(absoluteWinner);
+        viewer.resultsOnlineGameDialog(absoluteWinner);
         viewer.showMenu();
         client.closeClient();
     }

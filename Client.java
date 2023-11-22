@@ -53,7 +53,6 @@ public class Client {
             } catch (IOException exc) {
                 System.out.println(exc);
             }
-
         }
     }
 
