@@ -17,6 +17,7 @@ public class Viewer {
     private CanvasForTwoPlayers enemyCanvas;
     private JSplitPane splitPane;
     private SettingsPanel settings;
+    private BattleLobbyPanel lobby;
     private LevelChooser levelChooser;
     private JFrame frame;
     private CardLayout cardLayout;
@@ -29,6 +30,7 @@ public class Viewer {
         controller = new Controller(this, model);
         canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
+        canvas.addMouseListener(controller);
 
         myCanvas = new CanvasForTwoPlayers(model, controller, "myCanvas");
         myCanvas.addKeyListener(controller);
@@ -37,6 +39,7 @@ public class Viewer {
         levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
+        lobby = new BattleLobbyPanel(this, model);
 
         cardLayout = new CardLayout();
 
@@ -56,6 +59,7 @@ public class Viewer {
         frame.add(settings, "settings");
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
+        frame.add(lobby, "lobby");
 
         ImageIcon gameIcon = new ImageIcon("images/game-icon.png");
         frame.setIconImage(gameIcon.getImage());
@@ -135,6 +139,11 @@ public class Viewer {
         settings.updatePremiumButtonText();
     }
 
+    public void updateLobbyStats(Player player) {
+        lobby.setPlayer(player);
+        lobby.repaint();
+    }
+
     public void showMenu() {
         cardLayout.show(frame.getContentPane(), "menu");
     }
@@ -153,6 +162,11 @@ public class Viewer {
         }
         showTwoCanvas();
 
+    }
+
+    public void showBattleLobby() {
+              System.out.println("In lobby");
+        cardLayout.show(frame.getContentPane(), "lobby");
     }
 
     public String showSoloEndLevelDialog() {
@@ -200,35 +214,17 @@ public class Viewer {
         }
     }
 
-    private boolean hasFrameCanvas() {
-        Component[] components = frame.getContentPane().getComponents();
-
-        for (Component component : components) {
-            if (component == canvas) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public void showEnemyGiveUpDialog() {
         int totalMoves = model.getTotalMoves();
-        String[] options = {"Exit to Menu"};
-        int result = JOptionPane.showOptionDialog(
+        String[] options = {"Close"};
+        JOptionPane.showOptionDialog(
                 null, "Your opponent resigned, you won ! Your total moves " + totalMoves, "Congratulations !",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
-
-        if (result == 0) {
-            showMenu();
-        } else {
-            showMenu();
-        }
     }
 
-    public void ResultsOnlineGameDialog(String absoluteWinner) {
+    public void resultsOnlineGameDialog(String absoluteWinner) {
         int myTotalMoves = model.getTotalMoves();
         int enemyTotalMoves = enemyModel.getTotalMoves();
 
@@ -245,16 +241,6 @@ public class Viewer {
                 myTotalMoves, enemyTotalMoves, winner);
 
         JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
-
-    }
-
-    private void showTwoCanvas() {
-        updateMyCanvas();
-        updateEnemyCanvas();
-        updateMySkin();
-        cardLayout.show(frame.getContentPane(), "splitPane");
-        myCanvas.requestFocusInWindow();
-
     }
 
     public void showLevelChooser() {
@@ -291,5 +277,26 @@ public class Viewer {
         } else {
             showMenu();
         }
+    }
+
+    private void showTwoCanvas() {
+        updateMyCanvas();
+        updateEnemyCanvas();
+        updateMySkin();
+        cardLayout.show(frame.getContentPane(), "splitPane");
+        myCanvas.requestFocusInWindow();
+
+    }
+
+    private boolean hasFrameCanvas() {
+        Component[] components = frame.getContentPane().getComponents();
+
+        for (Component component : components) {
+            if (component == canvas) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
