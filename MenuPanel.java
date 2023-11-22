@@ -7,7 +7,10 @@ import java.awt.Font;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class MenuPanel extends JPanel {
     private Viewer viewer;
     private MenuController menuController;
@@ -83,5 +86,10 @@ public class MenuPanel extends JPanel {
         button.setFont(viewer.getCustomFont(Font.PLAIN, 24f));
         button.setActionCommand(command);
         return button;
+    }
+
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

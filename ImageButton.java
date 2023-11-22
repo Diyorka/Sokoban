@@ -11,7 +11,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.File;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class ImageButton extends JButton {
     private Image backgroundImage;
     private String buttonText;
@@ -65,5 +67,9 @@ public class ImageButton extends JButton {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }
