@@ -208,7 +208,6 @@ public class Model implements GeneralModel {
         map[playerPosY][playerPosX] = 1;
     }
 
-
     private void doComplitingAction() {
         moveSnowSound.stop();
         boxInTargetSound.stop();
@@ -288,18 +287,6 @@ public class Model implements GeneralModel {
             backgroundSnowMusic.stop();
         }
         isMusicPlayed = false;
-    }
-
-    public void stopAllSounds() {
-        defaultMusic.stop();
-        backgroundSnowMusic.stop();
-        wonSound.stop();
-        boxInTargetSound.stop();
-        moveSnowSound.stop();
-    }
-
-    public boolean isMusicPlayed() {
-        return isMusicPlayed;
     }
 
     public void startNotPassedLevel() {
@@ -509,7 +496,6 @@ public class Model implements GeneralModel {
         client.sendDataToServer("Given up");
         client.closeClient();
         map = null;
-        viewer.showMenu();
     }
 
     private void scanMap() {

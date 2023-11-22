@@ -214,35 +214,17 @@ public class Viewer {
         }
     }
 
-    private boolean hasFrameCanvas() {
-        Component[] components = frame.getContentPane().getComponents();
-
-        for (Component component : components) {
-            if (component == canvas) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public void showEnemyGiveUpDialog() {
         int totalMoves = model.getTotalMoves();
-        String[] options = {"Exit to Menu"};
-        int result = JOptionPane.showOptionDialog(
+        String[] options = {"Close"};
+        JOptionPane.showOptionDialog(
                 null, "Your opponent resigned, you won ! Your total moves " + totalMoves, "Congratulations !",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
-
-        if (result == 0) {
-            showMenu();
-        } else {
-            showMenu();
-        }
     }
 
-    public void ResultsOnlineGameDialog(String absoluteWinner) {
+    public void resultsOnlineGameDialog(String absoluteWinner) {
         int myTotalMoves = model.getTotalMoves();
         int enemyTotalMoves = enemyModel.getTotalMoves();
 
@@ -259,16 +241,6 @@ public class Viewer {
                 myTotalMoves, enemyTotalMoves, winner);
 
         JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
-
-    }
-
-    private void showTwoCanvas() {
-        updateMyCanvas();
-        updateEnemyCanvas();
-        updateMySkin();
-        cardLayout.show(frame.getContentPane(), "splitPane");
-        myCanvas.requestFocusInWindow();
-
     }
 
     public void showLevelChooser() {
@@ -305,5 +277,26 @@ public class Viewer {
         } else {
             showMenu();
         }
+    }
+
+    private void showTwoCanvas() {
+        updateMyCanvas();
+        updateEnemyCanvas();
+        updateMySkin();
+        cardLayout.show(frame.getContentPane(), "splitPane");
+        myCanvas.requestFocusInWindow();
+
+    }
+
+    private boolean hasFrameCanvas() {
+        Component[] components = frame.getContentPane().getComponents();
+
+        for (Component component : components) {
+            if (component == canvas) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
