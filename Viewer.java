@@ -148,6 +148,10 @@ public class Viewer {
         cardLayout.show(frame.getContentPane(), "menu");
     }
 
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
     public void showCanvas() {
         update();
         cardLayout.show(frame.getContentPane(), "canvas");
