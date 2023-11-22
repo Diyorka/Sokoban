@@ -8,9 +8,12 @@ import java.awt.Graphics;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import javax.swing.JSlider;
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("serial")
 public class SettingsPanel extends JPanel {
     private Viewer viewer;
     private Player player;
@@ -213,5 +216,10 @@ public class SettingsPanel extends JPanel {
         radioButton.setActionCommand(command);
         radioButton.addActionListener(controller);
         return radioButton;
+    }
+
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

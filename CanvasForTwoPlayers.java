@@ -12,7 +12,9 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 import java.awt.Dimension;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class CanvasForTwoPlayers extends JPanel {
     private Image playerImage;
     private Image frontPlayerImage;
@@ -220,5 +222,9 @@ public class CanvasForTwoPlayers extends JPanel {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

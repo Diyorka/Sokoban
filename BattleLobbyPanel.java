@@ -1,6 +1,5 @@
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
 import java.awt.Color;
@@ -8,8 +7,11 @@ import java.awt.Font;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
-public class BattleLobbyPanel extends JPanel{
+@SuppressWarnings("serial")
+public class BattleLobbyPanel extends JPanel {
     private Viewer viewer;
     private Model model;
     private BattleLobbyController controller;
@@ -125,5 +127,9 @@ public class BattleLobbyPanel extends JPanel{
         label.setForeground(Color.WHITE);
         label.setFont(font);
         return label;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

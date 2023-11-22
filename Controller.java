@@ -59,6 +59,7 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
                     model.playCurrentMusic();
                     setIconAndResize(button, "images/sound-on.png", 80, 80);
                 }
+                break;
             case "MoveBack":
                 model.moveBack();
                 viewer.showCanvas();
