@@ -301,16 +301,16 @@ public class Model implements GeneralModel {
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levels.setCurrentLevel(levelNumber);
         map = levels.getCurrentMap();
-        map2 = new int[map.length][];
-        for (int i = 0; i < map.length; i++) {
-            map2[i] = new int[map[i].length];
-            for (int j = 0; j < map[i].length; j++) {
-                map2[i][j] = map[i][j];
-            }
-        }
-        if (map != null) {
-            scanMap();
 
+        if (map != null) {
+            map2 = new int[map.length][];
+            for (int i = 0; i < map.length; i++) {
+                map2[i] = new int[map[i].length];
+                for (int j = 0; j < map[i].length; j++) {
+                    map2[i][j] = map[i][j];
+                }
+            }
+            scanMap();
         }
 
         viewer.showCanvas(gameType);
@@ -332,13 +332,12 @@ public class Model implements GeneralModel {
 
     public void restart() {
         collectedCoins = 0;
-
-        for (int i = 0; i < map2.length; i++) {
-            for (int j = 0; j < map2[i].length; j++) {
-                map[i][j] = map2[i][j];
-            }
-        }
         if (map != null) {
+            for (int i = 0; i < map2.length; i++) {
+                for (int j = 0; j < map2[i].length; j++) {
+                    map[i][j] = map2[i][j];
+                }
+            }
             scanMap();
         }
     }
