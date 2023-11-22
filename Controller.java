@@ -46,6 +46,7 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
                 viewer.showMenu();
                 break;
             case "Choose Level":
+                model.getClient().closeClient();
                 viewer.showLevelChooser();
                 break;
             case "Sound Off":
