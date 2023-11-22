@@ -31,7 +31,6 @@ public class Canvas extends JPanel {
     private Image backgroundImage;
     private JLabel coinsLabel;
     private JLabel stepsLabel;
-    private JLabel nickName;
     private GeneralModel model;
 
     public Canvas(GeneralModel model, Controller controller) {
@@ -75,12 +74,6 @@ public class Canvas extends JPanel {
         stepsLabel.setForeground(Color.WHITE);
         stepsLabel.setBounds(120, 20, 200, 100);
         add(stepsLabel);
-
-        nickName = new JLabel("Your name: " + model.getNickName());
-        nickName.setFont(getCustomFont(fontFile, Font.PLAIN, 50f));
-        nickName.setForeground(Color.WHITE);
-        nickName.setBounds(400, 20, 400, 100);
-        add(nickName);
 
         JButton exitGameButton = new JButton("Exit to menu");
         exitGameButton.setBounds(40, 700, 150, 40);
@@ -146,7 +139,6 @@ public class Canvas extends JPanel {
 
         coinsLabel.setText(collectedCoins);
         stepsLabel.setText(totalMoves);
-        nickName.setText("Your name: " + model.getNickName());
 
         int[][] desktop = model.getDesktop();
 
