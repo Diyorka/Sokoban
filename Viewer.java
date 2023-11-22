@@ -43,7 +43,6 @@ public class Viewer {
 
         cardLayout = new CardLayout();
 
-        // for two players
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, myCanvas, enemyCanvas);
         splitPane.setDividerLocation(0.5);
         splitPane.setResizeWeight(0.5);
@@ -159,7 +158,6 @@ public class Viewer {
     }
 
     public void showCanvas(String gameType) {
-        System.out.println("in show canvas gameType" + gameType);
         if (gameType.equals("alone")) {
             showCanvas();
             return;
@@ -169,7 +167,6 @@ public class Viewer {
     }
 
     public void showBattleLobby() {
-              System.out.println("In lobby");
         cardLayout.show(frame.getContentPane(), "lobby");
     }
 
@@ -210,10 +207,8 @@ public class Viewer {
         );
 
         if (userChoise == 0) {
-            System.out.println("Wait option selected");
             return options[0];
         } else {
-            System.out.println("Give up option selected");
             return options[1];
         }
     }

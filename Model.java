@@ -97,8 +97,6 @@ public class Model implements GeneralModel {
     }
 
     public void doAction(int keyMessage) {
-        System.out.println("in model do Action");
-
         if (keyMessage == RESTART && gameType.equals("alone")) {
             restart();
 
@@ -109,7 +107,6 @@ public class Model implements GeneralModel {
         }
 
         if (map == null) {
-            System.out.println("NO MAP FOUND\n\n");
             return;
         }
 
@@ -131,8 +128,8 @@ public class Model implements GeneralModel {
         }
 
         returnCheck();
-        viewer.update();// when play alone
-        viewer.updateMyCanvas();// when play with enemy
+        viewer.update();
+        viewer.updateMyCanvas();
 
         if (isWon()) {
             doComplitingAction();
@@ -142,9 +139,8 @@ public class Model implements GeneralModel {
                 if (isPlayerFirstCompletedGame) {
                     askOnlinePlayerFurtherAction();
                 } else {
-                    client.sendDataToServer("complete");// if we complete game but not first
+                    client.sendDataToServer("complete");
                     isPlayerCompleteGame = true;
-                    System.out.println("SEND DATA COMPLETE ");
                 }
             }
         }
@@ -169,7 +165,6 @@ public class Model implements GeneralModel {
         }
 
         if (mapIndexX == -1 || mapIndexY == -1) {
-            System.out.println("doMouseAction(): click out of map -> return");
             return;
         }
 
@@ -402,7 +397,6 @@ public class Model implements GeneralModel {
     }
 
     public void getNextLevel() {
-        // map = levels.getNextMap();
         changeLevel(String.valueOf(levels.getCurrentLevel() + 1));
         if (map != null) {
             scanMap();
@@ -452,10 +446,6 @@ public class Model implements GeneralModel {
         String playerChoice = viewer.showSoloEndLevelDialog();
 
         if (playerChoice.equals("Next level")) {
-            // map = levels.getNextMap();
-            // changeLevel(level.getCurrentLevel() + 1);
-            // scanMap();
-            // viewer.update();
             getNextLevel();
         } else if (playerChoice.equals("Back to menu")) {
             map = null;
@@ -470,7 +460,6 @@ public class Model implements GeneralModel {
         String playerChoice = viewer.showOnlineEndLevelDialog();
 
         if (playerChoice.equals("Wait results (30 sec)")) {
-            System.out.println("Send data to server : You have 30 seconds");
             viewer.disableMyCanvas();
             client.sendDataToServer("You have 30 seconds");
             viewer.getEnemyCanvas().setTimer(client, viewer);
@@ -483,7 +472,6 @@ public class Model implements GeneralModel {
     }
 
     public void giveUp() {
-        System.out.println("Send data to server : given up");
         client.sendDataToServer("Given up");
         client.closeClient();
         map = null;
@@ -584,7 +572,6 @@ public class Model implements GeneralModel {
                 if (prevWallX >= wallX) {
                     for (int k = prevWallX - 1; k >= prevWallX - differenceBetweenWalls; k--) {
                         if (map[wallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(prevWallX>wallX)");
                             return false;
                         }
                     }
@@ -593,7 +580,6 @@ public class Model implements GeneralModel {
                 if (wallX > prevWallX) {
                     for (int k = prevWallX; k < wallX; k++) {
                         if (map[prevWallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(wallX>prevWallX)");
                             return false;
                         }
                     }
@@ -620,7 +606,6 @@ public class Model implements GeneralModel {
             int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
 
             if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
-                System.out.println("isRightWallsCorrect(): problems with element in mapline " + (i + 1));
                 return false;
             }
         }
@@ -634,7 +619,6 @@ public class Model implements GeneralModel {
             if ((map[0][i] == 2) && !wallFound) {
                 wallFound = true;
             } else if ((map[0][i] != 2) && wallFound) {
-                System.out.println("isTopWallsCorrect(): top wall was not found in first mapline on column " + i);
                 return false;
             }
         }
@@ -649,7 +633,6 @@ public class Model implements GeneralModel {
             if ((map[lastArrayIndex][i] == 2) && !wallFound) {
                 wallFound = true;
             } else if ((map[lastArrayIndex][i] != 2) && wallFound) {
-                System.out.println("isDownWallsCorrect(): top wall was not found in last mapline on column " + i);
                 return false;
             }
         }
@@ -658,10 +641,6 @@ public class Model implements GeneralModel {
 
     private boolean isMapPlayable() {
         if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && checksCount == 0) {
-            System.out.println("isMapPlayable(): map have invalid game parameters");
-            System.out.println("players: " + playerCount + ("(should be equal to 1)"));
-            System.out.println("boxes: " + boxesCount);
-            System.out.println("checks: " + checksCount);
             return false;
         }
         return true;
@@ -829,7 +808,6 @@ public class Model implements GeneralModel {
         }
 
         if (gameType.equals("battle")) {
-            System.out.println("Up");
             client.sendDataToServer("Up");
         }
 
@@ -867,7 +845,6 @@ public class Model implements GeneralModel {
         }
 
         if (gameType.equals("battle")) {
-            System.out.println("Down");
             client.sendDataToServer("Down");
         }
 

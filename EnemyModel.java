@@ -11,13 +11,6 @@ public class EnemyModel implements GeneralModel {
     private final int CHECK = 4;
     private final int COIN = 5;
 
-    private final int LEFT = 37; //arrow left keycode
-    private final int RIGHT = 39; //arrow right keycode
-    private final int UP = 38; //arrow up keycode
-    private final int DOWN = 40; //arrow down keycode
-    private final int RESTART = 82; //'r' button keycode
-    private final int EXIT = 27; //'esc' button keycode
-
     private String move;
     private int playerPosX;
     private int playerPosY;
@@ -93,7 +86,6 @@ public class EnemyModel implements GeneralModel {
             viewer.updateMyCanvas();
             viewer.getModel().setIsPlayerFirstCompletedGame(false);
         } else if (action.equals("complete")) {
-            System.out.println("MAKE isEnemyCompletedGame TRUE");
             isEnemyCompletedGame = true;
         }
 
@@ -102,7 +94,6 @@ public class EnemyModel implements GeneralModel {
     }
 
     public void changeLevel() {
-        System.out.println("initialize enemy Map [~]");
         String data = levelList.getEnemyDataFromServer();
 
         String[] arrayData = data.split(";");
@@ -114,14 +105,6 @@ public class EnemyModel implements GeneralModel {
 
         if (map != null) {
             scanMap();
-            System.out.println("getting enemy map >>> ");
-            for (int i = 0; i < map.length; i++) {
-                for (int j = 0; j < map[i].length; j++) {
-                    System.out.print(map[i][j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
             viewer.showCanvas("battle");
         }
 
@@ -181,7 +164,6 @@ public class EnemyModel implements GeneralModel {
             int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
 
             if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
-                System.out.println("Map have invalid structure\n" + "Problem in mapline " + (i + 1));
                 map = null;
                 return;
             }
@@ -211,10 +193,6 @@ public class EnemyModel implements GeneralModel {
         }
 
         if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && checksCount == 0) {
-            System.out.println("Map have invalid game parameters");
-            System.out.println("players: " + playerCount);
-            System.out.println("boxes: " + boxesCount);
-            System.out.println("checks: " + checksCount);
             map = null;
             return;
         }
@@ -282,7 +260,7 @@ public class EnemyModel implements GeneralModel {
 
     private void moveLeft() {
         if ((map[playerPosY][playerPosX - 1] == WALL)) {
-            System.out.println("Impossible move to the left"); //debug
+            System.out.println("Impossible move to the left");
             return;
         }
 
@@ -311,7 +289,6 @@ public class EnemyModel implements GeneralModel {
 
     private void moveRight() {
         if ((map[playerPosY][playerPosX + 1] == WALL)) {
-            System.out.println("Impossible move to the right"); //debug
             return;
         }
 
@@ -340,7 +317,6 @@ public class EnemyModel implements GeneralModel {
 
     private void moveTop() {
         if ((map[playerPosY - 1][playerPosX] == WALL)) {
-            System.out.println("Impossible move to the top"); //debug
             return;
         }
 
@@ -369,7 +345,6 @@ public class EnemyModel implements GeneralModel {
 
     private void moveBot() {
         if (map[playerPosY + 1][playerPosX] == WALL) {
-            System.out.println("Impossible move to the bottom"); //debug
             return;
         }
 
@@ -398,7 +373,6 @@ public class EnemyModel implements GeneralModel {
 
     private boolean canMoveBoxToLeft() {
         if (((map[playerPosY][playerPosX - 2] == WALL) || (map[playerPosY][playerPosX - 2] == BOX)) && (playerPosX - 2 >= 0)) {
-            System.out.println("Impossible move box to the left"); //debug
             return false;
         }
         return true;
@@ -406,7 +380,6 @@ public class EnemyModel implements GeneralModel {
 
     private boolean canMoveBoxToRight() {
         if (((map[playerPosY][playerPosX + 2] == WALL) || (map[playerPosY][playerPosX + 2] == BOX)) && (playerPosX + 2 < map[playerPosY].length)) {
-            System.out.println("Impossible move box to the right"); //debug
             return false;
         }
         return true;
@@ -414,7 +387,6 @@ public class EnemyModel implements GeneralModel {
 
     private boolean canMoveBoxToTop() {
         if (((map[playerPosY - 2][playerPosX] == WALL) || (map[playerPosY - 2][playerPosX] == BOX)) && (playerPosY - 2 >= 0)) {
-            System.out.println("Impossible move box to the top"); //debug
             return false;
         }
         return true;
@@ -422,7 +394,6 @@ public class EnemyModel implements GeneralModel {
 
     private boolean canMoveBoxToBot() {
         if (((map[playerPosY + 2][playerPosX] == WALL) || (map[playerPosY + 2][playerPosX] == BOX)) && (playerPosY + 2 < map[playerPosX].length)) {
-            System.out.println("Impossible move box to the bottom"); //debug
             return false;
         }
         return true;

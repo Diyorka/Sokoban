@@ -126,8 +126,6 @@ public class Canvas extends JPanel {
         moveBackButton.setActionCommand("MoveBack");
         moveBackButton.addActionListener(controller);
         add(moveBackButton);
-
-
     }
 
     public void paintComponent(Graphics g) {
