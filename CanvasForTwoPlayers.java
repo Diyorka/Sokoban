@@ -70,15 +70,17 @@ public class CanvasForTwoPlayers extends JPanel {
         nickName.setBounds(240, 20, 300, 100);
         add(nickName);
 
-        JButton exitGameButton = new JButton("Give Up");
-        exitGameButton.setBounds(40, 700, 150, 40);
-        Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
-        exitGameButton.setFont(customFont);
-        exitGameButton.setForeground(Color.BLACK);
-        exitGameButton.setBackground(new Color(59, 89, 182));
-        exitGameButton.setActionCommand("GiveUp");
-        exitGameButton.addActionListener(controller);
-        add(exitGameButton);
+        if(model instanceof Model) {
+            JButton exitGameButton = new JButton("Give Up");
+            exitGameButton.setBounds(40, 700, 150, 40);
+            Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
+            exitGameButton.setFont(customFont);
+            exitGameButton.setForeground(Color.BLACK);
+            exitGameButton.setBackground(new Color(59, 89, 182));
+            exitGameButton.setActionCommand("GiveUp");
+            exitGameButton.addActionListener(controller);
+            add(exitGameButton);
+        }
 
         TimerImageLabel = new JLabel();
         Image timer = new ImageIcon("images/timer.png").getImage();
