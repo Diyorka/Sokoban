@@ -1,19 +1,7 @@
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.io.IOException;
-
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.io.InputStreamReader;
-
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-
-import java.util.Scanner;
 
 public class Client {
     private static final String SERVER_ADDRESS = "localhost";
@@ -31,14 +19,11 @@ public class Client {
         try {
             socketChannel = SocketChannel.open();
             socketChannel.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
-            System.out.println("Successfully connected to server ...");
             sendDataToServer(gameType);
             String serverResponse = getDataFromServer();
-            System.out.println(serverResponse);
 
             if (gameType.equals("battle")) {
                 serverResponse = getDataFromServer();
-                System.out.println(serverResponse);
                 if (serverResponse.equals("ENEMY_WAS_NOT_FOUND")) {
                     viewer.showErrorDialog("ENEMY NOT FOUND !");
                     closeClient();
@@ -61,11 +46,9 @@ public class Client {
         if (socketChannel != null && socketChannel.isOpen()) {
             try {
                 socketChannel.close();
-                System.out.println("Close client Socket");
             } catch (IOException exc) {
                 System.out.println(exc);
             }
-
         }
     }
 
@@ -78,15 +61,15 @@ public class Client {
         return levelContent;
     }
 
-    public  String loadRandomLevelFromServer() {
+    public String loadRandomLevelFromServer() {
         String levelContent = null;
-        if(socketChannel != null) {
+        if (socketChannel != null) {
             levelContent = getDataFromServer();
         }
         return levelContent;
     }
 
-    public  String loadEnemyLevelFromServer() {
+    public String loadEnemyLevelFromServer() {
         String levelContent = null;
         if (socketChannel != null) {
             levelContent = getDataFromServer();
@@ -103,7 +86,6 @@ public class Client {
 
                 socketChannel.write(buffer);
                 buffer.clear();
-                System.out.println("Successfully send data to server [~]");
 
             } catch (IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
@@ -127,8 +109,6 @@ public class Client {
                     data = new String(buffer.array(), 0, bytesRead);
                 }
                 buffer.clear();
-                System.out.println("Successfully get data from server [~]");
-
             } catch (IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();

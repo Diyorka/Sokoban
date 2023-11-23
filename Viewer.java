@@ -1,8 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
-import javax.swing.JPanel;
 import java.awt.CardLayout;
-import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
@@ -11,6 +9,9 @@ import java.io.File;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
+import java.awt.Color;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
 
 public class Viewer {
     private Controller controller;
@@ -19,6 +20,8 @@ public class Viewer {
     private CanvasForTwoPlayers enemyCanvas;
     private JSplitPane splitPane;
     private SettingsPanel settings;
+    private BattleLobbyPanel lobby;
+    private LevelChooser levelChooser;
     private JFrame frame;
     private CardLayout cardLayout;
     private Model model;
@@ -30,18 +33,19 @@ public class Viewer {
         controller = new Controller(this, model);
         canvas = new Canvas(model, controller);
         canvas.addKeyListener(controller);
+        canvas.addMouseListener(controller);
 
         myCanvas = new CanvasForTwoPlayers(model, controller, "myCanvas");
         myCanvas.addKeyListener(controller);
 
         enemyCanvas = new CanvasForTwoPlayers(enemyModel, null, "enemyCanvas");
-        LevelChooser levelChooser = new LevelChooser(this, model);
+        levelChooser = new LevelChooser(this, model);
         settings = new SettingsPanel(this, model);
         MenuPanel menu = new MenuPanel(this, model, enemyModel);
+        lobby = new BattleLobbyPanel(this, model);
 
         cardLayout = new CardLayout();
 
-        // for two players
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, myCanvas, enemyCanvas);
         splitPane.setDividerLocation(0.5);
         splitPane.setResizeWeight(0.5);
@@ -57,6 +61,7 @@ public class Viewer {
         frame.add(settings, "settings");
         frame.add(canvas, "canvas");
         frame.add(splitPane, "splitPane");
+        frame.add(lobby, "lobby");
 
         ImageIcon gameIcon = new ImageIcon("images/game-icon.png");
         frame.setIconImage(gameIcon.getImage());
@@ -71,6 +76,10 @@ public class Viewer {
 
     public Model getModel() {
         return model;
+    }
+
+    public LevelChooser getLevelChooser() {
+        return levelChooser;
     }
 
     public EnemyModel getEnemyModel() {
@@ -132,8 +141,17 @@ public class Viewer {
         settings.updatePremiumButtonText();
     }
 
+    public void updateLobbyStats(Player player) {
+        lobby.setPlayer(player);
+        lobby.repaint();
+    }
+
     public void showMenu() {
         cardLayout.show(frame.getContentPane(), "menu");
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     public void showCanvas() {
@@ -143,13 +161,16 @@ public class Viewer {
     }
 
     public void showCanvas(String gameType) {
-        System.out.println("in show canvas gameType" + gameType);
-        if(gameType.equals("alone")) {
+        if (gameType.equals("alone")) {
             showCanvas();
             return;
         }
         showTwoCanvas();
 
+    }
+
+    public void showBattleLobby() {
+        cardLayout.show(frame.getContentPane(), "lobby");
     }
 
     public String showSoloEndLevelDialog() {
@@ -163,7 +184,7 @@ public class Viewer {
 
         int userChoise = javax.swing.JOptionPane.showOptionDialog(
                 null, "You completed level " + levelNumber +
-                "!\nTotal moves: " + totalMoves, "Congratulations!",
+                        "!\nTotal moves: " + totalMoves, "Congratulations!",
                 javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[1]);
 
@@ -189,68 +210,39 @@ public class Viewer {
         );
 
         if (userChoise == 0) {
-            System.out.println("Wait option selected");
-            return (String) options[0];
+            return options[0];
         } else {
-            System.out.println("Give up option selected");
-            return (String) options[1];
+            return options[1];
         }
     }
 
-    private boolean hasFrameCanvas() {
-        Component[] components = frame.getContentPane().getComponents();
-
-        for (Component component : components) {
-            if (component == canvas) {
-                return true;
-            }
-        }
-
-        return false;
-    }
     public void showEnemyGiveUpDialog() {
         int totalMoves = model.getTotalMoves();
-        String[] options = {"Exit to Menu"};
-        int result = JOptionPane.showOptionDialog(
+        String[] options = {"Close"};
+        JOptionPane.showOptionDialog(
                 null, "Your opponent resigned, you won ! Your total moves " + totalMoves, "Congratulations !",
-                JOptionPane.DEFAULT_OPTION,  JOptionPane.INFORMATION_MESSAGE,
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options, options[0]
         );
-
-        if (result == 0) {
-            showMenu();
-        } else {
-            showMenu();
-        }
     }
 
-    public void ResultsOnlineGameDialog(String absoluteWinner) {
+    public void resultsOnlineGameDialog(String absoluteWinner) {
         int myTotalMoves = model.getTotalMoves();
         int enemyTotalMoves = enemyModel.getTotalMoves();
 
         String winner = "It's a tie!";
 
-        if(absoluteWinner == null) {
+        if (absoluteWinner == null) {
             winner = (myTotalMoves < enemyTotalMoves) ? "You won !" : "You lose";
         } else {
             winner = absoluteWinner.equals("me") ? "You won !" : "You lose";
         }
 
 
-       String message = String.format("Your total moves: %d\nEnemy total moves: %d\n%s",
-               myTotalMoves, enemyTotalMoves, winner);
+        String message = String.format("Your total moves: %d\nEnemy total moves: %d\n%s",
+                myTotalMoves, enemyTotalMoves, winner);
 
-      JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
-
-    }
-
-    private void showTwoCanvas() {
-        updateMyCanvas();
-        updateEnemyCanvas();
-        updateMySkin();
-        cardLayout.show(frame.getContentPane(), "splitPane");
-        myCanvas.requestFocusInWindow();
-
+        JOptionPane.showMessageDialog(null, message, "Game Results", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void showLevelChooser() {
@@ -259,6 +251,28 @@ public class Viewer {
 
     public void showSettings() {
         cardLayout.show(frame.getContentPane(), "settings");
+    }
+
+    public JButton createDarkButton(String name, String command, int x, int y, int width, int height, boolean enabled, ActionListener controller) {
+        CustomButton button = new CustomButton(name, new Color(43, 48, 64), new Color(29, 113, 184), Color.WHITE);
+        button.setBounds(x, y, width, height);
+        button.setFocusable(false);
+        button.setFont(getCustomFont(Font.PLAIN, 24f));
+        button.setEnabled(enabled);
+        button.setActionCommand(command);
+        button.addActionListener(controller);
+        return button;
+    }
+
+    public JButton createLightButton(String name, String command, int x, int y, int width, int height, boolean enabled, ActionListener controller) {
+        CustomButton button = new CustomButton(name, new Color(230, 145, 47), new Color(248, 235, 108), new Color(109, 63, 36));
+        button.setBounds(x, y, width, height);
+        button.setFocusable(false);
+        button.setFont(getCustomFont(Font.PLAIN, 24f));
+        button.setEnabled(enabled);
+        button.setActionCommand(command);
+        button.addActionListener(controller);
+        return button;
     }
 
     public Font getCustomFont(int style, float size) {
@@ -281,11 +295,32 @@ public class Viewer {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
                 null, options, options[0]
         );
-        
+
         if (result == 0) {
             showMenu();
         } else {
             showMenu();
         }
+    }
+
+    private void showTwoCanvas() {
+        updateMyCanvas();
+        updateEnemyCanvas();
+        updateMySkin();
+        cardLayout.show(frame.getContentPane(), "splitPane");
+        myCanvas.requestFocusInWindow();
+
+    }
+
+    private boolean hasFrameCanvas() {
+        Component[] components = frame.getContentPane().getComponents();
+
+        for (Component component : components) {
+            if (component == canvas) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

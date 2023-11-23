@@ -23,23 +23,20 @@ public class MenuController implements ActionListener {
             case "Set name":
                 String nickname = menuPanel.getNicknameText();
                 model.setPlayer(nickname);
+                viewer.getLevelChooser().initCoins();
                 break;
             case "Play":
                 client = new Client(viewer, "alone");
                 model.setClient(client);
-                model.changeLevel("Level 1");
+                model.startNotPassedLevel();
                 break;
             case "PlayWithEnemy":
-                System.out.println("play with enemy");
                 client = new Client(viewer, "battle");
-
-                if(client.hasConnectionToServer()) {
+                if (client.hasConnectionToServer()) {
                     model.setClient(client);
                     model.changeLevel();
-
                     enemyModel.setClient(client);
                     enemyModel.changeLevel();
-                    System.out.println("creating new Thread enemyFieldController");
                     EnemyFieldController enemyFieldController = new EnemyFieldController(client, viewer, enemyModel);
                     enemyFieldController.go();
                 }
@@ -51,7 +48,7 @@ public class MenuController implements ActionListener {
                 viewer.showSettings();
                 break;
             case "Exit":
-                if(client != null) {
+                if (client != null) {
                     client.closeClient();
                 }
 

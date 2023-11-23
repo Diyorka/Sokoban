@@ -8,9 +8,12 @@ import java.awt.Graphics;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import javax.swing.JSlider;
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("serial")
 public class SettingsPanel extends JPanel {
     private Viewer viewer;
     private Player player;
@@ -94,7 +97,8 @@ public class SettingsPanel extends JPanel {
         JLabel musicLabel = createLabel("Music:", 80, 480, 100, 30, labelFont);
         showMusicSettings();
 
-        JButton returnButton = createButton("Back", "Back", 40, 665, true);
+        JButton returnButton = viewer.createLightButton("Back", "Back", 40, 665, 100, 30, true, controller);
+        returnButton.setFont(viewer.getCustomFont(Font.PLAIN, 20f));
 
         add(coinImage);
         add(nickname);
@@ -119,14 +123,19 @@ public class SettingsPanel extends JPanel {
         JLabel premiumSkinPrice = createLabel(premiumSkinCost + " coins", 745, 320, 110, 30, font);
         premiumSkinPrice.setForeground(new Color(251, 197, 24));
 
-        defaultSkinButton = createButton("Choose", "Default_Skin", 315, 375, false);
-        santaSkinButton = createButton("Choose", "Santa_Skin", 520, 375, false);
+        Font buttonFont = viewer.getCustomFont(Font.PLAIN, 20f);
+        defaultSkinButton = viewer.createLightButton("Choose", "Default_Skin", 315, 375, 100, 30, false, controller);
+        defaultSkinButton.setFont(buttonFont);
+
+        santaSkinButton = viewer.createLightButton("Choose", "Santa_Skin", 520, 375, 100, 30, false, controller);
+        santaSkinButton.setFont(buttonFont);
 
         if (player.isPremiumAvailable()) {
-            premiumSkinButton = createButton("Choose", "Premium_Skin", 730, 375, false);
+            premiumSkinButton = viewer.createLightButton("Choose", "Premium_Skin", 730, 375, 100, 30, false, controller);
         } else {
-            premiumSkinButton = createButton("Buy", "Buy_Premium", 730, 375, false);
+            premiumSkinButton = viewer.createLightButton("Buy", "Buy_Premium", 730, 375, 100, 30, false, controller);
         }
+        premiumSkinButton.setFont(buttonFont);
         updateButtonStates();
 
         add(defaultSkinImage);
@@ -147,8 +156,8 @@ public class SettingsPanel extends JPanel {
     }
 
     private void showMusicSettings() {
-        JRadioButton defaultMusic = createJRadioButton("Default", "Default_Music", 325, 480, true);
-        JRadioButton christmasMusic = createJRadioButton("Christmas music", "Christmas_Music", 495, 480, false);
+        JRadioButton defaultMusic = createJRadioButton("Default", "Default_Music", 325, 480, false);
+        JRadioButton christmasMusic = createJRadioButton("Christmas music", "Christmas_Music", 495, 480, true);
         JRadioButton noSound = createJRadioButton("No sound", "No_Sound", 720, 480, false);
 
         ButtonGroup music = new ButtonGroup();
@@ -191,17 +200,6 @@ public class SettingsPanel extends JPanel {
         return labelImage;
     }
 
-    private JButton createButton(String name, String command, int x, int y, boolean isEnabled) {
-        JButton button = new JButton(name);
-        button.setBounds(x, y, 100, 30);
-        button.setFocusable(false);
-        button.setFont(viewer.getCustomFont(Font.PLAIN, 20f));
-        button.setEnabled(isEnabled);
-        button.setActionCommand(command);
-        button.addActionListener(controller);
-        return button;
-    }
-
     private JRadioButton createJRadioButton(String name, String command, int x, int y, boolean isSelected) {
         JRadioButton radioButton = new JRadioButton(name);
         radioButton.setBounds(x, y, 200, 30);
@@ -213,5 +211,10 @@ public class SettingsPanel extends JPanel {
         radioButton.setActionCommand(command);
         radioButton.addActionListener(controller);
         return radioButton;
+    }
+
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

@@ -5,8 +5,6 @@ import java.awt.Image;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.awt.FontFormatException;
@@ -14,7 +12,9 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Dimension;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class Canvas extends JPanel {
     private Image playerImage;
     private Image frontPlayerImage;
@@ -60,45 +60,54 @@ public class Canvas extends JPanel {
         stepsImageLabel.setBounds(30, 30, 80, 80);
         add(stepsImageLabel);
 
-        File fontFile = new File("fonts/PixelFont.otf");
-
         coinsLabel = new JLabel("0");
-        coinsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
+        coinsLabel.setFont(getCustomFont(Font.PLAIN, 80f));
         coinsLabel.setForeground(Color.WHITE);
         coinsLabel.setBounds(980, 20, 100, 100);
         coinsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         add(coinsLabel);
 
         stepsLabel = new JLabel("0");
-        stepsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
+        stepsLabel.setFont(getCustomFont(Font.PLAIN, 80f));
         stepsLabel.setForeground(Color.WHITE);
         stepsLabel.setBounds(120, 20, 200, 100);
         add(stepsLabel);
 
-        JButton exitGameButton = new JButton("Exit to menu");
-        exitGameButton.setBounds(40, 700, 150, 40);
-        Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
-        exitGameButton.setFont(customFont);
-        exitGameButton.setForeground(Color.BLACK);
-        exitGameButton.setBackground(new Color(59, 89, 182));
-        exitGameButton.setActionCommand("Exit to menu");
+        JButton exitGameButton = createButton("Exit to menu", "Exit to menu", 40, 700, 150, 40);
         exitGameButton.addActionListener(controller);
         add(exitGameButton);
 
-        JButton nextLevelButton = new JButton("Next level");
-        nextLevelButton.setBounds(1010, 700, 150, 40);
-        nextLevelButton.setFont(customFont);
-        nextLevelButton.setForeground(Color.BLACK);
-        nextLevelButton.setBackground(new Color(59, 89, 182));
-        nextLevelButton.setActionCommand("Next level");
+        JButton nextLevelButton = createButton("Next level", "Next level", 1010, 700, 150, 40);
         nextLevelButton.addActionListener(controller);
         add(nextLevelButton);
+
+        JButton soundOffButton = new JButton("");
+        Image soundOff = new ImageIcon("images/sound-off.png").getImage();
+        Image scaledSoundOff = soundOff.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        ImageIcon soundOffIcon = new ImageIcon(scaledSoundOff);
+        soundOffButton.setIcon(soundOffIcon);
+        soundOffButton.setBounds(30, 130, 80, 80);
+        soundOffButton.setActionCommand("Sound Off");
+        soundOffButton.setBorderPainted(false);
+        soundOffButton.setContentAreaFilled(false);
+        soundOffButton.addActionListener(controller);
+        add(soundOffButton);
+
+        JButton chooseLevelButton = createButton("Choose level", "Choose Level", 525, 700, 150, 40);
+        chooseLevelButton.addActionListener(controller);
+        add(chooseLevelButton);
 
         ImageButton replayButton = new ImageButton("", "images/restart.png", 36, false);
         replayButton.setBounds(1090, 130, 80, 80);
         replayButton.setActionCommand("Restart");
         replayButton.addActionListener(controller);
         add(replayButton);
+
+        ImageButton moveBackButton = new ImageButton("", "images/moveBack.png", 36, false);
+        moveBackButton.setBounds(30, 230, 70, 70);
+        moveBackButton.setActionCommand("MoveBack");
+        moveBackButton.addActionListener(controller);
+        add(moveBackButton);
     }
 
     public void paintComponent(Graphics g) {
@@ -113,7 +122,7 @@ public class Canvas extends JPanel {
 
         int[][] desktop = model.getDesktop();
 
-        if(desktop != null) {
+        if (desktop != null) {
             rotateGamer();
             drawDesktop(g, desktop);
         } else {
@@ -162,7 +171,7 @@ public class Canvas extends JPanel {
         int offset = 0;
 
         for (int i = 0; i < desktop.length; i++) {
-          boolean isFirstWallFound = false;
+            boolean isFirstWallFound = false;
 
             for (int j = 0; j < desktop[i].length; j++) {
                 if (!isFirstWallFound && desktop[i][j] == 2) {
@@ -171,24 +180,24 @@ public class Canvas extends JPanel {
 
                 if (isFirstWallFound) {
                     if (desktop[i][j] == 0) {
-                      g.drawImage(groundImage, x, y, null);
+                        g.drawImage(groundImage, x, y, null);
                     } else if (desktop[i][j] == 1) {
-                      g.drawImage(playerImage, x, y, null);
+                        g.drawImage(playerImage, x, y, null);
                     } else if (desktop[i][j] == 2) {
-                      g.drawImage(wallImage, x, y, null);
+                        g.drawImage(wallImage, x, y, null);
                     } else if (desktop[i][j] == 3) {
-                      g.drawImage(boxImage, x, y, null);
+                        g.drawImage(boxImage, x, y, null);
                     } else if (desktop[i][j] == 4) {
-                      g.drawImage(targetImage, x, y, null);
+                        g.drawImage(targetImage, x, y, null);
                     } else if (desktop[i][j] == 5) {
-                      g.drawImage(coinImage, x, y, null);
+                        g.drawImage(coinImage, x, y, null);
                     }
                 }
                 x = x + width + offset;
-          }
+            }
 
-          x = start;
-          y = y + height + offset;
+            x = start;
+            y = y + height + offset;
         }
 
     }
@@ -201,8 +210,18 @@ public class Canvas extends JPanel {
         g.drawString("Initialization Error!", 250, 100);
     }
 
-    private Font getCustomFont(File file, int style, float size) {
+    private JButton createButton(String name, String command, int x, int y, int width, int height) {
+        CustomButton button = new CustomButton(name, new Color(43, 48, 64), new Color(29, 113, 184), Color.WHITE);
+        button.setBounds(x, y, width, height);
+        button.setFocusable(false);
+        button.setFont(getCustomFont(Font.PLAIN, 22f));
+        button.setActionCommand(command);
+        return button;
+    }
+
+    private Font getCustomFont(int style, float size) {
         Font customFont = null;
+        File file = new File("fonts/PixelFont.otf");
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -211,5 +230,9 @@ public class Canvas extends JPanel {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

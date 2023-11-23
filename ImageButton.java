@@ -5,14 +5,15 @@ import java.awt.FontMetrics;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import java.awt.Font;
-import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.File;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class ImageButton extends JButton {
     private Image backgroundImage;
     private String buttonText;
@@ -20,7 +21,7 @@ public class ImageButton extends JButton {
 
     public ImageButton(String buttonText, String imagePath, int fontSize, boolean borderFlag) {
         this.buttonText = buttonText;
-        if(!"".equals(imagePath)) {
+        if (!"".equals(imagePath)) {
             this.backgroundImage = new ImageIcon(imagePath).getImage();
             setPreferredSize(new Dimension(backgroundImage.getWidth(null), backgroundImage.getHeight(null)));
         }
@@ -35,7 +36,7 @@ public class ImageButton extends JButton {
 
         Graphics2D g2d = (Graphics2D) g.create();
 
-        if(backgroundImage != null) {
+        if (backgroundImage != null) {
             g2d.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
             g2d.setColor(Color.BLACK);
         } else {
@@ -66,5 +67,9 @@ public class ImageButton extends JButton {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

@@ -5,8 +5,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -62,9 +60,9 @@ public class Music {
 
     public void close() {
         if (clip != null)
-        clip.close();
+            clip.close();
 
-        if (inputStream != null){
+        if (inputStream != null) {
             try {
                 inputStream.close();
             } catch (IOException ioe) {
@@ -81,7 +79,7 @@ public class Music {
         return playing;
     }
 
-    public Clip getClip(){
+    public Clip getClip() {
         return clip;
     }
 
@@ -101,6 +99,6 @@ public class Music {
             return gainControl.getValue();
         }
 
-        return -1; // или другое значение по умолчанию
+        return -1;
     }
 }

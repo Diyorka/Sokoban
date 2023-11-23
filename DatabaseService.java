@@ -11,13 +11,14 @@ import java.nio.file.StandardOpenOption;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-public class DBService {
+public class DatabaseService {
     private final String coinsPath = "db/passed_levels.csv";
     private final String skinsPath = "db/available_skins.csv";
     private final String totalCoinsPath = "db/total_coins.csv";
     private final String currentSkinPath = "db/current_skin.csv";
 
-    public DBService() {}
+    public DatabaseService() {
+    }
 
     public Player getPlayerInfo(String nickname) {
         createMissingFiles();
@@ -35,7 +36,7 @@ public class DBService {
             boolean fileExists = Files.exists(Paths.get(coinsPath));
             BufferedWriter writer = new BufferedWriter(new FileWriter(coinsPath, true));
 
-            if(!fileExists) {
+            if (!fileExists) {
                 writer.append("Nickname;Level;Coins");
                 writer.newLine();
             }
@@ -62,7 +63,7 @@ public class DBService {
                 writer.close();
                 writeTotalCoins(nickname, coins);
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -98,7 +99,7 @@ public class DBService {
             boolean fileExists = Files.exists(Paths.get(skinsPath));
             BufferedWriter writer = new BufferedWriter(new FileWriter(skinsPath, true));
 
-            if(!fileExists) {
+            if (!fileExists) {
                 writer.append("Nickname;Skin");
                 writer.newLine();
             }
@@ -107,7 +108,7 @@ public class DBService {
             writer.newLine();
             writer.close();
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -124,10 +125,10 @@ public class DBService {
 
             String fileContent = new String(Files.readAllBytes(Paths.get(currentSkinPath)));
 
-            Pattern pattern = Pattern.compile(nickname +  ";(.+)");
+            Pattern pattern = Pattern.compile(nickname + ";(.+)");
             Matcher matcher = pattern.matcher(fileContent);
 
-            if(matcher.find()) {
+            if (matcher.find()) {
                 String currentSkin = matcher.group(1);
                 fileContent = fileContent.replaceAll(nickname + ";.+", nickname + ";" + skin);
                 Files.write(Paths.get(currentSkinPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
@@ -137,15 +138,17 @@ public class DBService {
             }
 
             writer.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
 
     public PlayerSkin readCurrentSkin(String nickname) {
         PlayerSkin playerSkin = new DefaultSkin();
+        BufferedReader br = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(currentSkinPath))) {
+        try {
+            br = new BufferedReader(new FileReader(currentSkinPath));
             String line;
             boolean isFirstLine = true;
 
@@ -158,16 +161,26 @@ public class DBService {
                 String[] values = line.split(";");
                 String currentNickname = values[0];
                 String currentSkin = values[1];
-                
+
                 if (currentNickname.equals(nickname)) {
                     playerSkin = parseToPlayerSkin(currentSkin);
                 }
             }
+
+            return playerSkin;
+
         } catch (IOException ioe) {
             System.out.println(ioe);
         } finally {
-            return playerSkin;
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException ioe) {
+                System.out.println(ioe);
+            }
         }
+        return playerSkin;
     }
 
     private PlayerSkin parseToPlayerSkin(String skin) {
@@ -195,10 +208,10 @@ public class DBService {
 
             String fileContent = new String(Files.readAllBytes(Paths.get(totalCoinsPath)));
 
-            Pattern pattern = Pattern.compile(nickname +  ";(\\d+)");
+            Pattern pattern = Pattern.compile(nickname + ";(\\d+)");
             Matcher matcher = pattern.matcher(fileContent);
 
-            if(matcher.find()) {
+            if (matcher.find()) {
                 int currentCoins = Integer.parseInt(matcher.group(1));
                 fileContent = fileContent.replaceAll(nickname + ";\\d+", nickname + ";" + (value + currentCoins));
                 Files.write(Paths.get(totalCoinsPath), fileContent.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
@@ -208,7 +221,7 @@ public class DBService {
                 writer.close();
             }
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -284,26 +297,26 @@ public class DBService {
     }
 
     private int readTotalCoinsData(String nickname) {
-      int totalCoins = 0;
+        int totalCoins = 0;
 
-      try (BufferedReader reader = new BufferedReader(new FileReader(totalCoinsPath))) {
-          reader.readLine();
-          String line;
+        try (BufferedReader reader = new BufferedReader(new FileReader(totalCoinsPath))) {
+            reader.readLine();
+            String line;
 
-          while ((line = reader.readLine()) != null) {
-              String[] data = line.split(";");
-              String nicknameFromDB = data[0];
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(";");
+                String nicknameFromDB = data[0];
 
-              if (nickname.equals(nicknameFromDB)) {
-                  totalCoins = Integer.parseInt(data[1]);
-                  break;
-              }
-          }
+                if (nickname.equals(nicknameFromDB)) {
+                    totalCoins = Integer.parseInt(data[1]);
+                    break;
+                }
+            }
 
-      } catch (IOException e) {
-          System.out.println(e);
-      }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
 
-      return totalCoins;
+        return totalCoins;
     }
 }
