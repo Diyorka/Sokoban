@@ -12,7 +12,9 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 import java.awt.Dimension;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class CanvasForTwoPlayers extends JPanel {
     private Image playerImage;
     private Image frontPlayerImage;
@@ -93,7 +95,6 @@ public class CanvasForTwoPlayers extends JPanel {
         super.paintComponent(g);
 
         g.drawImage(backgroundImage, 0, 0, null);
-        String collectedCoins = String.valueOf(model.getCollectedCoins());
         String totalMoves = String.valueOf(model.getTotalMoves());
         stepsLabel.setText(totalMoves);
         nickName.setText(model.getNickName());
@@ -116,10 +117,9 @@ public class CanvasForTwoPlayers extends JPanel {
     }
 
     private void launchTimer(Client client, Viewer viewer) {
-        System.out.println("launchTimer");
         add(time);
-        int delay = 1000; // 1 second delay
-        int period = 1000; // 1 second interval
+        int delay = 1000;
+        int period = 1000;
         Timer timer = new Timer(delay, new TimerListener(time, client, this, canvasType, viewer));
         timer.setInitialDelay(0);
         timer.setDelay(period);
@@ -146,6 +146,7 @@ public class CanvasForTwoPlayers extends JPanel {
 
     private void rotateGamer() {
         String move = model.getMove();
+
         switch (move) {
             case "Left":
                 playerImage = leftPlayerImage;
@@ -220,5 +221,9 @@ public class CanvasForTwoPlayers extends JPanel {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

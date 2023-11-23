@@ -12,7 +12,9 @@ import java.io.IOException;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Dimension;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class Canvas extends JPanel {
     private Image playerImage;
     private Image frontPlayerImage;
@@ -106,8 +108,6 @@ public class Canvas extends JPanel {
         moveBackButton.setActionCommand("MoveBack");
         moveBackButton.addActionListener(controller);
         add(moveBackButton);
-
-
     }
 
     public void paintComponent(Graphics g) {
@@ -230,5 +230,9 @@ public class Canvas extends JPanel {
             System.out.println(e);
         }
         return customFont;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }

@@ -20,7 +20,6 @@ public class BattleLobbyController implements ActionListener {
         switch (command) {
             case "Cancel":
                 Client client = model.getClient();
-                System.out.println(client);
                 viewer.showMenu();
                 break;
         }

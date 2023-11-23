@@ -85,13 +85,11 @@ public class Model implements GeneralModel {
         backgroundSnowMusic.setVolume(0.75f);
         currentMusic = backgroundSnowMusic;
 
-
         playerPosX = -1;
         playerPosY = -1;
         mapMaxPixelWidth = -1;
         mapMaxPixelHeight = -1;
         move = "Down";
-
     }
 
     public boolean getIsPlayerCompleteGame() {
@@ -99,8 +97,6 @@ public class Model implements GeneralModel {
     }
 
     public void doAction(int keyMessage) {
-        System.out.println("in model do Action");
-
         if (keyMessage == RESTART && gameType.equals("alone")) {
             restart();
 
@@ -111,7 +107,6 @@ public class Model implements GeneralModel {
         }
 
         if (map == null) {
-            System.out.println("NO MAP FOUND\n\n");
             return;
         }
 
@@ -130,15 +125,13 @@ public class Model implements GeneralModel {
         } else if (keyMessage == DOWN) {
             move = "Down";
             moveBot();
-
         }
 
         returnCheck();
-        viewer.update();// when play alone
-        viewer.updateMyCanvas();// when play with enemy
+        viewer.update();
+        viewer.updateMyCanvas();
 
         if (isWon()) {
-            System.out.println("YOU WON ");
             doComplitingAction();
             if (gameType.equals("alone")) {
                 askSoloPlayerFurtherAction();
@@ -146,14 +139,11 @@ public class Model implements GeneralModel {
                 if (isPlayerFirstCompletedGame) {
                     askOnlinePlayerFurtherAction();
                 } else {
-                    client.sendDataToServer("complete");// if we complete game but not first
+                    client.sendDataToServer("complete");
                     isPlayerCompleteGame = true;
-                    System.out.println("SEND DATA COMPLETE ");
                 }
-
             }
         }
-
     }
 
     public void doMouseAction(int x, int y) {
@@ -173,10 +163,8 @@ public class Model implements GeneralModel {
         } else {
             mapIndexY = Math.round((y - canvasVerticalStart) / 50);
         }
-        System.out.println("doMouseAction(): clicked on {" + mapIndexX + ", " + mapIndexY + "}");
 
         if (mapIndexX == -1 || mapIndexY == -1) {
-            System.out.println("doMouseAction(): click out of map -> return");
             return;
         }
 
@@ -308,17 +296,16 @@ public class Model implements GeneralModel {
         int levelNumber = Integer.parseInt(stringLevelNumber);
         levels.setCurrentLevel(levelNumber);
         map = levels.getCurrentMap();
-        System.out.println("Creating duplicate");
-        map2 = new int[map.length][];
-        for (int i = 0; i < map.length; i++) {
-            map2[i] = new int[map[i].length];
-            for (int j = 0; j < map[i].length; j++) {
-                map2[i][j] = map[i][j];
-            }
-        }
-        if (map != null) {
-            scanMap();
 
+        if (map != null) {
+            map2 = new int[map.length][];
+            for (int i = 0; i < map.length; i++) {
+                map2[i] = new int[map[i].length];
+                for (int j = 0; j < map[i].length; j++) {
+                    map2[i][j] = map[i][j];
+                }
+            }
+            scanMap();
         }
 
         viewer.showCanvas(gameType);
@@ -340,13 +327,12 @@ public class Model implements GeneralModel {
 
     public void restart() {
         collectedCoins = 0;
-
-        for (int i = 0; i < map2.length; i++) {
-            for (int j = 0; j < map2[i].length; j++) {
-                map[i][j] = map2[i][j];
-            }
-        }
         if (map != null) {
+            for (int i = 0; i < map2.length; i++) {
+                for (int j = 0; j < map2[i].length; j++) {
+                    map[i][j] = map2[i][j];
+                }
+            }
             scanMap();
         }
     }
@@ -411,7 +397,6 @@ public class Model implements GeneralModel {
     }
 
     public void getNextLevel() {
-        // map = levels.getNextMap();
         changeLevel(String.valueOf(levels.getCurrentLevel() + 1));
         if (map != null) {
             scanMap();
@@ -461,10 +446,6 @@ public class Model implements GeneralModel {
         String playerChoice = viewer.showSoloEndLevelDialog();
 
         if (playerChoice.equals("Next level")) {
-            // map = levels.getNextMap();
-            // changeLevel(level.getCurrentLevel() + 1);
-            // scanMap();
-            // viewer.update();
             getNextLevel();
         } else if (playerChoice.equals("Back to menu")) {
             map = null;
@@ -479,7 +460,6 @@ public class Model implements GeneralModel {
         String playerChoice = viewer.showOnlineEndLevelDialog();
 
         if (playerChoice.equals("Wait results (30 sec)")) {
-            System.out.println("Send data to server : You have 30 seconds");
             viewer.disableMyCanvas();
             client.sendDataToServer("You have 30 seconds");
             viewer.getEnemyCanvas().setTimer(client, viewer);
@@ -492,7 +472,6 @@ public class Model implements GeneralModel {
     }
 
     public void giveUp() {
-        System.out.println("Send data to server : given up");
         client.sendDataToServer("Given up");
         client.closeClient();
         map = null;
@@ -563,7 +542,6 @@ public class Model implements GeneralModel {
         }
         mapMaxPixelWidth *= 50;
         mapMaxPixelHeight = map.length * 50;
-        System.out.println("width: " + mapMaxPixelWidth + "px\nheigth: " + mapMaxPixelHeight);
     }
 
     private boolean allWallSidesValid() {
@@ -594,7 +572,6 @@ public class Model implements GeneralModel {
                 if (prevWallX >= wallX) {
                     for (int k = prevWallX - 1; k >= prevWallX - differenceBetweenWalls; k--) {
                         if (map[wallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(prevWallX>wallX)");
                             return false;
                         }
                     }
@@ -603,7 +580,6 @@ public class Model implements GeneralModel {
                 if (wallX > prevWallX) {
                     for (int k = prevWallX; k < wallX; k++) {
                         if (map[prevWallY][k] != 2) {
-                            System.out.println("isLeftWallsCorrect(): problem in a mapline" + i + ", in a row " + k + "\n(wallX>prevWallX)");
                             return false;
                         }
                     }
@@ -630,7 +606,6 @@ public class Model implements GeneralModel {
             int nextMapLineLastElement = map[i + 1][map[i + 1].length - 1];
 
             if ((nextMapLineLastElementOfCurrentLine == 0 || nextMapLineLastElement != 2)) {
-                System.out.println("isRightWallsCorrect(): problems with element in mapline " + (i + 1));
                 return false;
             }
         }
@@ -644,7 +619,6 @@ public class Model implements GeneralModel {
             if ((map[0][i] == 2) && !wallFound) {
                 wallFound = true;
             } else if ((map[0][i] != 2) && wallFound) {
-                System.out.println("isTopWallsCorrect(): top wall was not found in first mapline on column " + i);
                 return false;
             }
         }
@@ -659,7 +633,6 @@ public class Model implements GeneralModel {
             if ((map[lastArrayIndex][i] == 2) && !wallFound) {
                 wallFound = true;
             } else if ((map[lastArrayIndex][i] != 2) && wallFound) {
-                System.out.println("isDownWallsCorrect(): top wall was not found in last mapline on column " + i);
                 return false;
             }
         }
@@ -668,10 +641,6 @@ public class Model implements GeneralModel {
 
     private boolean isMapPlayable() {
         if (playerCount != 1 || boxesCount != checksCount || boxesCount == 0 && checksCount == 0) {
-            System.out.println("isMapPlayable(): map have invalid game parameters");
-            System.out.println("players: " + playerCount + ("(should be equal to 1)"));
-            System.out.println("boxes: " + boxesCount);
-            System.out.println("checks: " + checksCount);
             return false;
         }
         return true;
@@ -743,7 +712,6 @@ public class Model implements GeneralModel {
 
     private void moveLeft() {
         if ((map[playerPosY][playerPosX - 1] == WALL)) {
-            System.out.println("Impossible move to the left"); //debug
             return;
         }
 
@@ -767,7 +735,6 @@ public class Model implements GeneralModel {
         }
 
         if (gameType.equals("battle")) {
-            System.out.println("Left");
             client.sendDataToServer("Left");
         }
         moveSnowSound.play();
@@ -780,8 +747,6 @@ public class Model implements GeneralModel {
 
     private void moveRight() {
         if ((map[playerPosY][playerPosX + 1] == WALL)) {
-
-            System.out.println("Impossible move to the right"); //debug
             return;
         }
 
@@ -806,7 +771,6 @@ public class Model implements GeneralModel {
         }
 
         if (gameType.equals("battle")) {
-            System.out.println("Right");
             client.sendDataToServer("Right");
         }
 
@@ -820,7 +784,6 @@ public class Model implements GeneralModel {
 
     private void moveTop() {
         if ((map[playerPosY - 1][playerPosX] == WALL)) {
-            System.out.println("Impossible move to the top"); //debug
             return;
         }
 
@@ -845,7 +808,6 @@ public class Model implements GeneralModel {
         }
 
         if (gameType.equals("battle")) {
-            System.out.println("Up");
             client.sendDataToServer("Up");
         }
 
@@ -859,7 +821,6 @@ public class Model implements GeneralModel {
 
     private void moveBot() {
         if (map[playerPosY + 1][playerPosX] == WALL) {
-            System.out.println("Impossible move to the bottom"); //debug
             return;
         }
 
@@ -884,7 +845,6 @@ public class Model implements GeneralModel {
         }
 
         if (gameType.equals("battle")) {
-            System.out.println("Down");
             client.sendDataToServer("Down");
         }
 
@@ -898,8 +858,8 @@ public class Model implements GeneralModel {
     }
 
     private boolean canMoveBoxToLeft() {
-        if (((map[playerPosY][playerPosX - 2] == WALL) || (map[playerPosY][playerPosX - 2] == BOX)) && (playerPosX - 2 >= 0)) {
-            System.out.println("Impossible move box to the left"); //debug
+        if (((map[playerPosY][playerPosX - 2] == WALL)
+            || (map[playerPosY][playerPosX - 2] == BOX)) && (playerPosX - 2 >= 0)) {
             return false;
         }
 
@@ -907,8 +867,8 @@ public class Model implements GeneralModel {
     }
 
     private boolean canMoveBoxToRight() {
-        if (((map[playerPosY][playerPosX + 2] == WALL) || (map[playerPosY][playerPosX + 2] == BOX)) && (playerPosX + 2 < map[playerPosY].length)) {
-            System.out.println("Impossible move box to the right"); //debug
+        if (((map[playerPosY][playerPosX + 2] == WALL)
+            || ((map[playerPosY][playerPosX + 2] == BOX)) && (playerPosX + 2 < map[playerPosY].length))) {
             return false;
         }
 
@@ -916,22 +876,19 @@ public class Model implements GeneralModel {
     }
 
     private boolean canMoveBoxToTop() {
-        if (((map[playerPosY - 2][playerPosX] == WALL) || (map[playerPosY - 2][playerPosX] == BOX)) && (playerPosY - 2 >= 0)) {
-            System.out.println("Impossible move box to the top"); //debug
+        if (((map[playerPosY - 2][playerPosX] == WALL)
+            || (map[playerPosY - 2][playerPosX] == BOX)) && (playerPosY - 2 >= 0)) {
             return false;
         }
 
         return true;
     }
 
-    private boolean canMoveBoxToBot() { //true && 7 < map[1].length()
-        if (((map[playerPosY + 2][playerPosX] == WALL) || (map[playerPosY + 2][playerPosX] == BOX)) && (playerPosY + 2 < map[playerPosX].length)) {
-            System.out.println("Impossible move box to the bottom"); //debug
+    private boolean canMoveBoxToBot() {
+        if ((map[playerPosY + 2][playerPosX] == WALL)
+            || ((map[playerPosY + 2][playerPosX] == BOX) && (playerPosY + 2 < map[playerPosX].length))) {
             return false;
         }
-        System.out.println("box moved to " + map[playerPosY + 2][playerPosX]);
-        //7 1 == 2
-        // y = 5 6 7 x = 1
         return true;
     }
 

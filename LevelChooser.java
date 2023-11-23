@@ -11,8 +11,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.File;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
+@SuppressWarnings("serial")
 public class LevelChooser extends JPanel {
 
     private Viewer viewer;
@@ -114,4 +116,7 @@ public class LevelChooser extends JPanel {
         return label;
     }
 
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
+    }  
 }

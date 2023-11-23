@@ -149,7 +149,6 @@ public class Levels {
 
     public int[][] getLevelFromServer(String level) {
         String levelContent = client.loadLevelFromServer(level);
-        System.out.println(levelContent);
 
         if (levelContent != null) {
             return parseData(levelContent, 'A');
@@ -169,7 +168,6 @@ public class Levels {
         String levelData = client.loadEnemyLevelFromServer();
         String[] array = levelData.split(";");
         levelContent = array[2];
-        System.out.println(levelData);
         if (levelData != null) {
             return levelData;
         }
@@ -179,7 +177,6 @@ public class Levels {
 
     public int[][] getRandomLevelFromServer() {
         String levelContent = client.loadRandomLevelFromServer();
-        System.out.println(levelContent);
 
         if (levelContent != null) {
             return parseData(levelContent, 'A');
@@ -212,7 +209,6 @@ public class Levels {
 
             }
 
-            System.out.println(data.toString());
             return data.toString();
 
         } catch (IOException ioe) {

@@ -36,16 +36,16 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        switch(command) {
+        switch (command) {
             case "Next level":
                 model.getNextLevel();
                 break;
             case "Exit to menu":
-                System.out.println("Exit to menu ");
                 model.getClient().closeClient();
                 viewer.showMenu();
                 break;
             case "Choose Level":
+                model.getClient().closeClient();
                 viewer.showLevelChooser();
                 break;
             case "Sound Off":
@@ -59,6 +59,8 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
                     model.playCurrentMusic();
                     setIconAndResize(button, "images/sound-on.png", 80, 80);
                 }
+                viewer.getCanvas().requestFocusInWindow();
+                break;
             case "MoveBack":
                 model.moveBack();
                 viewer.showCanvas();
@@ -68,7 +70,6 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
                 viewer.showCanvas();
                 break;
             case "GiveUp":
-                System.out.println("Give up");
                 model.giveUp();
         }
     }
@@ -79,13 +80,13 @@ public class Controller implements KeyListener, ActionListener, MouseListener {
         model.doMouseAction(x, y);
     }
 
-     private void setIconAndResize(JButton button, String imagePath, int width, int height) {
-         ImageIcon icon = new ImageIcon(imagePath);
-         Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-         ImageIcon scaledIcon = new ImageIcon(scaledImage);
-         button.setIcon(scaledIcon);
-         button.setSize(width, height);
-     }
+    private void setIconAndResize(JButton button, String imagePath, int width, int height) {
+        ImageIcon icon = new ImageIcon(imagePath);
+        Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        button.setIcon(scaledIcon);
+        button.setSize(width, height);
+    }
 
     public void mousePressed(MouseEvent e) {
     }

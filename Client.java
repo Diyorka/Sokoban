@@ -19,14 +19,11 @@ public class Client {
         try {
             socketChannel = SocketChannel.open();
             socketChannel.connect(new InetSocketAddress(SERVER_ADDRESS, SERVER_PORT));
-            System.out.println("Successfully connected to server ...");
             sendDataToServer(gameType);
             String serverResponse = getDataFromServer();
-            System.out.println(serverResponse);
 
             if (gameType.equals("battle")) {
                 serverResponse = getDataFromServer();
-                System.out.println(serverResponse);
                 if (serverResponse.equals("ENEMY_WAS_NOT_FOUND")) {
                     viewer.showErrorDialog("ENEMY NOT FOUND !");
                     closeClient();
@@ -49,7 +46,6 @@ public class Client {
         if (socketChannel != null && socketChannel.isOpen()) {
             try {
                 socketChannel.close();
-                System.out.println("Close client Socket");
             } catch (IOException exc) {
                 System.out.println(exc);
             }
@@ -90,7 +86,6 @@ public class Client {
 
                 socketChannel.write(buffer);
                 buffer.clear();
-                System.out.println("Successfully send data to server [~]");
 
             } catch (IOException exc) {
                 System.out.println("exception in method sendDataToServer " + exc);
@@ -114,8 +109,6 @@ public class Client {
                     data = new String(buffer.array(), 0, bytesRead);
                 }
                 buffer.clear();
-                System.out.println("Successfully get data from server [~]");
-
             } catch (IOException exc) {
                 System.out.println("exception in method getDataFromServer " + exc);
                 exc.printStackTrace();
