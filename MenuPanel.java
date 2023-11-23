@@ -35,38 +35,30 @@ public class MenuPanel extends JPanel {
     private void init() {
         setLayout(null);
         JLabel label = new JLabel("Sokoban");
-        label.setBounds(420, 100, 500, 100);
+        label.setBounds(445, 120, 500, 100);
         label.setForeground(Color.WHITE);
 
-        Font labelFont = viewer.getCustomFont(Font.PLAIN, 120f);
+        Font labelFont = viewer.getCustomFont(Font.PLAIN, 100f);
         label.setFont(labelFont);
 
         nickname = new JTextField("Stive");
         nickname.setFont(viewer.getCustomFont(Font.PLAIN, 28f));
-        nickname.setBounds(500, 245, 150, 40);
+        nickname.setBounds(500, 245, 140, 40);
         nickname.setForeground(Color.WHITE);
         nickname.setHorizontalAlignment(JTextField.CENTER);
         nickname.setOpaque(false);
 
-        JButton setNameButton = createButton("Ok", "Set name", 720, 245);
+        JButton setNameButton = viewer.createDarkButton("Ok", "Set name", 720, 245, 200, 40, true, menuController);
         setNameButton.setFont(viewer.getCustomFont(Font.PLAIN, 18f));
-        setNameButton.setBounds(650, 245, 50, 40);
-        setNameButton.addActionListener(menuController);
+        setNameButton.setBounds(640, 245, 60, 40);
 
-        JButton playButton = createButton("Play", "Play", 500, 315);
+        JButton playButton = viewer.createLightButton("Play", "Play", 500, 315, 200, 40, true, menuController);
         playButton.addActionListener(menuController);
 
-        JButton playWithEnemyButton = createButton("Play With Enemy", "PlayWithEnemy", 500, 385);
-        playWithEnemyButton.addActionListener(menuController);
-
-        JButton levelsButton = createButton("Choose level", "Level", 500, 455);
-        levelsButton.addActionListener(menuController);
-
-        JButton settingsButton = createButton("Settings", "Settings", 500, 525);
-        settingsButton.addActionListener(menuController);
-
-        JButton exitButton = createButton("Exit", "Exit", 500, 585);
-        exitButton.addActionListener(menuController);
+        JButton playWithEnemyButton = viewer.createLightButton("Play With Enemy", "PlayWithEnemy", 500, 385, 200, 40, true, menuController);
+        JButton levelsButton = viewer.createLightButton("Choose level", "Level", 500, 455, 200, 40, true, menuController);
+        JButton settingsButton = viewer.createLightButton("Settings", "Settings", 500, 525, 200, 40, true, menuController);
+        JButton exitButton = viewer.createLightButton("Exit", "Exit", 500, 595, 200, 40, true, menuController);
 
         add(label);
         add(nickname);
@@ -78,16 +70,6 @@ public class MenuPanel extends JPanel {
         add(exitButton);
 
     }
-
-    private JButton createButton(String name, String command, int x, int y) {
-        JButton button = new JButton(name);
-        button.setBounds(x, y, 200, 40);
-        button.setFocusable(false);
-        button.setFont(viewer.getCustomFont(Font.PLAIN, 24f));
-        button.setActionCommand(command);
-        return button;
-    }
-
 
     private void writeObject(ObjectOutputStream oos) throws IOException {
         throw new IOException("This class is NOT serializable.");
