@@ -15,7 +15,10 @@ import java.awt.image.BufferedImage;
 import javax.swing.JButton;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
+@SuppressWarnings("serial")
 public class CustomButton extends JButton {
 
     private Color firstColor;
@@ -157,5 +160,9 @@ public class CustomButton extends JButton {
         float x = pressedLocation.x - (pressedSize / 2);
         float y = pressedLocation.y - (pressedSize / 2);
         g2.fillOval((int) x, (int) y, (int) pressedSize, (int) pressedSize);
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        throw new IOException("This class is NOT serializable.");
     }
 }
