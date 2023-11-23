@@ -56,27 +56,19 @@ public class CanvasForTwoPlayers extends JPanel {
         stepsImageLabel.setBounds(30, 30, 80, 80);
         add(stepsImageLabel);
 
-        File fontFile = new File("fonts/PixelFont.otf");
-
         stepsLabel = new JLabel("0");
-        stepsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
+        stepsLabel.setFont(getCustomFont(Font.PLAIN, 80f));
         stepsLabel.setForeground(Color.WHITE);
         stepsLabel.setBounds(120, 20, 200, 100);
         add(stepsLabel);
 
         nickName = new JLabel(model.getNickName());
-        nickName.setFont(getCustomFont(fontFile, Font.PLAIN, 50f));
-        nickName.setForeground(Color.BLACK);
+        nickName.setFont(getCustomFont(Font.PLAIN, 50f));
+        nickName.setForeground(Color.WHITE);
         nickName.setBounds(240, 20, 300, 100);
         add(nickName);
 
-        JButton exitGameButton = new JButton("Give Up");
-        exitGameButton.setBounds(40, 700, 150, 40);
-        Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
-        exitGameButton.setFont(customFont);
-        exitGameButton.setForeground(Color.BLACK);
-        exitGameButton.setBackground(new Color(59, 89, 182));
-        exitGameButton.setActionCommand("GiveUp");
+        JButton exitGameButton = createButton("Give Up", "GiveUp", 40, 700, 150, 40);
         exitGameButton.addActionListener(controller);
         add(exitGameButton);
 
@@ -211,8 +203,18 @@ public class CanvasForTwoPlayers extends JPanel {
         g.drawString("Initialization Error!", 250, 100);
     }
 
-    private Font getCustomFont(File file, int style, float size) {
+    private JButton createButton(String name, String command, int x, int y, int width, int height) {
+        CustomButton button = new CustomButton(name, new Color(43, 48, 64), new Color(29, 113, 184), Color.WHITE);
+        button.setBounds(x, y, width, height);
+        button.setFocusable(false);
+        button.setFont(getCustomFont(Font.PLAIN, 22f));
+        button.setActionCommand(command);
+        return button;
+    }
+
+    private Font getCustomFont(int style, float size) {
         Font customFont = null;
+        File file = new File("fonts/PixelFont.otf");
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
