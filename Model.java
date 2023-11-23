@@ -411,21 +411,11 @@ public class Model implements GeneralModel {
 
     public void updateCurrentSkin(String skinType) {
         dbService.updateCurrentSkin(player.getNickname(), skinType);
-        PlayerSkin skin = null;
 
-        switch (skinType) {
-            case "Default Skin":
-                skin = new DefaultSkin();
-                break;
-            case "Santa Skin":
-                skin = new SantaSkin();
-                break;
-            case "Premium Skin":
-                skin = new PremiumSkin();
-                break;
-        }
-
-        player.setCurrentSkin(skin);
+        SkinFactory skinFactory = new SkinFactory();
+        PlayerSkin playerSkin = skinFactory.getPlayerSkin(skinType);
+        
+        player.setCurrentSkin(playerSkin);
         viewer.updateSkin();
     }
 
