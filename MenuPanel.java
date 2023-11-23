@@ -53,8 +53,6 @@ public class MenuPanel extends JPanel {
         setNameButton.setBounds(640, 245, 60, 40);
 
         JButton playButton = viewer.createLightButton("Play", "Play", 500, 315, 200, 40, true, menuController);
-        playButton.addActionListener(menuController);
-
         JButton playWithEnemyButton = viewer.createLightButton("Play With Enemy", "PlayWithEnemy", 500, 385, 200, 40, true, menuController);
         JButton levelsButton = viewer.createLightButton("Choose level", "Level", 500, 455, 200, 40, true, menuController);
         JButton settingsButton = viewer.createLightButton("Settings", "Settings", 500, 525, 200, 40, true, menuController);
