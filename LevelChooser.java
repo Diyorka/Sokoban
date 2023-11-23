@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.HashMap;
 
 public class LevelChooser extends JPanel {
+
+    private Viewer viewer;
     private LevelChooserController levelChooserController;
     private Model model;
     private JLabel[] collectedCoinsLabels;
@@ -22,15 +24,16 @@ public class LevelChooser extends JPanel {
         levelChooserController = new LevelChooserController(viewer, model);
         setLayout(null);
         this.model = model;
+        this.viewer = viewer;
 
-        Font font = getCustomFont(Font.PLAIN, 80);
+        Font font = viewer.getCustomFont(Font.PLAIN, 80);
         JLabel title = createLabel("Level Selection", 370, 100, 470, 60, font, Color.WHITE);
 
         collectedCoinsLabels = new JLabel[9];
 
         int x = 220;
         int y = 375;
-        font = getCustomFont(Font.PLAIN, 48);
+        font = viewer.getCustomFont(Font.PLAIN, 48);
 
         for (int i = 0; i < collectedCoinsLabels.length; i++) {
             collectedCoinsLabels[i] = createLabel("0/2", x, y, 65, 50, font, Color.BLACK);
@@ -46,8 +49,7 @@ public class LevelChooser extends JPanel {
 
         initCoins();
 
-        JButton backButton = createButton("Menu", "Back", 70, 70);
-        backButton.addActionListener(levelChooserController);
+        JButton backButton = viewer.createLightButton("Back", "Back", 70, 70, 150, 40, true, levelChooserController);
 
         add(title);
         add(backButton);
@@ -103,16 +105,6 @@ public class LevelChooser extends JPanel {
         return button;
     }
 
-    private JButton createButton(String name, String command, int x, int y) {
-        JButton button = new JButton(name);
-        Font font = getCustomFont(Font.PLAIN, 24f);
-        button.setBounds(x, y, 200, 40);
-        button.setFocusable(false);
-        button.setFont(font);
-        button.setActionCommand(command);
-        return button;
-    }
-
     private JLabel createLabel(String text, int x, int y, int w, int h, Font font, Color color) {
         JLabel label = new JLabel(text);
         label.setFont(font);
@@ -120,20 +112,6 @@ public class LevelChooser extends JPanel {
         label.setForeground(color);
 
         return label;
-    }
-
-    private Font getCustomFont(int style, float size) {
-        Font customFont = null;
-        File fontFile = new File("fonts/PixelFont.otf");
-
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(style, size);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-        } catch (IOException | FontFormatException e) {
-            System.out.println(e);
-        }
-        return customFont;
     }
 
 }

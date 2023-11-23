@@ -58,37 +58,24 @@ public class Canvas extends JPanel {
         stepsImageLabel.setBounds(30, 30, 80, 80);
         add(stepsImageLabel);
 
-        File fontFile = new File("fonts/PixelFont.otf");
-
         coinsLabel = new JLabel("0");
-        coinsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
+        coinsLabel.setFont(getCustomFont(Font.PLAIN, 80f));
         coinsLabel.setForeground(Color.WHITE);
         coinsLabel.setBounds(980, 20, 100, 100);
         coinsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         add(coinsLabel);
 
         stepsLabel = new JLabel("0");
-        stepsLabel.setFont(getCustomFont(fontFile, Font.PLAIN, 80f));
+        stepsLabel.setFont(getCustomFont(Font.PLAIN, 80f));
         stepsLabel.setForeground(Color.WHITE);
         stepsLabel.setBounds(120, 20, 200, 100);
         add(stepsLabel);
 
-        JButton exitGameButton = new JButton("Exit to menu");
-        exitGameButton.setBounds(40, 700, 150, 40);
-        Font customFont = getCustomFont(fontFile, Font.PLAIN, 22);
-        exitGameButton.setFont(customFont);
-        exitGameButton.setForeground(Color.BLACK);
-        exitGameButton.setBackground(new Color(59, 89, 182));
-        exitGameButton.setActionCommand("Exit to menu");
+        JButton exitGameButton = createButton("Exit to menu", "Exit to menu", 40, 700, 150, 40);
         exitGameButton.addActionListener(controller);
         add(exitGameButton);
 
-        JButton nextLevelButton = new JButton("Next level");
-        nextLevelButton.setBounds(1010, 700, 150, 40);
-        nextLevelButton.setFont(customFont);
-        nextLevelButton.setForeground(Color.BLACK);
-        nextLevelButton.setBackground(new Color(59, 89, 182));
-        nextLevelButton.setActionCommand("Next level");
+        JButton nextLevelButton = createButton("Next level", "Next level", 1010, 700, 150, 40);
         nextLevelButton.addActionListener(controller);
         add(nextLevelButton);
 
@@ -104,12 +91,7 @@ public class Canvas extends JPanel {
         soundOffButton.addActionListener(controller);
         add(soundOffButton);
 
-        JButton chooseLevelButton = new JButton("Choose Level");
-        chooseLevelButton.setBounds(525, 700, 150, 40);
-        chooseLevelButton.setFont(customFont);
-        chooseLevelButton.setForeground(Color.BLACK);
-        chooseLevelButton.setBackground(new Color(59, 89, 182));
-        chooseLevelButton.setActionCommand("Choose Level");
+        JButton chooseLevelButton = createButton("Choose level", "Choose Level", 525, 700, 150, 40);
         chooseLevelButton.addActionListener(controller);
         add(chooseLevelButton);
 
@@ -228,8 +210,18 @@ public class Canvas extends JPanel {
         g.drawString("Initialization Error!", 250, 100);
     }
 
-    private Font getCustomFont(File file, int style, float size) {
+    private JButton createButton(String name, String command, int x, int y, int width, int height) {
+        CustomButton button = new CustomButton(name, new Color(43, 48, 64), new Color(29, 113, 184), Color.WHITE);
+        button.setBounds(x, y, width, height);
+        button.setFocusable(false);
+        button.setFont(getCustomFont(Font.PLAIN, 22f));
+        button.setActionCommand(command);
+        return button;
+    }
+
+    private Font getCustomFont(int style, float size) {
         Font customFont = null;
+        File file = new File("fonts/PixelFont.otf");
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont(style, size);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

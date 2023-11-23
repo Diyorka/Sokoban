@@ -94,7 +94,8 @@ public class SettingsPanel extends JPanel {
         JLabel musicLabel = createLabel("Music:", 80, 480, 100, 30, labelFont);
         showMusicSettings();
 
-        JButton returnButton = createButton("Back", "Back", 40, 665, true);
+        JButton returnButton = viewer.createLightButton("Back", "Back", 40, 665, 100, 30, true, controller);
+        returnButton.setFont(viewer.getCustomFont(Font.PLAIN, 20f));
 
         add(coinImage);
         add(nickname);
@@ -119,14 +120,19 @@ public class SettingsPanel extends JPanel {
         JLabel premiumSkinPrice = createLabel(premiumSkinCost + " coins", 745, 320, 110, 30, font);
         premiumSkinPrice.setForeground(new Color(251, 197, 24));
 
-        defaultSkinButton = createButton("Choose", "Default_Skin", 315, 375, false);
-        santaSkinButton = createButton("Choose", "Santa_Skin", 520, 375, false);
+        Font buttonFont = viewer.getCustomFont(Font.PLAIN, 20f);
+        defaultSkinButton = viewer.createLightButton("Choose", "Default_Skin", 315, 375, 100, 30, false, controller);
+        defaultSkinButton.setFont(buttonFont);
+
+        santaSkinButton = viewer.createLightButton("Choose", "Santa_Skin", 520, 375, 100, 30, false, controller);
+        santaSkinButton.setFont(buttonFont);
 
         if (player.isPremiumAvailable()) {
-            premiumSkinButton = createButton("Choose", "Premium_Skin", 730, 375, false);
+            premiumSkinButton = viewer.createLightButton("Choose", "Premium_Skin", 730, 375, 100, 30, false, controller);
         } else {
-            premiumSkinButton = createButton("Buy", "Buy_Premium", 730, 375, false);
+            premiumSkinButton = viewer.createLightButton("Buy", "Buy_Premium", 730, 375, 100, 30, false, controller);
         }
+        premiumSkinButton.setFont(buttonFont);
         updateButtonStates();
 
         add(defaultSkinImage);
@@ -189,17 +195,6 @@ public class SettingsPanel extends JPanel {
         JLabel labelImage = new JLabel(icon);
         labelImage.setBounds(x, y, width, height);
         return labelImage;
-    }
-
-    private JButton createButton(String name, String command, int x, int y, boolean isEnabled) {
-        JButton button = new JButton(name);
-        button.setBounds(x, y, 100, 30);
-        button.setFocusable(false);
-        button.setFont(viewer.getCustomFont(Font.PLAIN, 20f));
-        button.setEnabled(isEnabled);
-        button.setActionCommand(command);
-        button.addActionListener(controller);
-        return button;
     }
 
     private JRadioButton createJRadioButton(String name, String command, int x, int y, boolean isSelected) {

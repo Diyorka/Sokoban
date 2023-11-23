@@ -9,6 +9,9 @@ import java.io.File;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
+import java.awt.Color;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
 
 public class Viewer {
     private Controller controller;
@@ -249,6 +252,28 @@ public class Viewer {
 
     public void showSettings() {
         cardLayout.show(frame.getContentPane(), "settings");
+    }
+
+    public JButton createDarkButton(String name, String command, int x, int y, int width, int height, boolean enabled, ActionListener controller) {
+        CustomButton button = new CustomButton(name, new Color(43, 48, 64), new Color(29, 113, 184), Color.WHITE);
+        button.setBounds(x, y, width, height);
+        button.setFocusable(false);
+        button.setFont(getCustomFont(Font.PLAIN, 24f));
+        button.setEnabled(enabled);
+        button.setActionCommand(command);
+        button.addActionListener(controller);
+        return button;
+    }
+
+    public JButton createLightButton(String name, String command, int x, int y, int width, int height, boolean enabled, ActionListener controller) {
+        CustomButton button = new CustomButton(name, new Color(230, 145, 47), new Color(248, 235, 108), new Color(109, 63, 36));
+        button.setBounds(x, y, width, height);
+        button.setFocusable(false);
+        button.setFont(getCustomFont(Font.PLAIN, 24f));
+        button.setEnabled(enabled);
+        button.setActionCommand(command);
+        button.addActionListener(controller);
+        return button;
     }
 
     public Font getCustomFont(int style, float size) {
