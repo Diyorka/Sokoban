@@ -68,10 +68,12 @@ public class CanvasForTwoPlayers extends JPanel {
         nickName.setBounds(240, 20, 300, 100);
         add(nickName);
 
-        JButton exitGameButton = createButton("Give Up", "GiveUp", 40, 700, 150, 40);
-        exitGameButton.addActionListener(controller);
-        add(exitGameButton);
-
+        if(model instanceof Model) {
+            JButton exitGameButton = createButton("Give Up", "GiveUp", 40, 700, 150, 40);
+            exitGameButton.addActionListener(controller);
+            add(exitGameButton);
+        }
+        
         TimerImageLabel = new JLabel();
         Image timer = new ImageIcon("images/timer.png").getImage();
         Image scaledTimer = timer.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
