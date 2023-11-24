@@ -1,4 +1,4 @@
-# Sokoban MVC Pattern -  Integrating Spring Data
+# Sokoban MVC Pattern -  Integrating Spring Data team
 
 
 
